@@ -7,6 +7,7 @@
 #include "CardPlayer.generated.h"
 
 class UChanceManagerComponent;
+class UUWBP_Layout_RLDB;
 
 UCLASS()
 class CROWNOFSIN_API ACardPlayer : public AActor
@@ -25,6 +26,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	UPROPERTY()
+	TObjectPtr<UUWBP_Layout_RLDB> PlayerUI; 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
 	UChanceManagerComponent* ChanceManagerComponent;
 };

@@ -1,15 +1,24 @@
-﻿#pragma once
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
 
 #include "CoreMinimal.h"
+#include "Components/TimelineComponent.h"
+#include "CrownOfSin/Public/Interfaces/Interface_Node.h"
+#include "CrownOfSin/Public/Libraries/FlowControllerLibiary.h"
 #include "GameFramework/Actor.h"
 #include "Node.generated.h"
 
-class ANode;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNodeSelected, ANode*, Node);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNodeSelected, ANode*, InNode);
+
+class FOnTimelineEvent;
+class UTimelineComponent;
+class USplineComponent;
+class UMapEventComponent;
 
 UCLASS()
-class CROWNOFSIN_API ANode : public AActor
+class CROWNOFSIN_API ANode : public AActor, public IInterface_Node
 {
 	GENERATED_BODY()
 
@@ -21,40 +30,100 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void OnConstruction(const FTransform& Transform) override;
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	/*ToDo : 구현해야함*/
-	void CrossOut()
-	{
-	}
-
-	/*ToDo : 구현해야함*/
-	void Enable()
-	{
-	}
-
-	/*ToDo : 구현해야함*/
-	void StopEnable()
-	{
-		
-	}
+	virtual void Tick(float DeltaSeconds) override;
 
 
-	/*========================================================================================
-	*	Field Members
-	=========================================================================================*/
+
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Node")
-	bool bOrigin = false;
+	UFUNCTION(Blueprintable, Category = "Node")
+	void AddConnectionSplines();
 
-	UPROPERTY(BlueprintReadWrite, Category="Node")
-	int32 ID;
+	UFUNCTION(Blueprintable, Category = "Node")
+	void DisplaySplinePath(USplineComponent* Spline);
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Node")
+	UFUNCTION()
+	void CrossOut();
+
+	UFUNCTION()
+	void Enable();
+
+	UFUNCTION()
+	void StopEnable();
+
+public:
+	// Interface
+	UFUNCTION()
+	virtual void HoverOverNode() override;
+
+	UFUNCTION()
+	virtual void HoverOffNode() override;
+
+	UFUNCTION()
+	virtual void ClickNode() override;
+public:
+	// variables
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
+	TObjectPtr<UStaticMeshComponent> NodeMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
+	TObjectPtr<USceneComponent> Scene;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
+	TObjectPtr<UStaticMeshComponent> CrossMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
+	TObjectPtr<UMapEventComponent> MapEventRef;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
+	TObjectPtr<UTimelineComponent> TL_Wobble;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<ANode*> Connections;
 
-	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category="Node|Delegate Event")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bOrigin;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UMaterialInstanceDynamic> NodeMaterial;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FLinearColor TrueColor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bEnabled;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Id;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FDataTableRowHandle MapEvent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UMapEventComponent> MapEventClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintReadWrite)
+	TObjectPtr<UStaticMesh> NewSplineMesh;
+
+	bool bIsOpened = false;
+
+	FGate NodeGate;
+	// Delegate
+public:
 	FOnNodeSelected OnNodeSelected;
+
+	FOnTimelineEvent NodeTimeLineFinish;
+
+	// Timeline
+public:
+	UFUNCTION(Category = "Timeline")
+	void TimelineFinish();
+
+	UFUNCTION(Category = "Timeline")
+	void TimeLineUpdate(float InWobble);
+
+	UPROPERTY(EditAnywhere,Category = "Timeline")
+	UCurveFloat* Wobble;
 };
