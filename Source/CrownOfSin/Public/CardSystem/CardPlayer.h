@@ -7,7 +7,7 @@
 #include "CardPlayer.generated.h"
 
 class UChanceManagerComponent;
-class UUWBP_Layout_RLDB;
+class UUW_Layout_RLDB;
 
 UCLASS()
 class CROWNOFSIN_API ACardPlayer : public AActor
@@ -28,7 +28,7 @@ public:
 
 public:
 	UPROPERTY()
-	TObjectPtr<UUWBP_Layout_RLDB> PlayerUI; 
+	TObjectPtr<UUW_Layout_RLDB> PlayerUI; 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
 	UChanceManagerComponent* ChanceManagerComponent;
 };

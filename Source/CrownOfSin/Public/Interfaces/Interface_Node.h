@@ -1,5 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
@@ -22,4 +21,13 @@ class CROWNOFSIN_API IInterface_Node
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+
+	UFUNCTION()
+	virtual void HoverOverNode()=0;
+
+	UFUNCTION()
+	virtual void HoverOffNode()=0;
+
+	UFUNCTION()
+	virtual void ClickNode() =0;
 };

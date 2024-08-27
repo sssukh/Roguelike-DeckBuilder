@@ -161,7 +161,7 @@ void ANodeMap::SetUniqueNodeIdsFromOrigin()
 		NodeIds.Add(NodeIndex, CurrentNode);
 
 		// 노드 자체의 ID 멤버 변수에도 고유 ID를 할당합니다.
-		CurrentNode->ID = NodeIndex;
+		CurrentNode->Id = NodeIndex;
 
 		// 다음 노드에 대해 ID 값을 증가시킵니다.
 		NodeIndex++;
