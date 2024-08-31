@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CardAction.h"
+#include "ActionBase.h"
 #include "Action_Effect.generated.h"
 
 UCLASS()
-class CROWNOFSIN_API AAction_Effect : public ACardAction
+class CROWNOFSIN_API AAction_Effect : public AActionBase
 {
 	GENERATED_BODY()
 

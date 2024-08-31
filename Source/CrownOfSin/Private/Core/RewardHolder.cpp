@@ -41,6 +41,5 @@ void ARewardHolder::RunEvent_Implementation(const FGameplayTag& EventTag, UObjec
 		{
 			StatusComponent->DestroyComponent();
 		}
-		return;
 	}
 }

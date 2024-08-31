@@ -1,5 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,6 +7,7 @@
 
 class UDispatcherHubComponent;
 
+/*DispatcherHubComponent를 보유하는 빈 액터입니다. 모든 이벤트가 바인딩되거나 호출될 수 있어야 하는 이벤트에 대해 전역적으로 액세스할 수 있도록 존재합니다.*/
 UCLASS()
 class CROWNOFSIN_API AGlobalDispatcherHub : public AActor
 {
@@ -30,6 +30,9 @@ public:
 	*	Field Members
 	=========================================================================================*/
 public:
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="Global Dispatcher Hub|Component")
+	USceneComponent* DefaultSceneRoot;
+	
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="Global Dispatcher Hub|Component")
 	UDispatcherHubComponent* DispatcherHubComponent;
 };

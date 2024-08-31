@@ -14,12 +14,12 @@
  */
 namespace AssetRefPath
 {
-	// const FString DataTablePath = TEXT("DataTable'/Game/OverLoad/AssetRef/DT_DataTable.DT_DataTable'");
-	// const FString TexturesPath = TEXT("DataTable'/Game/OverLoad/AssetRef/DT_Texture.DT_Texture'");
-	// const FString MeshesPath = TEXT("DataTable'/Game/OverLoad/AssetRef/DT_Mesh.DT_Mesh'");
-
+	
+	const FString MeshesPath = TEXT("DataTable'/Game/CrownOfSin/AssetRef/DT_StaticMesh.DT_StaticMesh'");
 	const FString MaterialPath = TEXT("DataTable'/Game/CrownOfSin/AssetRef/DT_Materials.DT_Materials'");
 
+	// const FString DataTablePath = TEXT("DataTable'/Game/OverLoad/AssetRef/DT_DataTable.DT_DataTable'");
+	// const FString TexturesPath = TEXT("DataTable'/Game/OverLoad/AssetRef/DT_Texture.DT_Texture'");
 	// const FString BluePrintPath = TEXT("DataTable'/Game/Game_/AssetRef/AssetRef_BluePrint.AssetRef_BluePrint'");
 
 	// const FString BluePrintAbilityPath = TEXT("DataTable'/Game/Game_/AssetRef/AssetRef_Ability.AssetRef_Ability'");

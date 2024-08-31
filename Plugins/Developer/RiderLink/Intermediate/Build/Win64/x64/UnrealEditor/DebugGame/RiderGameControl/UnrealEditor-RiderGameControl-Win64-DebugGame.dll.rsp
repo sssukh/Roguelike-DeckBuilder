@@ -35,7 +35,7 @@
 /NODEFAULTLIB:"LIBCD"
 /NODEFAULTLIB:"LIBCPD"
 /FUNCTIONPADMIN:6
-"F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\RiderGameControl\RiderGameControl.cpp.obj"
+"F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\RiderGameControl\Module.RiderGameControl.cpp.obj"
 "F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\RiderGameControl\Default.rc2.res"
 "F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\RD\UnrealEditor-RD-Win64-DebugGame.lib"
 "F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\RiderLink\UnrealEditor-RiderLink-Win64-DebugGame.lib"

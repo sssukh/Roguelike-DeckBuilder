@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Core/DispatcherHubComponent.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "FunctionLibrary_Event.generated.h"
 
