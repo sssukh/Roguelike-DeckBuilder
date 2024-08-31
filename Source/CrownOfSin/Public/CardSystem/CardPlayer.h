@@ -1,5 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,7 +6,7 @@
 #include "CardPlayer.generated.h"
 
 class UChanceManagerComponent;
-class UUW_Layout_RLDB;
+class UUW_Layout_Cos;
 
 UCLASS()
 class CROWNOFSIN_API ACardPlayer : public AActor
@@ -28,7 +27,7 @@ public:
 
 public:
 	UPROPERTY()
-	TObjectPtr<UUW_Layout_RLDB> PlayerUI; 
+	TObjectPtr<UUW_Layout_Cos> PlayerUI; 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
 	UChanceManagerComponent* ChanceManagerComponent;
 };

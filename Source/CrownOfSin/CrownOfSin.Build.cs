@@ -10,7 +10,9 @@ public class CrownOfSin : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
-			"Core", "CoreUObject", "Engine", "InputCore","GameplayTags","UMG"
+			"Core", "CoreUObject", "Engine", "InputCore",
+			"Slate","SlateCore","UMG",
+			"GameplayTags","Niagara"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
