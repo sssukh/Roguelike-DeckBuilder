@@ -1,6 +1,7 @@
 ﻿#include "Core/RewardHolder.h"
 
-#include "Core/DispatcherHubComponent.h"
+
+#include "Core/DispatcherHubLocalComponent.h"
 #include "Libraries/FunctionLibrary_Event.h"
 #include "StatusSystem/StatusComponent.h"
 #include "Utilities/CosGameplayTags.h"
@@ -15,7 +16,7 @@ ARewardHolder::ARewardHolder()
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 	SetRootComponent(DefaultSceneRoot);
 
-	DispatcherHubComponentLocal = CreateDefaultSubobject<UDispatcherHubComponent>(TEXT("DispatcherHubComponentLocal"));
+	DispatcherHubComponentLocal = CreateDefaultSubobject<UDispatcherHubLocalComponent>(TEXT("DispatcherHubComponentLocal"));
 }
 
 void ARewardHolder::BeginPlay()

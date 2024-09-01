@@ -30,7 +30,7 @@ public:
 	// EventHolder를 지정된 EventTag에 바인딩하고, 우선순위에 따라 EventHolder를 정렬합니다.
 	// 게임 인스턴스와 이벤트 홀더의 유효성을 확인하고, 올바른 위치에 삽입하여 이벤트 시스템을 관리합니다.
 	UFUNCTION(BlueprintCallable, Category="Dispatcher Hub Event")
-	void BindEventToHub(UObject* EventHolder, FGameplayTag EventTag);
+	virtual void BindEventToHub(UObject* EventHolder, FGameplayTag EventTag);
 
 	UFUNCTION(BlueprintCallable, Category="Dispatcher Hub Event")
 	void BindMultipleEventsToHub(UObject* EventHolder, FGameplayTagContainer EventTags);
@@ -38,7 +38,7 @@ public:
 	// 특정 EventTag에 바인딩된 EventHolder를 EventLists에서 제거합니다.
 	// 이벤트 태그에 연결된 객체를 제거하고, 디버그 업데이트 이벤트를 호출합니다.
 	UFUNCTION(BlueprintCallable, Category="Dispatcher Hub Event")
-	void UnbindEventFromHub(UObject* EventHolder, FGameplayTag EventTag);
+	virtual void UnbindEventFromHub(UObject* EventHolder, FGameplayTag EventTag);
 
 	UFUNCTION(BlueprintCallable, Category="Dispatcher Hub Event")
 	void UnbindMultipleEventsFromHub(UObject* EventHolder, FGameplayTagContainer EventTags);
@@ -47,7 +47,7 @@ public:
 	bool CallMultipleBoundEvents(const TArray<FGameplayTag>& EventTagsGameplayTags, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal);
 
 	UFUNCTION(BlueprintCallable, Category="Dispatcher Hub Event")
-	bool CallEvent(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal);
+	virtual bool CallEvent(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal);
 
 	UFUNCTION(BlueprintCallable, Category="Dispatcher Hub Event")
 	void QueueEvent(FGameplayTag Event, UObject* CallingObject, UObject* CallSpecificObject, float EndDelay, UObject* PayLoad, FGameplayTagContainer CallTags);
@@ -56,19 +56,18 @@ public:
 	void QueueEventWithPayloadAndCallTags(FGameplayTag Event, UObject* CallingObject, UObject* CallSpecificObject, float EndDelay, UObject* PayLoad, FGameplayTagContainer CallTags);
 
 	UFUNCTION(BlueprintCallable, Category="Dispatcher Hub Event")
-	bool ResolveCallEvent(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, UObject* PayLoad = nullptr,
-	                      FGameplayTagContainer CallTags = FGameplayTagContainer());
+	virtual bool ResolveCallEvent(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, UObject* PayLoad = nullptr,
+	                              FGameplayTagContainer CallTags = FGameplayTagContainer());
 
 	UFUNCTION(BlueprintCallable, Category="Dispatcher Hub Event")
-	bool CallEventWithPayload(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, UObject* PayLoad);
+	virtual bool CallEventWithPayload(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, UObject* PayLoad);
 
 	UFUNCTION(BlueprintCallable, Category="Dispatcher Hub Event")
-	bool CallEventWithCallTags(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, FGameplayTagContainer CallTags);
+	virtual bool CallEventWithCallTags(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, FGameplayTagContainer CallTags);
 
 	UFUNCTION(BlueprintCallable, Category="Dispatcher Hub Event")
-	bool CallEventWithPayloadAndCallTags(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, UObject* PayLoad, FGameplayTagContainer CallTags);
-
-
+	virtual bool CallEventWithPayloadAndCallTags(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, UObject* PayLoad,
+	                                             FGameplayTagContainer CallTags);
 
 protected:
 	// EventHolder가 UInterface_EventHolder 인터페이스를 구현하는지 확인합니다.

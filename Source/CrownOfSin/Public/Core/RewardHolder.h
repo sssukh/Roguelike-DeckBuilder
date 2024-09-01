@@ -6,7 +6,8 @@
 #include "Interfaces/Interface_EventHolder.h"
 #include "RewardHolder.generated.h"
 
-class UDispatcherHubComponent;
+class UDispatcherHubLocalComponent;
+
 
 /*RewardScreen에 표시될 보상을 보유합니다. CardPlayer와 마찬가지로 이 액터에 상태를 추가할 수 있습니다.*/
 UCLASS()
@@ -37,5 +38,5 @@ public:
 	USceneComponent* DefaultSceneRoot;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Reward Holder|Component")
-	UDispatcherHubComponent* DispatcherHubComponentLocal;
+	UDispatcherHubLocalComponent* DispatcherHubComponentLocal;
 };

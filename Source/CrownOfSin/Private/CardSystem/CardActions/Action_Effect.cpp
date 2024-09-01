@@ -1,26 +1,26 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "CardSystem/CardAction/Action_DispatcherEvent.h"
+#include "CardSystem/CardActions/Action_Effect.h"
+
 
 
 // Sets default values
-AAction_DispatcherEvent::AAction_DispatcherEvent()
+AAction_Effect::AAction_Effect()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
 }
 
 // Called when the game starts or when spawned
-void AAction_DispatcherEvent::BeginPlay()
+void AAction_Effect::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void AAction_DispatcherEvent::Tick(float DeltaTime)
+void AAction_Effect::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
