@@ -5,6 +5,7 @@
 #include "CosSaveGame.h"
 #include "Engine/GameInstance.h"
 #include "Interfaces/Interface_CardGameInstance.h"
+#include "NodeSystem/NodeEnumStruct.h"
 #include "CosGameInstance.generated.h"
 
 /**
@@ -122,7 +123,11 @@ public:
 
 	virtual bool IsDebugMode_Implementation() override;
 
+	virtual TArray<FDataTableRowHandle> GetDoneStoryEncountersFromInstance_Implementation() override;
 
+	virtual void SetCurrentEncounterInInstance_Implementation(FEncounter InCurrentEncoutner) override;
+
+	virtual void AddDoneStoryEncounterToInstance_Implementation(FDataTableRowHandle StoryEncounter) override;
 	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/

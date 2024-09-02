@@ -20,4 +20,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Function Library|Event")
 	static bool CallEventInGlobalDispatcherHub(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject);
+
+	UFUNCTION(BlueprintCallable, Category="Function Library|Event")
+	static bool QueueEventInGlobalDispatcherHub(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject,
+		float EndDelay, UObject* Payload, FGameplayTagContainer CallTags);
 };

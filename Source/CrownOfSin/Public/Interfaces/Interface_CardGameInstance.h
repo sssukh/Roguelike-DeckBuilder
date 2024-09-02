@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Core/CosEnumStruct.h"
+#include "NodeSystem/NodeEnumStruct.h"
 #include "UObject/Interface.h"
 #include "Interface_CardGameInstance.generated.h"
 
 class ACardBase;
+
 // This class does not need to be modified.
 UINTERFACE()
 class UInterface_CardGameInstance : public UInterface
@@ -68,4 +70,10 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	bool IsDebugMode();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
+	void SetCurrentEncounterInInstance(FEncounter CurrentEncoutner);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
+	void AddDoneStoryEncounterToInstance(FDataTableRowHandle StoryEncounter);
 };

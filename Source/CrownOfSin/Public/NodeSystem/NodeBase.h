@@ -112,7 +112,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category="Node Base")
 	FLinearColor TrueColor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Node Base", meta=(ExposeOnSpawn="true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Node Base", meta = (ExposeOnSpawn="true",RowType="/Script/CrownOfSin.MapEvent"))
 	FDataTableRowHandle MapEvent;
 
 	UPROPERTY(BlueprintReadWrite, Category="Node Base")

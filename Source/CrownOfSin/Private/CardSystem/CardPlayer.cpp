@@ -3,6 +3,8 @@
 
 #include "CardSystem/CardPlayer.h"
 
+#include "UI/UW_Layout_Cos.h"
+
 
 // Sets default values
 ACardPlayer::ACardPlayer(): ChanceManagerComponent(nullptr)
@@ -22,5 +24,10 @@ void ACardPlayer::BeginPlay()
 void ACardPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void ACardPlayer::DisplayScreenLogMessage(FText Message, FColor Color)
+{
+	PlayerUI->DisplayScreenLogMessage(Message,Color);
 }
 

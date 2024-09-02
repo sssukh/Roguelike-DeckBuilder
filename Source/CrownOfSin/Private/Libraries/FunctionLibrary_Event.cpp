@@ -29,3 +29,15 @@ bool UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(FGameplayTag EventTa
 
 	return GlobalDispatcherHub->DispatcherHubComponent->CallEvent(EventTag,CallingObject,CallSpecificObject,ECallGlobal::OnlyLocal);
 }
+
+bool UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(FGameplayTag EventTag, UObject* CallingObject,
+	UObject* CallSpecificObject, float EndDelay, UObject* Payload, FGameplayTagContainer CallTags)
+{
+	AGlobalDispatcherHub* DispatcherHub = Cast<AGlobalDispatcherHub>(UGameplayStatics::GetActorOfClass
+		(GEngine->GameViewport->GetWorld(),AGlobalDispatcherHub::StaticClass()));
+
+	// 구현 필요
+	// DispatcherHub->DispatcherHubComponent->QueueEventWithPayloadAndCallTags();
+
+	return true;
+}

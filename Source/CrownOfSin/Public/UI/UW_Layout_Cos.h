@@ -19,6 +19,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable,Category="UW Layout")
 	bool ShouldNodeMapBeBlocked();
+
+	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable,Category="UW Layout")
+	void DisplayScreenLogMessage(const FText& Message, const FColor& Color);
 };
 
 

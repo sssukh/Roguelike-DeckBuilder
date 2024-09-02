@@ -33,3 +33,8 @@ void UCardEffectComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	// ...
 }
 
+bool UCardEffectComponent::ResolveCardEffect()
+{
+	return true;
+}
+

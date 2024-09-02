@@ -26,8 +26,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	/*ToDo:구현해야 로직이 실행됩니다.*/
-	TArray<FGameplayTag> GetRandomTagsByWeights(const TMap<FGameplayTag, float>& WeightedTags, int InAmount)
-	{
-		return{};
-	}
+	TArray<FGameplayTag> GetRandomTagsByWeights(const TMap<FGameplayTag, float>& WeightedTags, int InAmount);
+
+	bool PickTagFromWeightAndWeightSum(TMap<FGameplayTag,float> WeightedTags, float WeightSum, FGameplayTag& PickedTag);
 };

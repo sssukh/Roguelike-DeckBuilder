@@ -12,7 +12,7 @@ struct FDoOnce
 public:
 	UPROPERTY(BlueprintReadWrite)
 	bool bDonOnce;
-
+	
 	FORCEINLINE FDoOnce();
 	explicit FORCEINLINE FDoOnce(bool bStartClosed);
 	

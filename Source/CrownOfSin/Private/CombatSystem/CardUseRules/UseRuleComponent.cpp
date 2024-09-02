@@ -3,6 +3,8 @@
 
 #include "CombatSystem/CardUseRules/UseRuleComponent.h"
 
+#include "Core/CosEnumStruct.h"
+
 
 // Sets default values for this component's properties
 UUseRuleComponent::UUseRuleComponent()
@@ -31,5 +33,15 @@ void UUseRuleComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+bool UUseRuleComponent::CheckIfUseAllowed(FUseRule UseRuleData, FString& FailMessage)
+{
+	return true;
+}
+
+bool UUseRuleComponent::ResolveUseConsequence(FUseRule UseRuleData)
+{
+	return true;
 }
 

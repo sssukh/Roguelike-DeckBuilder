@@ -21,6 +21,15 @@ enum class ECallGlobal : uint8
 	CallAfter
 };
 
+UENUM(BlueprintType)
+enum class ECardDataType : uint8
+{
+	Hand UMETA(Description = "Modify until it leaves the hand. 손에서 떠날 때 까지 변형된다."),
+	Deck UMETA(Description = "Modifies between level loads. 레벨 사이에서 변형된다."),
+	Base UMETA(Description = "Used to get the non-modified version. 변형되지 않은 원본을 받을 때 사용"),
+	Pile UMETA(Description = "Modify until combat ends. 전투가 종료할 때까지 변형된다.")
+};
+
 USTRUCT(BlueprintType)
 struct FObjectArray
 {
@@ -397,7 +406,7 @@ struct FCard : public FTableRowBase
 
 	// 카드 효과
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
-	FCardEffect CardEffects;
+	TArray<FCardEffect> CardEffects;
 
 	// 카드가 타겟을 지정하는지 여부
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
@@ -405,7 +414,7 @@ struct FCard : public FTableRowBase
 
 	// 카드의 사용 규칙
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
-	FUseRule UseRules;
+	TArray<FUseRule> UseRules;
 
 	// 카드 사용 후 발생하는 이벤트
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
@@ -522,23 +531,6 @@ struct FCardPattern : public FTableRowBase
 	int32 RepeatFrom;
 };
 
-USTRUCT(BlueprintType)
-struct FEncounter
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter")
-	FGameplayTagContainer GameplayTags;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter", meta = (RowType="/Script/CrownOfSin.Minion"))
-	TArray<FDataTableRowHandle> Minions;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter", meta = (RowType="/Script/CrownOfSin.Card"))
-	FDataTableRowHandle Reward;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter")
-	FString Level = FString(TEXT("Arena"));
-};
 
 USTRUCT(BlueprintType)
 struct FHeroDeck

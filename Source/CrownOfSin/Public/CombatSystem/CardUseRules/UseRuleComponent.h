@@ -7,6 +7,9 @@
 #include "UseRuleComponent.generated.h"
 
 
+class ACardBase;
+struct FUseRule;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UUseRuleComponent : public UActorComponent
 {
@@ -23,4 +26,16 @@ protected:
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	UFUNCTION(BlueprintCallable)
+	virtual bool CheckIfUseAllowed(FUseRule UseRuleData, FString& FailMessage);
+
+	UFUNCTION(BlueprintCallable)
+	virtual bool ResolveUseConsequence(FUseRule UseRuleData);
+	/*========================================================================================
+	*	Field Members
+	=========================================================================================*/
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Variable | Use Rule")
+	ACardBase* ParentCard;
 };

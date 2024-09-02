@@ -1,8 +1,8 @@
-"F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Source\RD\src\rd_framework_cpp\src\main\serialization\SerializationCtx.cpp"
-/FI"F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RD\Definitions.h"
-/Fo"F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RD\SerializationCtx.cpp.obj"
-/sourceDependencies "F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RD\SerializationCtx.cpp.dep.json"
-@"F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RD\RD.Shared.rsp"
+"C:\UnrealEngine\COS\Plugins\Developer\RiderLink\Source\RD\src\rd_framework_cpp\src\main\serialization\SerializationCtx.cpp"
+/FI"C:\UnrealEngine\COS\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RD\Definitions.h"
+/Fo"C:\UnrealEngine\COS\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RD\SerializationCtx.cpp.obj"
+/sourceDependencies "C:\UnrealEngine\COS\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RD\SerializationCtx.cpp.dep.json"
+@"C:\UnrealEngine\COS\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RD\RD.Shared.rsp"
 /Zc:inline
 /nologo
 /Oi

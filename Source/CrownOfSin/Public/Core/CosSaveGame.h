@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "CosEnumStruct.h"
 #include "GameFramework/SaveGame.h"
+#include "NodeSystem/NodeEnumStruct.h"
 #include "CosSaveGame.generated.h"
 
 /**

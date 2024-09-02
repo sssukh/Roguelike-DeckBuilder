@@ -378,3 +378,23 @@ bool UCosGameInstance::IsDebugMode_Implementation()
 {
 	return bDebugMode;
 }
+
+TArray<FDataTableRowHandle> UCosGameInstance::GetDoneStoryEncountersFromInstance_Implementation()
+{
+	return DoneStoryEncounters;
+}
+
+void UCosGameInstance::SetCurrentEncounterInInstance_Implementation(FEncounter InCurrentEncoutner)
+{
+	CurrentEncounter = InCurrentEncoutner;
+}
+
+void UCosGameInstance::AddDoneStoryEncounterToInstance_Implementation(FDataTableRowHandle StoryEncounter)
+{
+	DoneStoryEncounters.Add(StoryEncounter);
+}
+
+
+
+
+

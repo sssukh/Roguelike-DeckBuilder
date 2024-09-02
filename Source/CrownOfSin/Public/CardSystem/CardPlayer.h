@@ -25,9 +25,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Card Player | Debug")
+	void DisplayScreenLogMessage(FText Message, FColor Color);
+	
+	/*========================================================================================
+	*	Field Members
+	=========================================================================================*/
 public:
 	UPROPERTY()
-	TObjectPtr<UUW_Layout_Cos> PlayerUI; 
+	TObjectPtr<UUW_Layout_Cos> PlayerUI;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
 	UChanceManagerComponent* ChanceManagerComponent;
 };

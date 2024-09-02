@@ -3,6 +3,8 @@
 
 #include "CombatSystem/TargetSystem/TargetingComponent.h"
 
+#include "Core/CosEnumStruct.h"
+
 
 // Sets default values for this component's properties
 UTargetingComponent::UTargetingComponent()
@@ -32,4 +34,15 @@ void UTargetingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 	// ...
 }
+
+bool UTargetingComponent::FindValidTargets(TArray<AActor*> SpecifiedTargets, FCardEffect CardEffect, ACardBase* Card,
+	bool Preview, TArray<AActor*>& ValidTargets)
+{
+	ValidTargets = TArray<AActor*>();
+	return true;
+}
+
+
+
+
 
