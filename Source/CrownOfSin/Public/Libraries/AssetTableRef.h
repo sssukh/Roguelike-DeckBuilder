@@ -14,15 +14,15 @@
  */
 namespace AssetRefPath
 {
-	// const FString DataTablePath = TEXT("DataTable'/Game/OverLoad/AssetRef/DT_DataTable.DT_DataTable'");
-	// const FString TexturesPath = TEXT("DataTable'/Game/OverLoad/AssetRef/DT_Texture.DT_Texture'");
-	// const FString MeshesPath = TEXT("DataTable'/Game/OverLoad/AssetRef/DT_Mesh.DT_Mesh'");
-
+	const FString MeshesPath = TEXT("DataTable'/Game/CrownOfSin/AssetRef/DT_StaticMesh.DT_StaticMesh'");
 	const FString MaterialPath = TEXT("DataTable'/Game/CrownOfSin/AssetRef/DT_Materials.DT_Materials'");
+	const FString BluePrintPath = TEXT("DataTable'/Game/CrownOfSin/AssetRef/DT_BluePrints.DT_BluePrints'");
+	const FString TexturesPath = TEXT("DataTable'/Game/CrownOfSin/AssetRef/DT_Textures.DT_Textures'");
+	
 
-	// const FString BluePrintPath = TEXT("DataTable'/Game/Game_/AssetRef/AssetRef_BluePrint.AssetRef_BluePrint'");
 
-	// const FString BluePrintAbilityPath = TEXT("DataTable'/Game/Game_/AssetRef/AssetRef_Ability.AssetRef_Ability'");
+	// const FString DataTablePath = TEXT("DataTable'/Game/OverLoad/AssetRef/DT_DataTable.DT_DataTable'");
+
 
 	// const FString WidgetPath = TEXT("DataTable'/Game/Game_/AssetRef/AssetRef_Widget.AssetRef_Widget'");
 	// const FString SoundPath = TEXT("DataTable'/Game/Game_/AssetRef/AssetRef_Sounds.AssetRef_Sounds'");
@@ -61,8 +61,7 @@ public:
 
 	// 지정된 DataTable의 행 이름을 사용하여 T 유형의 클래스를 찾습니다.
 	template <typename T>
-	static TSubclassOf<T> FindClassFromDataTable(const FString& DataTablePath, const FName& RowName,
-	                                             bool bBluePrint = false)
+	static TSubclassOf<T> FindClassFromDataTable(const FString& DataTablePath, const FName& RowName, bool bBluePrint = false)
 	{
 		FString AssetPath;
 		if (!VerifyConstructorContext() || !TryGetAssetPathFromDataTable(DataTablePath, RowName, AssetPath))

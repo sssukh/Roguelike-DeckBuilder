@@ -11,17 +11,17 @@ namespace CosGameTags
 	
 	
 	UE_DEFINE_GAMEPLAY_TAG(Event_Action_ResourceChange,TEXT("Event.Action.ResourceChange"));
-	UE_DEFINE_GAMEPLAY_TAG(Event_Action_DrawAction,TEXT("Event.Action.Draw"));
-	UE_DEFINE_GAMEPLAY_TAG(Event_Action_FlickCardAction,TEXT("Event.Action.FlickCard"));
-	UE_DEFINE_GAMEPLAY_TAG(Event_Action_AutoPlayAction,TEXT("Event.Action.AutoPlay"));
-	UE_DEFINE_GAMEPLAY_TAG(Event_Action_NewPlayerTurnAction,TEXT("Event.Action.NewPlayerTurn"));
-	UE_DEFINE_GAMEPLAY_TAG(Event_Action_UseCardAction,TEXT("Event.Action.UseCard"));
-	UE_DEFINE_GAMEPLAY_TAG(Event_Action_VictoryAction,TEXT("Event.Action.Victory"));
-	UE_DEFINE_GAMEPLAY_TAG(Event_Action_GameOverAction,TEXT("Event.Action.GameOver"));
-	UE_DEFINE_GAMEPLAY_TAG(Event_Action_GenerateCardAction,TEXT("Event.Action.GenerateCard"));
-	UE_DEFINE_GAMEPLAY_TAG(Event_Action_WinGameAction,TEXT("Event.Action.WinGame"));
-	UE_DEFINE_GAMEPLAY_TAG(Event_Action_ModifyStatusMaxAction,TEXT("Event.Action.ModifyStatusMax"));
-	UE_DEFINE_GAMEPLAY_TAG(Event_Action_ReturnCardToHandAction,TEXT("Event.Action.ReturnCardToHand"));
+	UE_DEFINE_GAMEPLAY_TAG(Event_Action_Draw,TEXT("Event.Action.Draw"));
+	UE_DEFINE_GAMEPLAY_TAG(Event_Action_FlickCard,TEXT("Event.Action.FlickCard"));
+	UE_DEFINE_GAMEPLAY_TAG(Event_Action_AutoPlay,TEXT("Event.Action.AutoPlay"));
+	UE_DEFINE_GAMEPLAY_TAG(Event_Action_NewPlayerTurn,TEXT("Event.Action.NewPlayerTurn"));
+	UE_DEFINE_GAMEPLAY_TAG(Event_Action_UseCard,TEXT("Event.Action.UseCard"));
+	UE_DEFINE_GAMEPLAY_TAG(Event_Action_Victory,TEXT("Event.Action.Victory"));
+	UE_DEFINE_GAMEPLAY_TAG(Event_Action_GameOver,TEXT("Event.Action.GameOver"));
+	UE_DEFINE_GAMEPLAY_TAG(Event_Action_GenerateCard,TEXT("Event.Action.GenerateCard"));
+	UE_DEFINE_GAMEPLAY_TAG(Event_Action_WinGame,TEXT("Event.Action.WinGame"));
+	UE_DEFINE_GAMEPLAY_TAG(Event_Action_ModifyStatusMax,TEXT("Event.Action.ModifyStatusMax"));
+	UE_DEFINE_GAMEPLAY_TAG(Event_Action_ReturnCardToHand,TEXT("Event.Action.ReturnCardToHand"));
 
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Draw, TEXT("Event.Card.Draw"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Discard, TEXT("Event.Card.Discard"));
@@ -72,9 +72,9 @@ namespace CosGameTags
 	UE_DEFINE_GAMEPLAY_TAG(Event_Reshuffle, TEXT("Event.Reshuffle"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_ManaGain, TEXT("Event.ManaGain"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_DeckSetupDone, TEXT("Event.DeckSetupDone"));
+	
+	UE_DEFINE_GAMEPLAY_TAG(Event, TEXT("Event"))
 
-
-
-
-
+	UE_DEFINE_GAMEPLAY_TAG(Pile, TEXT("Pile"))
+	UE_DEFINE_GAMEPLAY_TAG(Pile_Hand, TEXT("Pile.Hand"))
 }

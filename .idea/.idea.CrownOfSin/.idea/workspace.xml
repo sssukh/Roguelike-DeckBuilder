@@ -10,33 +10,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08d416e-d58c-4005-934b-8cc216a53dd9" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/Libraries/FunctionLibrary_Card.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/Libraries/FunctionLibrary_Card.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.CrownOfSin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrownOfSin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Core/BP_Card.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/Core/BP_Card.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor.modules" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor.modules" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Intermediate/Build/Win64/x64/UnrealEditor/Development/RD/UnrealEditor-RD.sup.exp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Intermediate/Build/Win64/x64/UnrealEditor/Development/RiderBlueprint/UnrealEditor-RiderBlueprint.sup.exp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Intermediate/Build/Win64/x64/UnrealEditor/Development/RiderDebuggerSupport/UnrealEditor-RiderDebuggerSupport.sup.exp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Intermediate/Build/Win64/x64/UnrealEditor/Development/RiderGameControl/UnrealEditor-RiderGameControl.sup.exp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Intermediate/Build/Win64/x64/UnrealEditor/Development/RiderLC/UnrealEditor-RiderLC.sup.exp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Intermediate/Build/Win64/x64/UnrealEditor/Development/RiderLink/UnrealEditor-RiderLink.sup.exp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Intermediate/Build/Win64/x64/UnrealEditor/Development/RiderLogging/UnrealEditor-RiderLogging.sup.exp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Intermediate/Build/Win64/x64/UnrealEditor/Development/RiderShaderInfo/UnrealEditor-RiderShaderInfo.sup.exp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Intermediate/FileSystemMappings.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Intermediate/FileSystemMappings.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Private/CardSystem/CardBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/CardSystem/CardBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Private/Core/DispatcherHubComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/Core/DispatcherHubComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Private/NodeSystem/MapEvent_Treasure.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/NodeSystem/MapEvent_Treasure.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Private/NodeSystem/NodeBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/NodeSystem/NodeBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Private/Utilities/CosGameplayTags.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/Utilities/CosGameplayTags.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/CardSystem/CardAction/Action_Effect.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/CardSystem/CardAction/Action_Effect.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/CardSystem/CardBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/CardSystem/CardBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/Core/DispatcherHubComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/Core/DispatcherHubComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/Libraries/FunctionLibrary_Utility.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/Libraries/FunctionLibrary_Utility.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/NodeSystem/MapEvent_Treasure.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/NodeSystem/MapEvent_Treasure.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/Utilities/CosGameplayTags.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/Utilities/CosGameplayTags.h" afterDir="false" />
-    </list>
+    <list default="true" id="a08d416e-d58c-4005-934b-8cc216a53dd9" name="변경" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -516,7 +490,7 @@
       <workItem from="1725207180832" duration="1022000" />
       <workItem from="1725257136364" duration="24577000" />
       <workItem from="1725341151133" duration="9417000" />
-      <workItem from="1725351525257" duration="5380000" />
+      <workItem from="1725351525257" duration="8727000" />
     </task>
     <servers />
   </component>

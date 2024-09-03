@@ -122,8 +122,11 @@ public:
 	virtual TArray<int32> GetVisitedMapNodesFromInstance_Implementation() override;
 
 	virtual bool IsDebugMode_Implementation() override;
+	
+	virtual TArray<FStatusData> GetArtifactsFromInstance_Implementation() override;
 
 	virtual TArray<FDataTableRowHandle> GetDoneStoryEncountersFromInstance_Implementation() override;
+
 
 	virtual void SetCurrentEncounterInInstance_Implementation(FEncounter InCurrentEncoutner) override;
 

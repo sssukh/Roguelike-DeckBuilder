@@ -35,11 +35,7 @@
 /NODEFAULTLIB:"LIBCD"
 /NODEFAULTLIB:"LIBCPD"
 /FUNCTIONPADMIN:6
-"F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\RiderDebuggerSupport\BlueprintStackGetter.cpp.obj"
-"F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\RiderDebuggerSupport\DebugLogger.cpp.obj"
-"F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\RiderDebuggerSupport\RiderDebuggerSupport.cpp.obj"
-"F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\RiderDebuggerSupport\UnrealFunctions.cpp.obj"
-"F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\RiderDebuggerSupport\WideStringWrapper.cpp.obj"
+"F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\RiderDebuggerSupport\Module.RiderDebuggerSupport.cpp.obj"
 "F:\UnrealProjects\CrownOfSin\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\RiderDebuggerSupport\Default.rc2.res"
 "..\Intermediate\Build\Win64\x64\UnrealEditor\Development\Core\UnrealEditor-Core.lib"
 "..\Intermediate\Build\Win64\x64\UnrealEditor\Development\CoreUObject\UnrealEditor-CoreUObject.lib"

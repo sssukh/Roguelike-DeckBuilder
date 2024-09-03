@@ -6,11 +6,11 @@
 #include "Interfaces/Interface_CardGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Libraries/AssetTableRef.h"
 #include "Utilities/CosLog.h"
 #include "NodeSystem/MapEventComponent.h"
 #include "NodeSystem/NodeEnumStruct.h"
 #include "UI/UW_Layout_Cos.h"
-
 
 
 ANodeBase::ANodeBase()
@@ -26,6 +26,11 @@ ANodeBase::ANodeBase()
 
 	CrossMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CrossMesh"));
 	CrossMesh->SetupAttachment(NodeMesh);
+
+	if (UStaticMesh* SM_Edge = FAssetReferenceUtility::LoadAssetFromDataTable<UStaticMesh>(AssetRefPath::MeshesPath, FName("SM_Edge")))
+	{
+		SplineMesh = SM_Edge;
+	}
 }
 
 void ANodeBase::BeginPlay()
@@ -116,7 +121,7 @@ void ANodeBase::AddConnectionSplines()
 		SplineComponent->SetLocationAtSplinePoint(0, StartLocation + DirectionOffset, ESplineCoordinateSpace::World);
 		SplineComponent->SetLocationAtSplinePoint(SplineComponent->GetNumberOfSplinePoints() - 1, EndLocation - DirectionOffset, ESplineCoordinateSpace::World);
 
-		DisplaySplinePath(SplineComponent,ConnectionIndex);
+		DisplaySplinePath(SplineComponent, ConnectionIndex);
 	}
 }
 

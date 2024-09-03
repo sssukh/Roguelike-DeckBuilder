@@ -72,8 +72,13 @@ public:
 	bool IsDebugMode();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
+
 	void SetCurrentEncounterInInstance(FEncounter CurrentEncoutner);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	void AddDoneStoryEncounterToInstance(FDataTableRowHandle StoryEncounter);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
+	TArray<FStatusData> GetArtifactsFromInstance();
+
 };

@@ -1,5 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
@@ -144,6 +143,6 @@ public:
 	// 확인 필요 <class 정보, 객체> 맵이다.
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Variables | Card")
 	TMap<TSubclassOf<UUseRuleComponent>,UUseRuleComponent*> UseRuleInstances;
-
+	
 	
 };

@@ -1,5 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,17 +7,16 @@
 #include "MapEventComponent.generated.h"
 
 
-UCLASS(ClassGroup=(Custom),Blueprintable, meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=("Cos"), meta=(BlueprintSpawnableComponent))
+
 class CROWNOFSIN_API UMapEventComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UMapEventComponent();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:

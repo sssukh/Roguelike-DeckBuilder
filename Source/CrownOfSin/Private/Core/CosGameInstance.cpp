@@ -395,6 +395,7 @@ void UCosGameInstance::AddDoneStoryEncounterToInstance_Implementation(FDataTable
 }
 
 
-
-
-
+TArray<FStatusData> UCosGameInstance::GetArtifactsFromInstance_Implementation()
+{
+	return Artifacts;
+}
