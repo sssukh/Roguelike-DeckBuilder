@@ -21,6 +21,27 @@ enum class ECallGlobal : uint8
 	CallAfter
 };
 
+UENUM(BlueprintType)
+enum class EStatusSlot : uint8
+{
+	None,
+	Active,
+	Passive,
+	Bar,
+	OverlapBar,
+	Artifact,
+	Currency
+};
+
+UENUM(BlueprintType)
+enum class EStatusTextAlignment : uint8
+{
+	None,
+	BottomRight,
+	Center,
+	BottomLeft
+};
+
 USTRUCT(BlueprintType)
 struct FObjectArray
 {
@@ -157,6 +178,36 @@ struct FMinion : public FTableRowBase
 };
 
 USTRUCT(BlueprintType)
+struct FToolTip : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tool Tip")
+	FText Title;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tool Tip")
+	FText UnValued;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tool Tip")
+	FText Valued;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tool Tip")
+	FText Flavor;
+};
+
+USTRUCT(BlueprintType)
+struct FToolTipValue
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tool Tip Value")
+	FDataTableRowHandle ToolTipTable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tool Tip Value")
+	bool bValued;
+};
+
+USTRUCT(BlueprintType)
 struct FStatusData
 {
 	GENERATED_BODY()
@@ -199,6 +250,34 @@ struct FStatusData
 		}
 		return *this;
 	}
+};
+
+
+USTRUCT(BlueprintType)
+struct FStatusAppearance
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status Appearance")
+	int32 StatusValue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status Appearance")
+	UTexture2D* Icon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status Appearance")
+	FLinearColor Tint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status Appearance")
+	EStatusSlot SlotType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status Appearance")
+	EStatusTextAlignment TextAlignment;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status Appearance")
+	TArray<FToolTipValue> Tooltips;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status Appearance")
+	FText FriendlyName;
 };
 
 USTRUCT(BlueprintType)

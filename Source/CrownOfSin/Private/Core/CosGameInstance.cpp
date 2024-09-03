@@ -378,3 +378,8 @@ bool UCosGameInstance::IsDebugMode_Implementation()
 {
 	return bDebugMode;
 }
+
+TArray<FStatusData> UCosGameInstance::GetArtifactsFromInstance_Implementation()
+{
+	return Artifacts;
+}

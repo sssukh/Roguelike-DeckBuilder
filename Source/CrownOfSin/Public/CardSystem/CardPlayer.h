@@ -1,33 +1,60 @@
-﻿
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "GameFramework/Actor.h"
+#include "Interfaces/Interface_CardTarget.h"
 #include "CardPlayer.generated.h"
 
+class UDispatcherHubLocalComponent;
+class UPileComponent;
+class UInputMappingContext;
 class UChanceManagerComponent;
 class UUW_Layout_Cos;
 
 UCLASS()
-class CROWNOFSIN_API ACardPlayer : public AActor
+class CROWNOFSIN_API ACardPlayer : public AActor,public IInterface_CardTarget
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	ACardPlayer();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	UPROPERTY()
-	TObjectPtr<UUW_Layout_Cos> PlayerUI; 
+	void GeneratePileTagLookup();
+
+	/*========================================================================================
+	*	Iinterface_CardTarget
+	=========================================================================================*/
+public:
+	virtual int32 AddToStatus_Implementation(TSubclassOf<UStatusComponent> InStatusClass, int32 InAmount, bool bIsShowSplash, UObject* InPayLoad) override;
+
+	
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Config|Setup")
+	UInputMappingContext* DefaultIMC;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Config|Setup")
+	TSubclassOf<UUW_Layout_Cos> WBP_LayoutClass;
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
 	UChanceManagerComponent* ChanceManagerComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
+	UDispatcherHubLocalComponent* DispatcherHubLocalComponent;
+
+
+	UPROPERTY(BlueprintReadWrite, Category="Card Player")
+	TObjectPtr<UUW_Layout_Cos> PlayerUI;
+
+	UPROPERTY(BlueprintReadWrite, Category="Card Player")
+	TMap<FGameplayTag, UPileComponent*> PileTagLookup;
 };

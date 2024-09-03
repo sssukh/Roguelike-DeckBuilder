@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 using UnrealBuildTool;
 
@@ -12,7 +11,8 @@ public class CrownOfSin : ModuleRules
 		{
 			"Core", "CoreUObject", "Engine", "InputCore",
 			"Slate","SlateCore","UMG",
-			"GameplayTags","Niagara"
+			"GameplayTags","Niagara",
+			"EnhancedInput"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[]
