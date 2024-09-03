@@ -30,6 +30,8 @@ enum class ECardDataType : uint8
 	Base UMETA(Description = "Used to get the non-modified version. 변형되지 않은 원본을 받을 때 사용"),
 	Pile UMETA(Description = "Modify until combat ends. 전투가 종료할 때까지 변형된다.")
 };
+
+UENUM(BlueprintType)
 enum class EStatusSlot : uint8
 {
 	None,

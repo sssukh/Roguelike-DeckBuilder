@@ -4,10 +4,11 @@
 #include "CardSystem/CardBase.h"
 
 #include "CardSystem/CardEffectComponent.h"
-#include "CardSystem/CardAction/Action_Effect.h"
+#include "CardSystem/CardActions/Action_Effect.h"
 #include "CombatSystem/CardUseRules/UseRuleComponent.h"
 #include "CombatSystem/TargetSystem/TargetingComponent.h"
 #include "CombatSystem/TargetSystem/Targeting_UnTargetedComponent.h"
+#include "Core/DispatcherHubComponent.h"
 #include "Interfaces/Interface_CardTarget.h"
 #include "Libraries/FunctionLibrary_Event.h"
 #include "Libraries/FunctionLibrary_Utility.h"
@@ -61,7 +62,7 @@ bool ACardBase::AttemptUseCard(TArray<AActor*> Targets, bool SkipPlayableCheck, 
 void ACardBase::UseCard(bool SkipConsequences, bool AutoPlay)
 {
 	// DispatcherHub에 이벤트 등록
-	UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(CosGameTags::Event_Action_UseCardAction,
+	UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(CosGameTags::Event_Action_UseCard,
 		this,nullptr,1.0f,nullptr,FGameplayTagContainer());
 
 	FGameplayTagContainer TagContainer;
