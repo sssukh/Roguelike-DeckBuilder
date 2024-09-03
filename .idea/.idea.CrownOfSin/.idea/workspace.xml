@@ -14,10 +14,66 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrownOfSin/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrownOfSin/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrownOfSin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrownOfSin/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrownOfSin/Widgets/WBP_Layout_RLDB.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrownOfSin/Widgets/WBP_Layout_RLDB.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardEffects/BP_CardEffect_ChangeNodeMap.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardEffects/BP_CardEffect_ChangeNodeMap.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardEffects/Story/BP_CardEffect_Story_ArenaEncounter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardEffects/Story/BP_CardEffect_Story_ArenaEncounter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardEffects/Story/BP_CardEffect_Story_ModHeroHealth.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardEffects/Story/BP_CardEffect_Story_ModHeroHealth.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardUseRules/BP_UseRule.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardUseRules/BP_UseRule.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardUseRules/BP_UseRule_StatCost.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardUseRules/BP_UseRule_StatCost.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardUseRules/BP_UseRule_Unplayable.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardUseRules/BP_UseRule_Unplayable.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Core/BP_Card.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/Core/BP_Card.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Core/BP_ChanceManagerComponent.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/Core/BP_ChanceManagerComponent.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Core/BP_DispatcherHubComponent.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/Core/BP_DispatcherHubComponent.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Interfaces/DELETE_BPI_CardGameInstance.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Libraries/BPFL_Card.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/Libraries/BPFL_Card.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Libraries/BPML_Card.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/Libraries/BPML_Card.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/NodeMap/BP_MapEvent_Treasure.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/NodeMap/BP_MapEvent_Treasure.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/NodeMap/DELETE_BP_MapEventComponent.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/NodeMap/DELETE_BP_MapEventComponent.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Piles/BP_PileComponent_Deck.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/Piles/BP_PileComponent_Deck.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Statuses/Artifacts/BP_Status_Artifact_BrokenShield.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/Statuses/Artifacts/BP_Status_Artifact_BrokenShield.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Statuses/CardStatuses/BP_Status_Card_ManaReduceOnDraw.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/Statuses/CardStatuses/BP_Status_Card_ManaReduceOnDraw.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Structs/FCard.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/Structs/FCard.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Structs/FStatus.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Structs/FUseRule.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Data/DT_Artifacts.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Data/DT_Artifacts.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Widgets/WBP_ArtifactRewardScreen.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Widgets/WBP_ArtifactRewardScreen.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Widgets/WBP_CardVisual.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Widgets/WBP_CardVisual.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Widgets/WBP_GameOver.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Widgets/WBP_GameOver.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/RLDB/Widgets/WBP_PlayerStatusIndicator.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Widgets/WBP_PlayerStatusIndicator.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RD-0017.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RD-0021.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RD-0022.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RD-0023.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderBlueprint-0017.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderBlueprint-0021.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderBlueprint-0022.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderBlueprint-0023.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderDebuggerSupport-0017.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderDebuggerSupport-0021.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderDebuggerSupport-0022.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderDebuggerSupport-0023.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderGameControl-0017.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderGameControl-0021.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderGameControl-0022.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderGameControl-0023.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderLC-0017.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderLC-0021.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderLC-0022.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderLC-0023.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderLink-0017.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderLink-0021.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderLink-0022.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderLink-0023.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderLogging-0017.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderLogging-0021.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderLogging-0022.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderLogging-0023.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderShaderInfo-0017.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderShaderInfo-0021.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderShaderInfo-0022.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderShaderInfo-0023.pdb" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor.modules" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Binaries/Win64/UnrealEditor.modules" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Intermediate/FileSystemMappings.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Intermediate/FileSystemMappings.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Private/CardSystem/CardBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/CardSystem/CardBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/Core/CosEnumStruct.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/Core/CosEnumStruct.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -486,7 +542,8 @@
       <workItem from="1725257136364" duration="24577000" />
       <workItem from="1725341151133" duration="9417000" />
       <workItem from="1725351525257" duration="9335000" />
-      <workItem from="1725379623422" duration="496000" />
+      <workItem from="1725379623422" duration="918000" />
+      <workItem from="1725380561614" duration="630000" />
     </task>
     <servers />
   </component>
