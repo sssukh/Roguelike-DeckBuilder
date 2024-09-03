@@ -11,6 +11,7 @@
 #include "Interfaces/Interface_CardTarget.h"
 #include "Libraries/FunctionLibrary_Event.h"
 #include "Libraries/FunctionLibrary_Utility.h"
+#include "Utilities/CosGameplayTags.h"
 #include "Utilities/CosLog.h"
 
 
@@ -51,25 +52,32 @@ bool ACardBase::AttemptUseCard(TArray<AActor*> Targets, bool SkipPlayableCheck, 
 		UseCard(SkipConsequences,AutoPlay);
 		return true;
 	}
-	
+
+	// 사용불가능한 상태이므로 에러메시지 출력
 	UFunctionLibrary_Utility::SendScreenLogMessage(FText::FromString(FailMessage),FColor::Red);
 	return false;
 }
 
 void ACardBase::UseCard(bool SkipConsequences, bool AutoPlay)
 {
+	// DispatcherHub에 이벤트 등록
+	UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(CosGameTags::Event_Action_UseCardAction,
+		this,nullptr,1.0f,nullptr,FGameplayTagContainer());
+
+	FGameplayTagContainer TagContainer;
+	if(AutoPlay)
+		TagContainer.AddTag(CosGameTags::Flag_AutoPlayed);
 	
-	// 이벤트 태그 만들어줘야한다.
-	//UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub();
+	DispatcherHubComponent->CallEventWithCallTags(CosGameTags::Event_Card_PrePlay,this,nullptr,ECallGlobal::CallAfter,TagContainer);
 
-	// CallEventWithCallTags() 구현 필요 및 이벤트 태그 필요
-	//DispatcherHubComponent->CallEventWithCallTags()
-
+	// 사용한 카드의 사용 후처리를 진행한다.
+	// 규칙들을 순회하면서 결과를 적용한다.
 	if(!SkipConsequences)
 	{
 		ResolveUseRuleConsequences();
 	}
 
+	// repetitions 초기화
 	CurrentRepetitions = -1;
 
 	ContinueToNextRepetition();
@@ -77,7 +85,7 @@ void ACardBase::UseCard(bool SkipConsequences, bool AutoPlay)
 
 bool ACardBase::CheckIfPlayable(FString& FailMessage)
 {
-	// 카드의 멤버변수에서 지정된 타입의 규칙을 가져온다.
+	// 카드의 멤버변수에서 CardDataHand의 Rule을 가져온다.
 	TArray<FUseRule> Rules = GetCardUseRules(ECardDataType::Hand);
 
 	for (FUseRule Rule : Rules)
@@ -87,6 +95,8 @@ bool ACardBase::CheckIfPlayable(FString& FailMessage)
 
 		// 사용해도 되는지 확인한다.
 		// 각 UseRuleComponent를 상속받은 객체들의 재정의된 내용이 실행된다.
+		// TODO : 아직 상속받은 컴포넌트의 내용 정의 안됨
+		// 예를 들어 StatCost에서는 이 카드의 지정된 Cost가 CardPlayer의 CostValue보다 낮아야만 사용가능이 된다.
 		if(!RuleComponent->CheckIfUseAllowed(Rule,FailMessage))
 		{
 			return false;
@@ -108,7 +118,8 @@ void ACardBase::ResolveUseRuleConsequences()
 
 	for (FUseRule UseRule : UseRules)
 	{
-		// UseRuleComponent 상속받은 객체 내부에 정의된 내용을 호출.
+		// UseRuleComponent 상속받은 객체 내부에 정의된 내용을 호출한다.
+		// 예를 들어 StatCost에서는 카드를 사용하므로서 소모한 마나를 빼는 작업을 한다.
 		UUseRuleComponent* RuleComponent = *UseRuleInstances.Find(UseRule.Rule);
 
 		RuleComponent->ResolveUseConsequence(UseRule);
@@ -117,8 +128,10 @@ void ACardBase::ResolveUseRuleConsequences()
 
 void ACardBase::ContinueToNextRepetition()
 {
+	// 반복 횟수 1 증가
 	++CurrentRepetitions;
 
+	// 
 	if(GetCardRepetitions(ECardDataType::Hand)<=CurrentRepetitions)
 	{
 		if(CurrentRepetitions>0)
@@ -359,6 +372,21 @@ void ACardBase::QueueCardEffectAction(AActor* TargetActor, AActor* SourcePuppet,
 {
 	if(!IsValid(CardEffect->EffectAction))
 		return;
-	// GetWorld()->SpawnActorDeferred<CardEffect->EffectAction>(CardEffect->EffectAction::StaticClass(),FTransform::Identity,nullptr,
-	// 	nullptr,ESpawnActorCollisionHandlingMethod::Undefined,ESpawnActorScaleMethod::SelectDefaultAtRuntime);
+	AAction_Effect* ActionEffect = GetWorld()->SpawnActorDeferred<AAction_Effect>(CardEffect->EffectAction,
+	                                                          FTransform::Identity, nullptr,
+	                                                          nullptr,ESpawnActorCollisionHandlingMethod::Undefined,ESpawnActorScaleMethod::SelectDefaultAtRuntime);
+	if(!CardEffect)
+	{
+		COS_LOG_SCREEN(TEXT("ACardBase : ActionEffect가 생성되지 않습니다."));
+		return;
+	}
+	
+	ActionEffect->Target = TargetActor;
+	ActionEffect->SourcePuppet = SourcePuppet;
+	if(bAnimateSourcePuppet)
+		ActionEffect->HeroAnim = CardEffect->HeroAnim;
+	ActionEffect->Effect = GetCardEffects(ECardDataType::Hand)[EffectLoopIndex];
+		
+	ActionEffect->FinishSpawning(FTransform::Identity);
+	
 }

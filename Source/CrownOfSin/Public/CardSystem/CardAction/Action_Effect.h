@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "CardAction.h"
+#include "GameplayTagContainer.h"
+#include "Core/CosEnumStruct.h"
 #include "Action_Effect.generated.h"
 
 UCLASS()
@@ -22,4 +24,26 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	/*========================================================================================
+	*	Field Members
+	=========================================================================================*/
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Action Effect")
+	AActor* Target;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Action Effect")
+	AActor* SourcePuppet;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Action Effect")
+	FGameplayTagContainer AnimTags;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Action Effect")
+	FGameplayTag HeroAnim;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Action Effect")
+	FCardEffect Effect;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Action Effect")
+	float StartDelayIfNoAnim;
 };

@@ -18,6 +18,6 @@ public:
 	UFUNCTION(BlueprintCallable,Category="ATBTT|FunctionLibrary|Utility", meta=(WorldContext="WorldContextObject"))
 	static void DisplayWarningIfMultipleSingletons(const UObject* WorldContextObject,TSubclassOf<AActor> InClass);
 
-	UFUNCTION(BlueprintCallable,Category="ATBTT|FunctionLibrary|Utility", meta=(WorldContext="WorldContextObject"))
+	UFUNCTION(BlueprintCallable,Category="RLDB|FunctionLibrary|Utility", meta=(WorldContext="WorldContextObject"))
 	static void SendScreenLogMessage(FText Message, FColor Color);
 };

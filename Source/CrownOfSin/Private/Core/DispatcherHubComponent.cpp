@@ -51,7 +51,7 @@ void UDispatcherHubComponent::BindEventToHub(UObject* EventHolder, FGameplayTag 
 
 	if (IInterface_CardGameInstance::Execute_IsDebugMode(GameInstance))
 	{
-		UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_Debug_DispathcerHubUpdate, this, nullptr);
+		UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_Debug_DispatcherHubUpdate, this, nullptr);
 	}
 	
 	FObjectArray& EventArray = EventLists.FindOrAdd(EventTag);
@@ -169,6 +169,7 @@ void UDispatcherHubComponent::BindEventToHub(UObject* EventHolder, FGameplayTag 
 	//
 	// EventLists.Add(EventTag, FObjectArray(*LocalObjects));
 }
+
 
 bool UDispatcherHubComponent::IsValidEventHolder(UObject* EventHolder)
 {

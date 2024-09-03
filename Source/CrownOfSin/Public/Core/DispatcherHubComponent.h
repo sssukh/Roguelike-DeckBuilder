@@ -34,7 +34,9 @@ public:
 	//ToDo::구현해야함
 	bool CallEvent(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal) { return false; }
 
-
+	//ToDo::구현해야함
+	bool CallEventWithCallTags(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal,FGameplayTagContainer CallTags){return false;}
+	
 
 protected:
 	bool IsValidEventHolder(UObject* EventHolder);

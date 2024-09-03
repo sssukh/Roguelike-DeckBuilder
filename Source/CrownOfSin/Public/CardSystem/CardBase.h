@@ -10,6 +10,10 @@
 
 class UDispatcherHubComponent;
 
+/*툴킷의 중심 행위자.
+ *카드 액터는 눈에 보이지 않지만 WBP_Card를 통해 시각화되고 입력을 받습니다.
+ *카드 속성은 데이터 테이블(예: DT_Cards)에 정의됩니다.
+ *사용되면 TargetingComponent를 통해 대상을 찾고 최종적으로 이러한 대상에 대한 CardEffect를 해결하기 전에 모든 CardUseRules가 유효한지 확인합니다.*/
 UCLASS()
 class CROWNOFSIN_API ACardBase : public AActor
 {
@@ -27,17 +31,30 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
+	/*
+	 *  CheckIfPlayable()을 통해 Play가능 여부를 확인하고 UseCard를 호출한다.
+	 *  SkipPlayableCheck를 통해 가능 여부 확인하는 단계를 스킵할 수 있다.
+	 *  
+	 */
 	UFUNCTION(BlueprintCallable,Category = "Card")
-	bool AttemptUseCard(TArray<AActor*> Targets,bool SkipPlayableCheck, bool SkipConsequences, bool AutoPlay);
+	bool AttemptUseCard(TArray<AActor*> Targets, bool SkipPlayableCheck, bool SkipConsequences, bool AutoPlay);
 
-	// TODO 구현 필요 
+	/*
+	 * 
+	 */
 	UFUNCTION(BlueprintCallable,Category = "Card")
 	void UseCard(bool SkipConsequences, bool AutoPlay);
 
+	/*
+	 * 이 카드를 사용할 수 있는지 체크하는 함수이다.
+	 *  @ Params FailMessage : 에러 메세지를 받아오기위한 매개변수 
+	 */
 	UFUNCTION(BlueprintCallable,Category = "Card")
 	bool CheckIfPlayable(FString& FailMessage);
 
+	/*
+	 * 규칙들을 순회하면서 그 안에 정의된 결과를 적용한다(resolve).
+	 */
 	UFUNCTION(BlueprintCallable,Category = "Card")
 	void ResolveUseRuleConsequences();
 
@@ -105,6 +122,7 @@ public:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Variables | Card")
 	int32 TargetLoopIndex;
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Variables | Components")
 	TObjectPtr<UDispatcherHubComponent> DispatcherHubComponent;
 

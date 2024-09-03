@@ -21,6 +21,8 @@ public:
 
 	// UFUNCTION(BlueprintCallable, Category = "MapEvent Treasure")
 	virtual void RunMapEvent(FDataTableRowHandle EventData) override;
+
+	void RunEvent(FGameplayTag EventTag, UObject* CallingObject, bool bGlobal, UObject* Payload, FGameplayTagContainer CallTags);
 	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/

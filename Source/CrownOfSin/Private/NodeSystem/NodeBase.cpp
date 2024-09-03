@@ -213,7 +213,7 @@ void ANodeBase::ClickNode_Implementation()
 			UGameInstance* GameInstance = GetGameInstance();
 			if (!GameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
 			{
-				COS_LOG_SCREEN(TEXT("게임 인스턴스가 UInterface_CardInstance를 상속받지 않았습니다"));
+				COS_LOG_SCREEN(TEXT("게임 인스턴스가 UInterface_CardGameInstance를 상속받지 않았습니다"));
 				return;
 			}
 
