@@ -135,7 +135,7 @@ bool UMapEventComponent::ChooseRandomEncounter(FMapEvent MapEventData, TMap<FGam
 	return false;
 }
 
-FGameplayTagContainer UMapEventComponent::GetEncounterTags(UDataTable* DataTable, FName RowName)
+FGameplayTagContainer UMapEventComponent::GetEncounterTags(FDataTableRowHandle EncounterTags)
 {
 	return FGameplayTagContainer();
 }
@@ -156,7 +156,11 @@ bool UMapEventComponent::GetProperTableRow(FMapEvent MapEventData, TArray<FName>
 {
 	for (FName EncounterRow : EncounterRows)
 	{
-		FGameplayTagContainer TagContainer = GetEncounterTags(DataTable,EncounterRow);
+		FDataTableRowHandle RowHandle;
+		RowHandle.DataTable = DataTable;
+		RowHandle.RowName = EncounterRow;
+		
+		FGameplayTagContainer TagContainer = GetEncounterTags(RowHandle);
 
 		// TagWeights가 없거나 TagContainer 내부에 PickedTag가 있는 경우 true
 		// PickedTag는 TagWeights에서 변형된 WeightedTags에서 랜덤하게 뽑아낸 FGameplayTag이다.

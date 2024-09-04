@@ -17,9 +17,9 @@ UMapEvent_Arena::UMapEvent_Arena()
 
 
 
-FGameplayTagContainer UMapEvent_Arena::GetEncounterTags(UDataTable* DataTable, FName RowName)
+FGameplayTagContainer UMapEvent_Arena::GetEncounterTags(FDataTableRowHandle EncounterTags)
 {
-	return DataTable->FindRow<FEncounter>(RowName,TEXT("FEncounter"))->GameplayTags;
+	return EncounterTags.DataTable->FindRow<FEncounter>(EncounterTags.RowName,TEXT("FEncounter"))->GameplayTags;
 }
 
 void UMapEvent_Arena::RunMapEvent(FDataTableRowHandle EventData)

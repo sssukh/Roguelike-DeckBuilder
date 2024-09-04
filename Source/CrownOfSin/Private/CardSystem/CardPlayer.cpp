@@ -52,8 +52,7 @@ void ACardPlayer::BeginPlay()
 	DispatcherHubLocalComponent->BindEventToHub(this, CosGameTags::Event_TurnStart);
 
 	UFunctionLibrary_Event::BindEventToGlobalDispatcherHub(this, CosGameTags::Event_Death);
-
-
+	
 	if (!WBP_LayoutClass)
 	{
 		COS_LOG_SCREEN(TEXT("WBP Layout CLass를 설정해주세요!!!!!"));
@@ -133,4 +132,9 @@ int32 ACardPlayer::AddToStatus_Implementation(TSubclassOf<UStatusComponent> InSt
 	}
 
 	return 0;
+}
+
+void ACardPlayer::InitializeStoryEncounter_Implementation(FDataTableRowHandle EncounterData, bool bIsFirstScreen)
+{
+	PlayerUI->InitializeStoryEncounter(EncounterData,bIsFirstScreen);
 }

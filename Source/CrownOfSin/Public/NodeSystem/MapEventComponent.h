@@ -40,7 +40,7 @@ public:
 	 * 컴포넌트를 상속받은 곳에서 따로 정의된다.
 	 */
 	UFUNCTION(BlueprintCallable)
-	virtual FGameplayTagContainer GetEncounterTags(UDataTable* DataTable, FName RowName);
+	virtual FGameplayTagContainer GetEncounterTags(FDataTableRowHandle EncounterTags);
 
 	/*
 	 * WeightedTags에 들어있는 (가중치)/(총 가중치) 에 따른 확률로 Tag를 가져온다.

@@ -4,6 +4,7 @@
 #include "GameplayTagContainer.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/Interface_CardTarget.h"
+#include "Interfaces/Interface_StoryEncounter.h"
 #include "CardPlayer.generated.h"
 
 class UDispatcherHubLocalComponent;
@@ -13,7 +14,7 @@ class UChanceManagerComponent;
 class UUW_Layout_Cos;
 
 UCLASS()
-class CROWNOFSIN_API ACardPlayer : public AActor,public IInterface_CardTarget
+class CROWNOFSIN_API ACardPlayer : public AActor,public IInterface_CardTarget, public IInterface_StoryEncounter
 {
 	GENERATED_BODY()
 
@@ -42,7 +43,11 @@ public:
 public:
 	virtual int32 AddToStatus_Implementation(TSubclassOf<UStatusComponent> InStatusClass, int32 InAmount, bool bIsShowSplash, UObject* InPayLoad) override;
 
-	
+	/*========================================================================================
+	*	Iinterface_CardTarget
+	=========================================================================================*/
+public:
+	virtual void InitializeStoryEncounter_Implementation(FDataTableRowHandle EncounterData, bool bIsFirstScreen) override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Config|Setup")

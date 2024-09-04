@@ -18,6 +18,18 @@ void UFunctionLibrary_Event::BindEventToGlobalDispatcherHub(UObject* EventHolder
 	GlobalDispatcherHub->DispatcherHubComponent->BindEventToHub(EventHolder, EventTag);
 }
 
+void UFunctionLibrary_Event::UnBindEventFromGlobalDispatcherHub(UObject* EventHolder, FGameplayTag EventTag)
+{
+	AGlobalDispatcherHub* GlobalDispatcherHub = Cast<AGlobalDispatcherHub>(UGameplayStatics::GetActorOfClass(EventHolder, AGlobalDispatcherHub::StaticClass()));
+	if (!GlobalDispatcherHub)
+	{
+		COS_LOG_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
+		return;
+	}
+
+	GlobalDispatcherHub->DispatcherHubComponent->UnbindEventFromHub(EventHolder, EventTag);
+}
+
 bool UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject)
 {
 	AGlobalDispatcherHub* GlobalDispatcherHub = Cast<AGlobalDispatcherHub>(UGameplayStatics::GetActorOfClass(CallingObject, AGlobalDispatcherHub::StaticClass()));

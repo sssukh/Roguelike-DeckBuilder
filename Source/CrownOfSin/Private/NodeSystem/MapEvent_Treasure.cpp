@@ -8,6 +8,8 @@
 #include "Interfaces/Interface_CardGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Libraries/FunctionLibrary_Card.h"
+#include "Libraries/FunctionLibrary_Event.h"
+#include "Libraries/FunctionLibrary_Utility.h"
 #include "Utilities/CosGameplayTags.h"
 #include "Utilities/CosLog.h"
 
@@ -21,9 +23,9 @@ UMapEvent_Treasure::UMapEvent_Treasure()
 	// ...
 }
 
-FGameplayTagContainer UMapEvent_Treasure::GetEncounterTags(UDataTable* DataTable, FName RowName)
+FGameplayTagContainer UMapEvent_Treasure::GetEncounterTags(FDataTableRowHandle EncounterTags)
 {
-	FStoryEncounter* StoryEncounter = DataTable->FindRow<FStoryEncounter>(RowName,"FStoryEncounter in Treasure");
+	FStoryEncounter* StoryEncounter = EncounterTags.DataTable->FindRow<FStoryEncounter>(EncounterTags.RowName,"FStoryEncounter in Treasure");
 
 	if(!StoryEncounter)
 	{
@@ -59,13 +61,7 @@ void UMapEvent_Treasure::RunMapEvent(FDataTableRowHandle EventData)
 	}
 	IInterface_CardGameInstance::Execute_AttemptSaveGame(gameInstance,"",true);
 
-
-
-	
-
-
-	// TODO:BindEventToGlobalDispatcherHub() 구현 필요
-	// AGlobalDispatcherHub::
+	UFunctionLibrary_Event::BindEventToGlobalDispatcherHub(this,CosGameTags::Event_CloseRewardScreen);
 }
 
 void UMapEvent_Treasure::RunEvent(FGameplayTag EventTag, UObject* CallingObject, bool bGlobal, UObject* Payload,
@@ -84,7 +80,10 @@ void UMapEvent_Treasure::RunEvent(FGameplayTag EventTag, UObject* CallingObject,
 	}
 	IInterface_CardGameInstance::Execute_AttemptSaveGame(gameInstance,"",true);
 
-	// TODO:UnbindEventToGlobalDispatcherHub() 구현 필요 
+	// TODO:UnbindEventToGlobalDispatcherHub() 구현 필요
+
+	UFunctionLibrary_Event::UnBindEventFromGlobalDispatcherHub(this,CosGameTags::Event_CloseRewardScreen);
+
 }
 
 

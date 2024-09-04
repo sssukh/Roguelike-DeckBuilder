@@ -20,7 +20,7 @@ struct FMapEvent : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Map Event")
-	TObjectPtr<UActorComponent> MapEventClass;
+	TSubclassOf<UActorComponent> MapEventClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Map Event")
 	TObjectPtr<UTexture2D> Icon;
@@ -74,5 +74,5 @@ struct FStoryEncounter : public FTableRowBase
 	TArray<FCard> EncounterOptions;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Story Encounter")
-	TObjectPtr<UUserWidget> EncounterWidget;
+	TSubclassOf<UUserWidget> EncounterWidget;
 };

@@ -18,6 +18,9 @@ public:
 	static void BindEventToGlobalDispatcherHub(UObject* EventHolder, FGameplayTag EventTag);
 
 	UFUNCTION(BlueprintCallable, Category="Function Library|Event")
+	static void UnBindEventFromGlobalDispatcherHub(UObject* EventHolder, FGameplayTag EventTag);
+	
+	UFUNCTION(BlueprintCallable, Category="Function Library|Event")
 	static bool CallEventInGlobalDispatcherHub(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject);
 
 	UFUNCTION(BlueprintCallable, Category="Function Library|Event")

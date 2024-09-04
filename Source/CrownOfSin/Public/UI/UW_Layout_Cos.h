@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Interfaces/Interface_StoryEncounter.h"
 #include "UW_Layout_Cos.generated.h"
 
 class UButton;
@@ -15,7 +16,7 @@ class UUW_RewardScreen;
  * 
  */
 UCLASS()
-class CROWNOFSIN_API UUW_Layout_Cos : public UUserWidget
+class CROWNOFSIN_API UUW_Layout_Cos : public UUserWidget, public IInterface_StoryEncounter
 {
 	GENERATED_BODY()
 
@@ -40,7 +41,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable,Category="UW Layout")
 	void DisplayScreenLogMessage(const FText& Message, const FColor& Color);
 
-
+	/*========================================================================================
+	*	Iinterface_StoryEncounter
+	=========================================================================================*/
+public:
+	virtual void InitializeStoryEncounter_Implementation(FDataTableRowHandle EncounterData, bool bIsFirstScreen) override;
+	
 	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/
