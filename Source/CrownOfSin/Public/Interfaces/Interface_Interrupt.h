@@ -27,4 +27,6 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Interrupt")
 	void CancelInterruption();
+
+	
 };

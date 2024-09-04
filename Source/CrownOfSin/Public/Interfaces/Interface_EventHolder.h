@@ -34,5 +34,5 @@ public:
 	void SetPriority(float InPriority);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Event Holder")
-	FName GetFriendlyName();
+	FText GetFriendlyName();
 };

@@ -48,7 +48,7 @@ public:
 	bool CallMultipleBoundEvents(const TArray<FGameplayTag>& EventTagsGameplayTags, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal);
 
 	UFUNCTION(BlueprintCallable, Category="Dispatcher Hub Event")
-	virtual bool CallEvent(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal);
+	virtual bool CallEvent(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject = nullptr, ECallGlobal AlsoCallGlobal = ECallGlobal::CallAfter);
 
 	UFUNCTION(BlueprintCallable, Category="Dispatcher Hub Event")
 	void QueueEvent(FGameplayTag Event, UObject* CallingObject, UObject* CallSpecificObject, float EndDelay, UObject* PayLoad, FGameplayTagContainer CallTags);
@@ -69,7 +69,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Dispatcher Hub Event")
 	virtual bool CallEventWithPayloadAndCallTags(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, UObject* PayLoad,
 	                                             FGameplayTagContainer CallTags);
-
 
 protected:
 	// EventHolder가 UInterface_EventHolder 인터페이스를 구현하는지 확인합니다.
