@@ -50,7 +50,6 @@ enum class EStatusTextAlignment : uint8
 	BottomRight,
 	Center,
 	BottomLeft
-
 };
 
 USTRUCT(BlueprintType)
@@ -289,6 +288,31 @@ struct FStatusAppearance
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status Appearance")
 	FText FriendlyName;
+
+	// 기본 생성자
+	FStatusAppearance()
+		: StatusValue(0)
+		  , Icon(nullptr)
+		  , Tint(FLinearColor::White)
+		  , SlotType(EStatusSlot::None) // 기본값 설정, 필요시 적절한 기본값 사용
+		  , TextAlignment(EStatusTextAlignment::None) // 기본값 설정, 필요시 적절한 기본값 사용
+		  , FriendlyName(FText::FromString(TEXT("Default")))
+	{
+	}
+
+	// 모든 멤버 변수를 인수로 받는 생성자
+	FStatusAppearance(int32 InStatusValue, UTexture2D* InIcon, FLinearColor InTint, EStatusSlot InSlotType,
+	                  EStatusTextAlignment InTextAlignment, const TArray<FToolTipValue>& InTooltips, FText InFriendlyName)
+		: StatusValue(InStatusValue)
+		  , Icon(InIcon)
+		  , Tint(InTint)
+		  , SlotType(InSlotType)
+		  , TextAlignment(InTextAlignment)
+		  , Tooltips(InTooltips)
+		  , FriendlyName(InFriendlyName)
+	{
+	}
+	
 };
 
 USTRUCT(BlueprintType)
@@ -610,6 +634,10 @@ struct FCardPattern : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CardPattern")
 	int32 RepeatFrom;
+
+	FCardPattern(): RepeatFrom(0)
+	{
+	}
 };
 
 

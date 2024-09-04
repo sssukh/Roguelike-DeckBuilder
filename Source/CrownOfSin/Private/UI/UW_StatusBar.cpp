@@ -2,6 +2,7 @@
 
 #include "Components/HorizontalBox.h"
 #include "Components/VerticalBox.h"
+#include "Interfaces/Interface_Utility.h"
 #include "Libraries/AssetTableRef.h"
 #include "StatusSystem/StatusComponent.h"
 #include "UI/UW_StatusIcon.h"
@@ -74,7 +75,7 @@ void UUW_StatusBar::InteractWithAllStatuses()
 
 		if (UW_StatusIcon->IsVisible())
 		{
-			UW_StatusIcon->StatusComponent->Interact(FGameplayTagContainer(StatusBarTag));
+			IInterface_Utility::Execute_Interact(UW_StatusIcon->StatusComponent,FGameplayTagContainer(StatusBarTag));
 		}
 	}
 }

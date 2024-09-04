@@ -3,6 +3,7 @@
 #include "UI/UW_ToolTip.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
+#include "Interfaces/Interface_Utility.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetTextLibrary.h"
 #include "Libraries/AssetTableRef.h"
@@ -37,7 +38,7 @@ void UUW_StatusIcon::NativeConstruct()
 
 void UUW_StatusIcon::OnClicked_StatusButton()
 {
-	StatusComponent->Interact(FGameplayTagContainer(StatusBarTag));
+	IInterface_Utility::Execute_Interact(StatusComponent, FGameplayTagContainer(StatusBarTag));
 }
 
 void UUW_StatusIcon::RefreshAppearance()

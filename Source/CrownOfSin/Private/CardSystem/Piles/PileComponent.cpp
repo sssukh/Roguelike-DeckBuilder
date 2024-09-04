@@ -22,9 +22,3 @@ void UPileComponent::BeginPlay()
 	// ...
 }
 
-void UPileComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}

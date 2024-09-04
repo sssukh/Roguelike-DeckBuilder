@@ -27,17 +27,19 @@ bool UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(FGameplayTag EventTa
 		return false;
 	}
 
-	return GlobalDispatcherHub->DispatcherHubComponent->CallEvent(EventTag,CallingObject,CallSpecificObject,ECallGlobal::OnlyLocal);
+	return GlobalDispatcherHub->DispatcherHubComponent->CallEvent(EventTag, CallingObject, CallSpecificObject, ECallGlobal::OnlyLocal);
 }
 
-bool UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(FGameplayTag EventTag, UObject* CallingObject,
-	UObject* CallSpecificObject, float EndDelay, UObject* Payload, FGameplayTagContainer CallTags)
+bool UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, float EndDelay, UObject* Payload,
+                                                             FGameplayTagContainer CallTags)
 {
-	AGlobalDispatcherHub* DispatcherHub = Cast<AGlobalDispatcherHub>(UGameplayStatics::GetActorOfClass
-		(GEngine->GameViewport->GetWorld(),AGlobalDispatcherHub::StaticClass()));
+	AGlobalDispatcherHub* GlobalDispatcherHub = Cast<AGlobalDispatcherHub>(UGameplayStatics::GetActorOfClass(CallingObject, AGlobalDispatcherHub::StaticClass()));
+	if (!GlobalDispatcherHub)
+	{
+		COS_LOG_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
+		return false;
+	}
 
-	// 구현 필요
-	// DispatcherHub->DispatcherHubComponent->QueueEventWithPayloadAndCallTags();
-
+	GlobalDispatcherHub->DispatcherHubComponent->QueueEventWithPayloadAndCallTags(EventTag, CallingObject, CallSpecificObject, EndDelay, Payload, CallTags);
 	return true;
 }
