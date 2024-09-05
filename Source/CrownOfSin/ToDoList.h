@@ -6,6 +6,7 @@
 //3. DT_Cards 데이터 지정해줘야함
 //4. DT_Minions_Monsters 데이터 지정해줘야함
 
+//sdsdsdsdsdsdsdsdsdsdsdsd
 
 //데이터테이블 로우 핸들 예시
 // UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Node Base", meta = (ExposeOnSpawn="true",RowType="/Script/CrownOfSin.MapEvent"))

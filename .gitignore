@@ -1,6 +1,7 @@
 # Visual Studio 2015 user specific files
 .vs/
 
+.idea/
 
 # Compiled Object files
 *.slo
@@ -49,7 +50,6 @@ SourceArt/**/*.tga
 # Binary Files
 Binaries/*
 Plugins/*/Binaries/*
-.idea/
 
 # Builds
 Build/*
@@ -74,3 +74,5 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+.idea/.idea.CrownOfSin/.idea/workspace.xml
+.idea
