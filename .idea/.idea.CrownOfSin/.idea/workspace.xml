@@ -12,45 +12,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="db41902e-ade0-4dc3-b77e-e700ebbe35a4" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.CrownOfSin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrownOfSin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrownOfSin/AssetRef/DT_Textures.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrownOfSin/AssetRef/DT_Textures.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrownOfSin/BluePrints/Core/BP_CardPlayer.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrownOfSin/BluePrints/Core/BP_CardPlayer.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrownOfSin/Data/Cards/DT_Cards.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrownOfSin/Data/Cards/DT_Cards.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrownOfSin/Data/DT_Decks.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrownOfSin/Data/DT_Decks.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrownOfSin/Data/Minions/DT_Minions_Heroes.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrownOfSin/Data/Minions/DT_Minions_Heroes.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrownOfSin/Data/Minions/DT_Minions_Monsters.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrownOfSin/Data/Minions/DT_Minions_Monsters.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrownOfSin/Widgets/MainMenu/WBP_HeroAddBox.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrownOfSin/Widgets/MainMenu/WBP_HeroAddBox.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrownOfSin/Widgets/MainMenu/WBP_MainMenu_Cos.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrownOfSin/Widgets/MainMenu/WBP_MainMenu_Cos.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrownOfSin/Widgets/WBP_Layout_RLDB.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardActions/BP_Action_Reshuffle.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardActions/BP_Action_Reshuffle.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardEffects/BP_CardEffect_AddNewCardToPile.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardEffects/BP_CardEffect_AddNewCardToPile.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardEffects/BP_CardEffect_AddRandomCardsToPile.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/CardEffects/BP_CardEffect_AddRandomCardsToPile.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Core/DELETE_BP_GI_RLDB.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/Core/DELETE_BP_GI_RLDB.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/RLDB/Blueprints/Statuses/CardStatuses/BP_Status_Card_ManaModifier.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Blueprints/Statuses/CardStatuses/BP_Status_Card_ManaModifier.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/RLDB/Data/Cards/DT_Cards.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/RLDB/Data/DELETE_DT_Decks.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Data/DELETE_DT_Decks.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/RLDB/Data/NodeMap/DT_StoryEncounters.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Data/NodeMap/DT_StoryEncounters.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/RLDB/Widgets/WBP_Card.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/RLDB/Widgets/WBP_Card.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Private/CardSystem/CardBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/CardSystem/CardBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Private/CardSystem/CardPlayer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/CardSystem/CardPlayer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Private/CardSystem/Piles/PileComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/CardSystem/Piles/PileComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Private/CardSystem/Piles/PileComponent_Deck.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/CardSystem/Piles/PileDeckComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Private/Core/CosGameInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/Core/CosGameInstance.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Private/UI/UW_MainMenu.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/UI/UW_MainMenu.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Private/Utilities/CosGameplayTags.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/Utilities/CosGameplayTags.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/CardSystem/CardBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/CardSystem/CardBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/CardSystem/CardPlayer.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/CardSystem/CardPlayer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/CardSystem/Piles/PileComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/CardSystem/Piles/PileComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/CardSystem/Piles/PileComponent_Deck.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/CardSystem/Piles/PileDeckComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/Core/CosEnumStruct.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/Core/CosEnumStruct.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/Core/CosGameInstance.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/Core/CosGameInstance.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/Core/DispatcherHubLocalComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/Core/DispatcherHubLocalComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/Libraries/FunctionLibrary_ArrayUtils.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/Libraries/FunctionLibrary_ArrayUtils.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/UI/UW_HeroAddBox.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/UI/UW_HeroAddBox.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/UI/UW_MainMenu.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/UI/UW_MainMenu.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Public/Utilities/CosGameplayTags.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Public/Utilities/CosGameplayTags.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/ToDoList.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/ToDoList.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrownOfSin/Private/NodeSystem/MapEvent_Multi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrownOfSin/Private/NodeSystem/MapEvent_Multi.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,28 +37,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;C++ 프로젝트.CrownOfSin.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "C++ 프로젝트.CrownOfSin.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "namchanwoo2",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\skack\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\skack\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\skack\\AppData\\Local\\Symbols\\src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\skack\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache",
+      "C:\\Users\\skack\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache",
+      "C:\\Users\\skack\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="C++ 프로젝트.CrownOfSin">
     <configuration name="CrownOfSin" type="CppProject" factoryName="C++ Project">
       <configuration_1>
@@ -536,6 +498,7 @@
       <workItem from="1725453960698" duration="166000" />
       <workItem from="1725467789870" duration="3611000" />
       <workItem from="1725516038620" duration="9023000" />
+      <workItem from="1725526587585" duration="326000" />
     </task>
     <servers />
   </component>
