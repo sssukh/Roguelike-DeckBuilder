@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "UI/UW_RewardScreen.h"
 #include "UI/UW_ScreenFade.h"
+#include "UI/UW_TargetingBezier.h"
 #include "Utilities/CosLog.h"
 
 
@@ -86,7 +87,7 @@ void UUW_Layout_Cos::InitializeStoryEncounter_Implementation(FDataTableRowHandle
 	// 받아온 EncounterData로 데이터를 정상적으로 받아오면 스토리 위젯생성
 	// 아마 WBP_StoryEncounter인듯하다.
 	UUserWidget* StoryWidget = CreateWidget<UUserWidget>(StoryEncounterBox, StoryEncounter->EncounterWidget);
-
+	
 	// 받아온 정보로 만든 스토리 위젯을 스토리 인카운터 박스에 자식으로 추가
 	StoryEncounterBox->AddChild(StoryWidget);
 

@@ -7,7 +7,7 @@
 #include "MapEvent_Arena.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), Blueprintable,meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=("Cos"), Blueprintable,meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UMapEvent_Arena : public UMapEventComponent
 {
 	GENERATED_BODY()

@@ -384,7 +384,7 @@ TArray<FDataTableRowHandle> UCosGameInstance::GetDoneStoryEncountersFromInstance
 	return DoneStoryEncounters;
 }
 
-void UCosGameInstance::SetCurrentEncounterInInstance_Implementation(FEncounter InCurrentEncoutner)
+void UCosGameInstance::SetCurrentEncounterInInstance_Implementation(FEncounterData InCurrentEncoutner)
 {
 	CurrentEncounter = InCurrentEncoutner;
 }

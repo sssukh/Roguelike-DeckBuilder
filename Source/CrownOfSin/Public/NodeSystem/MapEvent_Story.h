@@ -7,7 +7,7 @@
 #include "MapEvent_Story.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=("Cos"), Blueprintable,meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UMapEvent_Story : public UMapEventComponent
 {
 	GENERATED_BODY()

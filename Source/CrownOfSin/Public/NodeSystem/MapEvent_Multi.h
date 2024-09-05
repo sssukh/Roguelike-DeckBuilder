@@ -7,7 +7,7 @@
 #include "MapEvent_Multi.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=("Cos"), Blueprintable,meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UMapEvent_Multi : public UMapEventComponent
 {
 	GENERATED_BODY()

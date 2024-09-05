@@ -8,6 +8,8 @@ namespace CosGameTags
 	UE_DEFINE_GAMEPLAY_TAG(Target_Hero, TEXT("Target.Hero"))
 	UE_DEFINE_GAMEPLAY_TAG(Target_Minion, TEXT("Target.Minion"))
 	UE_DEFINE_GAMEPLAY_TAG(Target_Enemy, TEXT("Target.Enemy"))
+	UE_DEFINE_GAMEPLAY_TAG(Target_CardPlayer, TEXT("Target.CardPlayer"))
+
 	
 	
 	UE_DEFINE_GAMEPLAY_TAG(Event_Action_ResourceChange,TEXT("Event.Action.ResourceChange"));
@@ -28,7 +30,7 @@ namespace CosGameTags
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Exhaust, TEXT("Event.Card.Exhaust"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Grab, TEXT("Event.Card.Grab"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_GenerateCard, TEXT("Event.Card.Generate"));
-	UE_DEFINE_GAMEPLAY_TAG(Event_Card_CardSelectionMode, TEXT("Event.CardSelectionMode"));
+	UE_DEFINE_GAMEPLAY_TAG(Event_Card_CardSelectionMode, TEXT("Event.Card.CardSelectionMode"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_DropCard, TEXT("Event.Card.Drop"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Void, TEXT("Event.Card.Void"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Destroy, TEXT("Event.Card.Destroy"));
@@ -76,5 +78,64 @@ namespace CosGameTags
 	UE_DEFINE_GAMEPLAY_TAG(Event, TEXT("Event"))
 
 	UE_DEFINE_GAMEPLAY_TAG(Pile, TEXT("Pile"))
+	UE_DEFINE_GAMEPLAY_TAG(Pile_Deck, TEXT("Pile.Deck"))
 	UE_DEFINE_GAMEPLAY_TAG(Pile_Hand, TEXT("Pile.Hand"))
+	UE_DEFINE_GAMEPLAY_TAG(Pile_Draw, TEXT("Pile.Draw"))
+	UE_DEFINE_GAMEPLAY_TAG(Pile_Discard, TEXT("Pile.Discard"))
+	UE_DEFINE_GAMEPLAY_TAG(Pile_Exhaust, TEXT("Pile.Exhaust"))
+	UE_DEFINE_GAMEPLAY_TAG(Pile_Void, TEXT("Pile.Void"))
+	UE_DEFINE_GAMEPLAY_TAG(Pile_Shop, TEXT("Pile.Shop"))
+	UE_DEFINE_GAMEPLAY_TAG(Pile_Destroy, TEXT("Pile.Destroy"))
+
+
+	UE_DEFINE_GAMEPLAY_TAG(Encounter, TEXT("Encounter"))
+	UE_DEFINE_GAMEPLAY_TAG(Encounter_Easy, TEXT("Encounter.Easy"))
+	UE_DEFINE_GAMEPLAY_TAG(Encounter_Normal, TEXT("Encounter.Normal"))
+	UE_DEFINE_GAMEPLAY_TAG(Encounter_Elite, TEXT("Encounter.Elite"))
+	UE_DEFINE_GAMEPLAY_TAG(Encounter_Boss, TEXT("Encounter.Boss"))
+
+	UE_DEFINE_GAMEPLAY_TAG(Rarity, TEXT("Rarity"))
+	UE_DEFINE_GAMEPLAY_TAG(Rarity_Invalid, TEXT("Rarity.Invalid"))
+	UE_DEFINE_GAMEPLAY_TAG(Rarity_Common, TEXT("Rarity.Common"))
+	UE_DEFINE_GAMEPLAY_TAG(Rarity_Rare, TEXT("Rarity.Rare"))
+	UE_DEFINE_GAMEPLAY_TAG(Rarity_Epic, TEXT("Rarity.Epic"))
+	UE_DEFINE_GAMEPLAY_TAG(Rarity_Legendary, TEXT("Rarity.Legendary"))
+	UE_DEFINE_GAMEPLAY_TAG(Rarity_Curse, TEXT("Rarity.Curse"))
+
+	UE_DEFINE_GAMEPLAY_TAG(Interact, TEXT("Interact"))
+	UE_DEFINE_GAMEPLAY_TAG(Interact_Mark, TEXT("Interact.Mark"))
+	UE_DEFINE_GAMEPLAY_TAG(Interact_UnMark, TEXT("Interact.Unmark"))
+
+	UE_DEFINE_GAMEPLAY_TAG(Position, TEXT("Position"))
+	UE_DEFINE_GAMEPLAY_TAG(Position_Front, TEXT("Position.Front"))
+	UE_DEFINE_GAMEPLAY_TAG(Position_Back, TEXT("Position.Back"))
+
+	UE_DEFINE_GAMEPLAY_TAG(StatusBar, TEXT("StatusBar"))
+	UE_DEFINE_GAMEPLAY_TAG(StatusBar_MinionBar, TEXT("StatusBar.MinionBar"))
+	UE_DEFINE_GAMEPLAY_TAG(StatusBar_ArtifactBar, TEXT("StatusBar.ArtifactBar"))
+	UE_DEFINE_GAMEPLAY_TAG(StatusBar_RewardBar, TEXT("StatusBar.RewardBar"))
+
+	UE_DEFINE_GAMEPLAY_TAG(Anim, TEXT("Anim"))
+	UE_DEFINE_GAMEPLAY_TAG(Anim_Attack, TEXT("Anim.Attack"))
+	UE_DEFINE_GAMEPLAY_TAG(Anim_Flinch, TEXT("Anim.Flinch"))
+	UE_DEFINE_GAMEPLAY_TAG(Anim_Die, TEXT("Anim.Die"))
+	UE_DEFINE_GAMEPLAY_TAG(Anim_Cast, TEXT("Anim.Cast"))
+	UE_DEFINE_GAMEPLAY_TAG(Anim_Block, TEXT("Anim.Block"))
+	UE_DEFINE_GAMEPLAY_TAG(Anim_Spawn, TEXT("Anim.Spawn"))
+	UE_DEFINE_GAMEPLAY_TAG(Anim_Idle, TEXT("Anim.Idle"))
+
+	UE_DEFINE_GAMEPLAY_TAG(Effect, TEXT("Effect"))
+	UE_DEFINE_GAMEPLAY_TAG(Effect_Attack, TEXT("Effect.Attack"))
+	UE_DEFINE_GAMEPLAY_TAG(Effect_Skill, TEXT("Effect.Skill"))
+	UE_DEFINE_GAMEPLAY_TAG(Effect_Power, TEXT("Effect.Power"))
+	UE_DEFINE_GAMEPLAY_TAG(Effect_Defense, TEXT("Effect.Defense"))
+	UE_DEFINE_GAMEPLAY_TAG(Effect_Physical, TEXT("Effect.Physical"))
+	UE_DEFINE_GAMEPLAY_TAG(Effect_Magic, TEXT("Effect.Magic"))
+	UE_DEFINE_GAMEPLAY_TAG(Effect_Fire, TEXT("Effect.Fire"))
+	UE_DEFINE_GAMEPLAY_TAG(Effect_Poison, TEXT("Effect.Poison"))
+	UE_DEFINE_GAMEPLAY_TAG(Effect_Buff, TEXT("Effect.Buff"))
+	UE_DEFINE_GAMEPLAY_TAG(Effect_Debuff, TEXT("Effect.Debuff"))
+	UE_DEFINE_GAMEPLAY_TAG(Effect_Invalid, TEXT("Effect.Invalid"))
+	UE_DEFINE_GAMEPLAY_TAG(Effect_Curse, TEXT("Effect.Curse"))
+
 }
