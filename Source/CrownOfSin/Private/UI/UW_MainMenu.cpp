@@ -53,55 +53,15 @@ void UUW_MainMenu::NativeConstruct()
 
 void UUW_MainMenu::OnNewGameButtonClicked()
 {
-	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(this);
-	if (!GameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
-	{
-		COS_LOG_SCREEN(TEXT("Game Instance가 Interface_CardGameInstance 인터페이스를 상속받지 않았습니다."));
-		return;
-	}
+	// 게임 인스턴스를 확인하고 초기화
+	UGameInstance* GameInstance = ValidateAndResetGameInstance();
+	if (!GameInstance) return;
 
-	IInterface_CardGameInstance::Execute_ResetGame(GameInstance);
+	// 선택된 영웅과 덱을 처리
+	ProcessSelectedHeroesAndDecks(GameInstance);
 
-	// 선택된 영웅과 덱을 가져옵니다.
-	TArray<FHeroDeck> SelectedHeroesAndDecks = WBP_HeroAddBox->GetSelectedHeroesAndDecks();
-
-	// 각 영웅과 덱에 대해 반복합니다.
-	for (FHeroDeck& HeroesAndDeck : SelectedHeroesAndDecks)
-	{
-		FString UniqueID;
-		// 영웅과 덱을 영구적으로 게임 인스턴스에 추가합니다.
-		IInterface_CardGameInstance::Execute_AddPersistentHeroToInstance(GameInstance, HeroesAndDeck.Hero, HeroesAndDeck.Deck, UniqueID);
-
-		// 영웅의 데이터 테이블에서 FMinion 구조체를 찾습니다.
-		FMinion* FoundMinion = HeroesAndDeck.Hero.DataTable->FindRow<FMinion>(HeroesAndDeck.Hero.RowName,TEXT(""));
-		if (!FoundMinion)
-			continue;
-
-		// 영웅의 시작 상태를 반복하여 각 상태를 검사합니다.
-		for (TTuple<TSubclassOf<UStatusComponent>, int32> StatusEntry : FoundMinion->StartingStatuses)
-		{
-			TSubclassOf<UStatusComponent> StatusClass = StatusEntry.Key;
-			int32 StatusValue = StatusEntry.Value;
-
-			// 상태 클래스가 UStatus_Artifact의 서브클래스인지 확인합니다.
-			if (StatusClass->IsChildOf(UStatus_Artifact::StaticClass()))
-			{
-				IInterface_CardGameInstance::Execute_AddArtifactToInstance(GameInstance, FStatusData(StatusValue, FGameplayTagContainer(), StatusClass));
-			}
-		}
-	}
-
-	// 플레이어 컨트롤러를 가져옵니다.
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
-
-	// 입력 모드를 게임과 UI를 모두 허용하는 모드로 설정합니다.
-	UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(PlayerController, nullptr, EMouseLockMode::DoNotLock, true);
-
-	// 현재 노드 맵의 이름을 게임 인스턴스로부터 가져옵니다.
-	FString CurrentNodeMap = IInterface_CardGameInstance::Execute_GetCurrentNodeMapFromInstance(GameInstance);
-
-	// 현재 노드 맵으로 레벨을 전환합니다.
-	UGameplayStatics::OpenLevel(this, FName(CurrentNodeMap));
+	// 게임을 시작할 준비를 설정하고 레벨 로드
+	PrepareAndStartNewGame(GameInstance);
 }
 
 void UUW_MainMenu::OnContinueButtonClicked()
@@ -138,4 +98,79 @@ void UUW_MainMenu::OnQuitButtonClicked()
 {
 	// 게임을 종료하고 애플리케이션을 닫습니다.
 	UKismetSystemLibrary::QuitGame(this, nullptr, EQuitPreference::Quit, false);
+}
+
+UGameInstance* UUW_MainMenu::ValidateAndResetGameInstance()
+{
+	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(this);
+
+	// 게임 인스턴스가 Interface_CardGameInstance를 상속받고 있는지 확인
+	if (!GameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
+	{
+		COS_LOG_SCREEN(TEXT("Game Instance가 Interface_CardGameInstance 인터페이스를 상속받지 않았습니다."));
+		return nullptr;
+	}
+
+	// 게임 인스턴스를 리셋
+	IInterface_CardGameInstance::Execute_ResetGame(GameInstance);
+
+	return GameInstance;
+}
+
+void UUW_MainMenu::ProcessSelectedHeroesAndDecks(UGameInstance* GameInstance)
+{
+	// 선택된 영웅과 덱을 가져옴
+	TArray<FHeroDeck> SelectedHeroesAndDecks = WBP_HeroAddBox->GetSelectedHeroesAndDecks();
+
+	// 각 영웅과 덱에 대해 처리
+	for (FHeroDeck& HeroDeck : SelectedHeroesAndDecks)
+	{
+		AddHeroAndDeckToGameInstance(GameInstance, HeroDeck);
+	}
+}
+
+void UUW_MainMenu::AddHeroAndDeckToGameInstance(UGameInstance* GameInstance, FHeroDeck& HeroDeck)
+{
+	FString UniqueID;
+
+	// 영웅과 덱을 게임 인스턴스에 추가
+	IInterface_CardGameInstance::Execute_AddPersistentHeroToInstance(GameInstance, HeroDeck.Hero, HeroDeck.Deck, UniqueID);
+
+	// 영웅의 시작 상태 설정
+	AddStartingStatusesToHero(GameInstance, HeroDeck);
+}
+
+void UUW_MainMenu::AddStartingStatusesToHero(UGameInstance* GameInstance, const FHeroDeck& HeroDeck)
+{
+	// 영웅의 데이터 테이블에서 FMinion 구조체를 찾음
+	FMinion* FoundMinion = HeroDeck.Hero.DataTable->FindRow<FMinion>(HeroDeck.Hero.RowName, TEXT(""));
+	if (!FoundMinion) return;
+
+	// 각 상태에 대해 처리
+	for (const TTuple<TSubclassOf<UStatusComponent>, int32>& StatusEntry : FoundMinion->StartingStatuses)
+	{
+		TSubclassOf<UStatusComponent> ArtifactClass = StatusEntry.Key;
+		int32 ArtifactValue = StatusEntry.Value;
+
+		// UStatus_Artifact의 서브클래스인지 확인하고 게임 인스턴스에 추가
+		if (ArtifactClass->IsChildOf(UStatus_Artifact::StaticClass()))
+		{
+			IInterface_CardGameInstance::Execute_AddArtifactToInstance(GameInstance, FStatusData(ArtifactValue, FGameplayTagContainer(), ArtifactClass));
+		}
+	}
+}
+
+void UUW_MainMenu::PrepareAndStartNewGame(UGameInstance* GameInstance)
+{
+	// 플레이어 컨트롤러를 가져옴
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+
+	// 입력 모드를 게임과 UI를 모두 허용하는 모드로 설정
+	UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(PlayerController, nullptr, EMouseLockMode::DoNotLock, true);
+
+	// 현재 노드 맵의 이름을 가져옴
+	FString CurrentNodeMap = IInterface_CardGameInstance::Execute_GetCurrentNodeMapFromInstance(GameInstance);
+
+	// 해당 맵으로 레벨 전환
+	UGameplayStatics::OpenLevel(this, FName(CurrentNodeMap));
 }

@@ -52,6 +52,17 @@ public:
 	void SetGraphicsQuality(int32 InQuality);
 
 
+protected:
+	// 영웅의 시작 상태를 필터링하고 설정하는 함수
+	void SetFilteredStartingStatusesForMinion(FMinion& Minion, const FString& UniqueID);
+	
+	// 건강 상태를 설정하는 함수
+	void SetHealthStatusLimits(FMinion& Minion);
+
+	// 영웅의 덱을 설정하는 함수
+	bool AssignHeroDeckToMinion(FDataTableRowHandle HeroDeck, const FString& UniqueID);
+
+
 	/*========================================================================================
 	*	IInterface_CardGameInstance
 	=========================================================================================*/

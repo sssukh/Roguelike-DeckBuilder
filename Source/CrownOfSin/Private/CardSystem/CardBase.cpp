@@ -9,6 +9,8 @@
 #include "CombatSystem/TargetSystem/TargetingComponent.h"
 #include "CombatSystem/TargetSystem/Targeting_UnTargetedComponent.h"
 #include "Core/DispatcherHubComponent.h"
+#include "Core/DispatcherHubLocalComponent.h"
+#include "Core/GameplayTagComponent.h"
 #include "Interfaces/Interface_CardTarget.h"
 #include "Libraries/FunctionLibrary_Event.h"
 #include "Libraries/FunctionLibrary_Utility.h"
@@ -21,13 +23,17 @@ ACardBase::ACardBase()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = false;
+
+
+	GameplayTagComponent = CreateDefaultSubobject<UGameplayTagComponent>(TEXT("GameplayTagComponent"));
+	DispatcherHubLocal = CreateDefaultSubobject<UDispatcherHubLocalComponent>(TEXT("DispatcherHubLocal"));
 }
 
 // Called when the game starts or when spawned
 void ACardBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -41,21 +47,21 @@ bool ACardBase::AttemptUseCard(TArray<AActor*> Targets, bool SkipPlayableCheck, 
 	InputTargets = Targets;
 
 	// CheckIfPlayable을 뛰어넘고 바로 UseCard
-	if(SkipPlayableCheck)
+	if (SkipPlayableCheck)
 	{
-		UseCard(SkipConsequences,AutoPlay);
+		UseCard(SkipConsequences, AutoPlay);
 		return true;
 	}
 	FString FailMessage;
 	// CheckIfPlayable로 가능 여부 확인 후 UseCard
-	if(CheckIfPlayable(FailMessage))
+	if (CheckIfPlayable(FailMessage))
 	{
-		UseCard(SkipConsequences,AutoPlay);
+		UseCard(SkipConsequences, AutoPlay);
 		return true;
 	}
 
 	// 사용불가능한 상태이므로 에러메시지 출력
-	UFunctionLibrary_Utility::SendScreenLogMessage(FText::FromString(FailMessage),FColor::Red);
+	UFunctionLibrary_Utility::SendScreenLogMessage(FText::FromString(FailMessage), FColor::Red);
 	return false;
 }
 
@@ -63,17 +69,17 @@ void ACardBase::UseCard(bool SkipConsequences, bool AutoPlay)
 {
 	// DispatcherHub에 이벤트 등록
 	UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(CosGameTags::Event_Action_UseCard,
-		this,nullptr,1.0f,nullptr,FGameplayTagContainer());
+	                                                        this, nullptr, 1.0f, nullptr, FGameplayTagContainer());
 
 	FGameplayTagContainer TagContainer;
-	if(AutoPlay)
+	if (AutoPlay)
 		TagContainer.AddTag(CosGameTags::Flag_AutoPlayed);
-	
-	DispatcherHubComponent->CallEventWithCallTags(CosGameTags::Event_Card_PrePlay,this,nullptr,ECallGlobal::CallAfter,TagContainer);
+
+	DispatcherHubLocal->CallEventWithCallTags(CosGameTags::Event_Card_PrePlay, this, nullptr, ECallGlobal::CallAfter, TagContainer);
 
 	// 사용한 카드의 사용 후처리를 진행한다.
 	// 규칙들을 순회하면서 결과를 적용한다.
-	if(!SkipConsequences)
+	if (!SkipConsequences)
 	{
 		ResolveUseRuleConsequences();
 	}
@@ -98,12 +104,12 @@ bool ACardBase::CheckIfPlayable(FString& FailMessage)
 		// 각 UseRuleComponent를 상속받은 객체들의 재정의된 내용이 실행된다.
 		// TODO : 아직 상속받은 컴포넌트의 내용 정의 안됨
 		// 예를 들어 StatCost에서는 이 카드의 지정된 Cost가 CardPlayer의 CostValue보다 낮아야만 사용가능이 된다.
-		if(!RuleComponent->CheckIfUseAllowed(Rule,FailMessage))
+		if (!RuleComponent->CheckIfUseAllowed(Rule, FailMessage))
 		{
 			return false;
 		}
 	}
-	
+
 	FailMessage = TEXT("");
 	return true;
 }
@@ -133,25 +139,23 @@ void ACardBase::ContinueToNextRepetition()
 	++CurrentRepetitions;
 
 	// 
-	if(GetCardRepetitions(ECardDataType::Hand)<=CurrentRepetitions)
+	if (GetCardRepetitions(ECardDataType::Hand) <= CurrentRepetitions)
 	{
-		if(CurrentRepetitions>0)
+		if (CurrentRepetitions > 0)
 		{
-			
 			GetWorld()->GetTimerManager().SetTimerForNextTick(FTimerDelegate::CreateLambda(
-			[&]()
-			{
-				EffectLoopIndex = -1;
-				ContinueToNextEffect();
-			}
+				[&]()
+				{
+					EffectLoopIndex = -1;
+					ContinueToNextEffect();
+				}
 			));
 		}
 
 		return;
 	}
-	
+
 	EndCardUse();
-	
 }
 
 int32 ACardBase::GetCardRepetitions(ECardDataType Type)
@@ -174,50 +178,47 @@ void ACardBase::ContinueToNextEffect()
 	++EffectLoopIndex;
 
 	// 인덱스가 범위를 초과하지 않으면
-	if(GetCardEffects(ECardDataType::Hand).Num()-1>=EffectLoopIndex)
+	if (GetCardEffects(ECardDataType::Hand).Num() - 1 >= EffectLoopIndex)
 	{
 		// TargetLoopIndex 리셋
-		TargetLoopIndex=-1;
+		TargetLoopIndex = -1;
 
 		// HandType의 CardEffect들 가져오기
 		TArray<FCardEffect> CardEffects = GetCardEffects(ECardDataType::Hand);
 
 		// TargetingComponent 가져오기.
-		CurrentTargeting = AccessTargetingClassLazy(GetOwner(),CardEffects[EffectLoopIndex].Targeting);
-		
-		if(CurrentTargeting->bRequiresInput)
-		{
-			CurrentTargeting->OnInputTargetsReceived.AddDynamic(this,&ACardBase::ProceedOnInputTargetsReceived);
+		CurrentTargeting = AccessTargetingClassLazy(GetOwner(), CardEffects[EffectLoopIndex].Targeting);
 
-			
+		if (CurrentTargeting->bRequiresInput)
+		{
+			CurrentTargeting->OnInputTargetsReceived.AddDynamic(this, &ACardBase::ProceedOnInputTargetsReceived);
+
+
 			FCardEffect CardEffect = GetCardEffects(ECardDataType::Hand)[EffectLoopIndex];
-			if(!CurrentTargeting->FindValidTargets(InputTargets,CardEffect,this,false,CurrentValidTargets))
+			if (!CurrentTargeting->FindValidTargets(InputTargets, CardEffect, this, false, CurrentValidTargets))
 			{
 				ContinueToNextTarget();
 			}
 		}
 		else
 		{
-			
 			FCardEffect CardEffect = GetCardEffects(ECardDataType::Hand)[EffectLoopIndex];
-			CurrentTargeting->FindValidTargets(InputTargets,CardEffect,this,false,CurrentValidTargets);
+			CurrentTargeting->FindValidTargets(InputTargets, CardEffect, this, false, CurrentValidTargets);
 
 			ContinueToNextTarget();
 		}
-		
 	}
 	else
 	{
 		ContinueToNextRepetition();
 	}
-	
 }
 
 void ACardBase::ContinueToNextTarget()
 {
 	++TargetLoopIndex;
 
-	if(bInterrupt)
+	if (bInterrupt)
 	{
 		bInterrupt = false;
 
@@ -226,7 +227,7 @@ void ACardBase::ContinueToNextTarget()
 	}
 
 	// TargetLoopIndex가 범위를 벗어나면
-	if(CurrentValidTargets.Num()-1<TargetLoopIndex)
+	if (CurrentValidTargets.Num() - 1 < TargetLoopIndex)
 	{
 		ContinueToNextEffect();
 		return;
@@ -234,8 +235,8 @@ void ACardBase::ContinueToNextTarget()
 
 	TempCardEffect = GetCardEffects(ECardDataType::Hand)[EffectLoopIndex];
 
-	CurrentCardEffect = NewObject<UCardEffectComponent>(this,TempCardEffect.EffectClass);
-	
+	CurrentCardEffect = NewObject<UCardEffectComponent>(this, TempCardEffect.EffectClass);
+
 	CurrentCardEffect->EffectValue = TempCardEffect.EffectValue;
 	CurrentCardEffect->TargetComponent = TempCardEffect.TargetComponent;
 	CurrentCardEffect->ParentCard = this;
@@ -246,11 +247,11 @@ void ACardBase::ContinueToNextTarget()
 	CurrentCardEffect->UsedData = TempCardEffect.UsedData;
 	CurrentCardEffect->Identifier = TempCardEffect.Identifier;
 
-	if(CurrentCardEffect->bImmediated)
+	if (CurrentCardEffect->bImmediated)
 	{
-		if(IsValid(CurrentCardEffect->EffectAction))
+		if (IsValid(CurrentCardEffect->EffectAction))
 		{
-			if(!GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+			if (!GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
 			{
 				COS_LOG_SCREEN(TEXT("게임 인스턴스가 UInterface_CardInstance를 상속받지 않았습니다"));
 				return;
@@ -260,7 +261,7 @@ void ACardBase::ContinueToNextTarget()
 
 			AActor* InterfaceActor = CurrentValidTargets[TargetLoopIndex];
 
-			if(!InterfaceActor->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+			if (!InterfaceActor->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
 			{
 				COS_LOG_SCREEN(TEXT("게임 인스턴스가 UInterface_CardInstance를 상속받지 않았습니다"));
 				return;
@@ -268,27 +269,26 @@ void ACardBase::ContinueToNextTarget()
 
 			AActor* TargetActor = IInterface_CardTarget::Execute_GetPuppet(InterfaceActor);
 
-			QueueCardEffectAction(TargetActor,SourcePuppet,CurrentCardEffect,TargetLoopIndex==0);
+			QueueCardEffectAction(TargetActor, SourcePuppet, CurrentCardEffect, TargetLoopIndex == 0);
 		}
 
 		CurrentCardEffect->ResolveCardEffect();
 
-		if(CurrentCardEffect->bImmediated)
+		if (CurrentCardEffect->bImmediated)
 		{
 			ContinueAfterCardResolved();
 		}
-			
 	}
 	else
 	{
-		CurrentCardEffect->OnCardResolved.AddDynamic(this,&ACardBase::ContinueAfterCardResolved);
+		CurrentCardEffect->OnCardResolved.AddDynamic(this, &ACardBase::ContinueAfterCardResolved);
 	}
 }
 
 FCard ACardBase::GetCardDataByCardDataType(ECardDataType Type)
 {
 	FCard result;
-	switch(Type)
+	switch (Type)
 	{
 	case ECardDataType::Base:
 		result = CardDataBase;
@@ -302,7 +302,7 @@ FCard ACardBase::GetCardDataByCardDataType(ECardDataType Type)
 	case ECardDataType::Pile:
 		result = CardDataPile;
 		break;
-	default :
+	default:
 		break;
 	}
 
@@ -320,35 +320,35 @@ TArray<FCardEffect> ACardBase::GetCardEffects(ECardDataType Type)
 }
 
 UTargetingComponent* ACardBase::AccessTargetingClassLazy(AActor* TargetingHolderActor,
-	TSubclassOf<UTargetingComponent> TargetingClass)
+                                                         TSubclassOf<UTargetingComponent> TargetingClass)
 {
 	// 외부에서는 Owner가 들어오게 된다.
 	// TargetingHolderActor가 유효하지 않으면
-	if(!TargetingHolderActor)
+	if (!TargetingHolderActor)
 	{
 		// 자기 자신을 Holder로 설정해서 접근
-		return AccessTargetingClassLazy(this,TargetingClass);
+		return AccessTargetingClassLazy(this, TargetingClass);
 	}
 
 	// TargetingHolderActor에 있는 Targeting Component가 유효하면 반환
-	if(UTargetingComponent* TargetingComponent = Cast<UTargetingComponent>(TargetingHolderActor->GetComponentByClass(TargetingClass)))
+	if (UTargetingComponent* TargetingComponent = Cast<UTargetingComponent>(TargetingHolderActor->GetComponentByClass(TargetingClass)))
 	{
 		return TargetingComponent;
 	}
 
 	// Holder는 유효하지만 TargetingComponent가 유효하지 않으면 
 	// 건네받은 TargetingClass로 TargetingComponent를 생성해서 TargetingHolderActor에 부착시킨다.
-	if(IsValid(TargetingClass))
+	if (IsValid(TargetingClass))
 	{
 		// Holder에 더해주고 만든 것 반환
 		UTargetingComponent* TargetingComponent = NewObject<UTargetingComponent>(TargetingHolderActor);
 		TargetingComponent->RegisterComponent();
 
-		return TargetingComponent;		
+		return TargetingComponent;
 	}
 
 	// 건네받은 TargetingClass도 유효하지 않으면 UTargeting_UnTargetedComponent를 클래스로 해서 다시 접근
-	return AccessTargetingClassLazy(TargetingHolderActor,UTargeting_UnTargetedComponent::StaticClass());
+	return AccessTargetingClassLazy(TargetingHolderActor, UTargeting_UnTargetedComponent::StaticClass());
 }
 
 void ACardBase::ProceedOnInputTargetsReceived(TArray<AActor*> Targets)
@@ -356,7 +356,7 @@ void ACardBase::ProceedOnInputTargetsReceived(TArray<AActor*> Targets)
 	CurrentValidTargets = Targets;
 
 	// 불리고 나서 델리게이트 해제
-	CurrentTargeting->OnInputTargetsReceived.RemoveDynamic(this,&ACardBase::ProceedOnInputTargetsReceived);
+	CurrentTargeting->OnInputTargetsReceived.RemoveDynamic(this, &ACardBase::ProceedOnInputTargetsReceived);
 
 	ContinueToNextTarget();
 }
@@ -369,25 +369,29 @@ void ACardBase::ContinueAfterCardResolved()
 }
 
 void ACardBase::QueueCardEffectAction(AActor* TargetActor, AActor* SourcePuppet, UCardEffectComponent* CardEffect,
-	bool bAnimateSourcePuppet)
+                                      bool bAnimateSourcePuppet)
 {
-	if(!IsValid(CardEffect->EffectAction))
+	if (!IsValid(CardEffect->EffectAction))
 		return;
 	AAction_Effect* ActionEffect = GetWorld()->SpawnActorDeferred<AAction_Effect>(CardEffect->EffectAction,
-	                                                          FTransform::Identity, nullptr,
-	                                                          nullptr,ESpawnActorCollisionHandlingMethod::Undefined,ESpawnActorScaleMethod::SelectDefaultAtRuntime);
-	if(!CardEffect)
+	                                                                              FTransform::Identity, nullptr,
+	                                                                              nullptr, ESpawnActorCollisionHandlingMethod::Undefined, ESpawnActorScaleMethod::SelectDefaultAtRuntime);
+	if (!CardEffect)
 	{
 		COS_LOG_SCREEN(TEXT("ACardBase : ActionEffect가 생성되지 않습니다."));
 		return;
 	}
-	
+
 	ActionEffect->Target = TargetActor;
 	ActionEffect->SourcePuppet = SourcePuppet;
-	if(bAnimateSourcePuppet)
+	if (bAnimateSourcePuppet)
 		ActionEffect->HeroAnim = CardEffect->HeroAnim;
 	ActionEffect->Effect = GetCardEffects(ECardDataType::Hand)[EffectLoopIndex];
-		
+
 	ActionEffect->FinishSpawning(FTransform::Identity);
-	
+}
+
+FGameplayTagContainer ACardBase::GetGameplayTags()
+{
+	return GameplayTagComponent->GameplayTags;
 }

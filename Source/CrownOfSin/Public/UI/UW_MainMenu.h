@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Core/CosEnumStruct.h"
 #include "UW_MainMenu.generated.h"
 
 class UUW_HeroAddBox;
@@ -47,6 +48,35 @@ protected:
      */
 	UFUNCTION(BlueprintCallable, Category="UW Main Menu Event")
 	void OnQuitButtonClicked();
+
+
+
+protected:
+	/**
+     * 게임 인스턴스가 유효한지 확인하고, 게임을 초기화하는 함수입니다.
+     * @return 게임 인스턴스가 유효하면 그 인스턴스를 반환하고, 그렇지 않으면 nullptr을 반환합니다.
+     */
+	UGameInstance* ValidateAndResetGameInstance();
+
+	/**
+     * 선택된 영웅과 덱을 처리하고, 영웅을 영구적으로 게임 인스턴스에 추가하는 함수입니다.
+     */
+	void ProcessSelectedHeroesAndDecks(UGameInstance* GameInstance);
+
+	/**
+     * 개별 영웅과 덱을 게임 인스턴스에 추가하고, 영웅의 시작 상태를 설정하는 함수입니다.
+     */
+	void AddHeroAndDeckToGameInstance(UGameInstance* GameInstance, FHeroDeck& HeroDeck);
+
+	/**
+     * 영웅의 시작 상태를 게임 인스턴스에 추가하는 함수입니다.
+     */
+	void AddStartingStatusesToHero(UGameInstance* GameInstance, const FHeroDeck& HeroDeck);
+
+	/**
+     * 게임 준비를 완료하고 새로운 레벨을 로드하는 함수입니다.
+     */
+	void PrepareAndStartNewGame(UGameInstance* GameInstance);
 
 
 	/*========================================================================================

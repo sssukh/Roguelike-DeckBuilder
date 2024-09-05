@@ -3,13 +3,15 @@
 
 namespace CosGameTags
 {
+	UE_DEFINE_GAMEPLAY_TAG(None, TEXT("None"))
+	
 	UE_DEFINE_GAMEPLAY_TAG(Target, TEXT("Target"))
 	UE_DEFINE_GAMEPLAY_TAG(Target_Ally, TEXT("Target.Ally"))
 	UE_DEFINE_GAMEPLAY_TAG(Target_Hero, TEXT("Target.Hero"))
 	UE_DEFINE_GAMEPLAY_TAG(Target_Minion, TEXT("Target.Minion"))
 	UE_DEFINE_GAMEPLAY_TAG(Target_Enemy, TEXT("Target.Enemy"))
 	
-	
+	UE_DEFINE_GAMEPLAY_TAG(Event, TEXT("Event"))
 	UE_DEFINE_GAMEPLAY_TAG(Event_Action_ResourceChange,TEXT("Event.Action.ResourceChange"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Action_Draw,TEXT("Event.Action.Draw"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Action_FlickCard,TEXT("Event.Action.FlickCard"));
@@ -39,16 +41,6 @@ namespace CosGameTags
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_EnterHand, TEXT("Event.Card.EnterHand"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_ExitHand, TEXT("Event.Card.ExitHand"));
 
-	UE_DEFINE_GAMEPLAY_TAG(Flag_Active, TEXT("Flag.Active"));
-	UE_DEFINE_GAMEPLAY_TAG(Flag_Passive, TEXT("Flag.Passive"));
-	UE_DEFINE_GAMEPLAY_TAG(Flag_AutoPlayed, TEXT("Flag.AutoPlayed"));
-	UE_DEFINE_GAMEPLAY_TAG(Flag_Specific, TEXT("Flag.Specific"));
-	UE_DEFINE_GAMEPLAY_TAG(Flag_Skippable, TEXT("Flag.Skippable"));
-	UE_DEFINE_GAMEPLAY_TAG(Flag_DoNotClear, TEXT("Flag.DoNotClear"));
-	UE_DEFINE_GAMEPLAY_TAG(Flag_FilterToAllowed, TEXT("Flag.FilterToAllowed"));
-	UE_DEFINE_GAMEPLAY_TAG(Flag_KeepAfterAutoPlay, TEXT("Flag.KeepAfterAutoPlay"));
-	UE_DEFINE_GAMEPLAY_TAG(Flag_Slow, TEXT("Flag.Slow"));
-
 	UE_DEFINE_GAMEPLAY_TAG(Event_TurnStart, TEXT("Event.TurnStart"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_TurnEnd, TEXT("Event.TurnEnd"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_PreAttack, TEXT("Event.PreAttack"));
@@ -72,9 +64,22 @@ namespace CosGameTags
 	UE_DEFINE_GAMEPLAY_TAG(Event_Reshuffle, TEXT("Event.Reshuffle"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_ManaGain, TEXT("Event.ManaGain"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_DeckSetupDone, TEXT("Event.DeckSetupDone"));
+
+	UE_DEFINE_GAMEPLAY_TAG(Flag_Active, TEXT("Flag.Active"));
+	UE_DEFINE_GAMEPLAY_TAG(Flag_Passive, TEXT("Flag.Passive"));
+	UE_DEFINE_GAMEPLAY_TAG(Flag_AutoPlayed, TEXT("Flag.AutoPlayed"));
+	UE_DEFINE_GAMEPLAY_TAG(Flag_Specific, TEXT("Flag.Specific"));
+	UE_DEFINE_GAMEPLAY_TAG(Flag_Skippable, TEXT("Flag.Skippable"));
+	UE_DEFINE_GAMEPLAY_TAG(Flag_DoNotClear, TEXT("Flag.DoNotClear"));
+	UE_DEFINE_GAMEPLAY_TAG(Flag_FilterToAllowed, TEXT("Flag.FilterToAllowed"));
+	UE_DEFINE_GAMEPLAY_TAG(Flag_KeepAfterAutoPlay, TEXT("Flag.KeepAfterAutoPlay"));
+	UE_DEFINE_GAMEPLAY_TAG(Flag_Slow, TEXT("Flag.Slow"));
 	
-	UE_DEFINE_GAMEPLAY_TAG(Event, TEXT("Event"))
+
 
 	UE_DEFINE_GAMEPLAY_TAG(Pile, TEXT("Pile"))
 	UE_DEFINE_GAMEPLAY_TAG(Pile_Hand, TEXT("Pile.Hand"))
+	
+	UE_DEFINE_GAMEPLAY_TAG(Effect_Attack, TEXT("Effect.Attack"))
+	UE_DEFINE_GAMEPLAY_TAG(Effect_Damage_Physical, TEXT("Effect.Damage.Physical"))
 }

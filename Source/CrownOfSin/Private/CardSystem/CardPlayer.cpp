@@ -4,6 +4,7 @@
 #include "Blueprint/UserWidget.h"
 #include "CardSystem/ChanceManagerComponent.h"
 #include "CardSystem/Piles/PileComponent.h"
+#include "CardSystem/Piles/PileDestroyComponent.h"
 #include "Core/DispatcherHubLocalComponent.h"
 #include "Interfaces/Interface_CardGameInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -15,9 +16,6 @@
 #include "UI/UW_Layout_Cos.h"
 
 
-
-// Sets default values
-
 ACardPlayer::ACardPlayer(): ChanceManagerComponent(nullptr)
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -27,43 +25,44 @@ ACardPlayer::ACardPlayer(): ChanceManagerComponent(nullptr)
 
 	DispatcherHubLocalComponent = CreateDefaultSubobject<UDispatcherHubLocalComponent>(TEXT("DispatcherHubLocalComponent"));
 	ChanceManagerComponent = CreateDefaultSubobject<UChanceManagerComponent>(TEXT("ChanceManagerComponent"));
+	PileDestroyComponent = CreateDefaultSubobject<UPileDestroyComponent>(TEXT("PileDestroyComponent"));
 }
 
 void ACardPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
-
-	if (DefaultIMC)
-	{
-		UEnhancedInputLocalPlayerSubsystem* InputSubsystem = PlayerController->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-		InputSubsystem->AddMappingContext(DefaultIMC, 0);
-	}
-	else
+	if (!DefaultIMC)
 	{
 		COS_LOG_SCREEN(TEXT("Card Player의 Default IMC를 설정해주세요!!"));
 		return;
 	}
 
-
-	GeneratePileTagLookup();
-
-	DispatcherHubLocalComponent->BindEventToHub(this, CosGameTags::Event_TurnStart);
-
-	UFunctionLibrary_Event::BindEventToGlobalDispatcherHub(this, CosGameTags::Event_Death);
-	
 	if (!WBP_LayoutClass)
 	{
 		COS_LOG_SCREEN(TEXT("WBP Layout CLass를 설정해주세요!!!!!"));
 		return;
 	}
+
+
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	UEnhancedInputLocalPlayerSubsystem* InputSubsystem = PlayerController->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	InputSubsystem->AddMappingContext(DefaultIMC, 0);
+
+	// PileComponent와 관련된 태그를 맵핑하는 함수 호출 (GeneratePileTagLookup)
+	GeneratePileTagLookup();
+
+	// DispatcherHubLocalComponent에 이벤트 바인딩: 턴 시작 이벤트와 바인딩
+	DispatcherHubLocalComponent->BindEventToHub(this, CosGameTags::Event_TurnStart);
+
+	// 글로벌 이벤트 허브에 사망 이벤트 바인딩
+	UFunctionLibrary_Event::BindEventToGlobalDispatcherHub(this, CosGameTags::Event_Death);
+
 	PlayerUI = CreateWidget<UUW_Layout_Cos>(PlayerController, WBP_LayoutClass);
 	PlayerUI->AddToViewport();
 
-
 	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(this);
-	TArray<FStatusData> Artifacts = IInterface_CardGameInstance::Execute_GetArtifactsFromInstance(GameInstance);
+	const TArray<FStatusData>& Artifacts = IInterface_CardGameInstance::Execute_GetArtifactsFromInstance(GameInstance);
 
 	for (const FStatusData& Artifact : Artifacts)
 	{
@@ -73,14 +72,9 @@ void ACardPlayer::BeginPlay()
 	PlayerController->bShowMouseCursor = true;
 }
 
-void ACardPlayer::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
 void ACardPlayer::DisplayScreenLogMessage(FText Message, FColor Color)
 {
-	PlayerUI->DisplayScreenLogMessage(Message,Color);
+	PlayerUI->DisplayScreenLogMessage(Message, Color);
 }
 
 void ACardPlayer::GeneratePileTagLookup()
@@ -99,35 +93,56 @@ void ACardPlayer::GeneratePileTagLookup()
 	}
 }
 
-int32 ACardPlayer::AddToStatus_Implementation(TSubclassOf<UStatusComponent> InStatusClass, int32 InAmount, bool bIsShowSplash, UObject* InPayLoad)
+bool ACardPlayer::IsValidStatusClass(TSubclassOf<UStatusComponent> InStatusClass)
 {
 	if (!InStatusClass->IsChildOf(UStatusComponent::StaticClass()))
 	{
-		UE_LOG(LogTemp, Error, TEXT("InStatusClass는 UStatusComponent의 하위 클래스가 아닙니다."));
+		COS_LOG_ERROR(TEXT("InStatusClass는 UStatusComponent의 하위 클래스가 아닙니다."));
+		return false;
+	}
+	return true;
+}
+
+UStatusComponent* ACardPlayer::CreateNewStatusComponent(TSubclassOf<UStatusComponent> InStatusClass)
+{
+	FString ClassName = InStatusClass->GetName();
+	FString BaseName = FString::Printf(TEXT("%s_Component"), *ClassName);
+
+	// 고유한 이름을 생성하여 새로운 상태 컴포넌트 생성
+	FName UniqueName = MakeUniqueObjectName(this, InStatusClass, FName(*BaseName));
+	UStatusComponent* NewStatusComponent = NewObject<UStatusComponent>(this, InStatusClass, UniqueName);
+	NewStatusComponent->RegisterComponent();
+
+	NewStatusComponent->StatusValue = 0;
+	NewStatusComponent->OwnerUiRef = PlayerUI;
+	NewStatusComponent->bShowImmediately = false;
+	NewStatusComponent->GameplayTags = FGameplayTag();
+
+	return NewStatusComponent;
+}
+
+int32 ACardPlayer::AddToStatus_Implementation(TSubclassOf<UStatusComponent> InStatusClass, int32 InAmount, bool bIsShowSplash, UObject* InPayLoad)
+{
+	// 상태 클래스의 유효성 검사
+	if (!IsValidStatusClass(InStatusClass))
+	{
 		return 0;
 	}
 
+	// 상태 컴포넌트를 찾거나 새로 생성한 후 상태 값을 추가
 	UStatusComponent* StatusComponent = Cast<UStatusComponent>(FindComponentByClass(InStatusClass));
-	if (IsValid(StatusComponent))
+
+	// 상태 컴포넌트를 찾은 경우
+	if (StatusComponent)
 	{
 		return StatusComponent->AddStatusValue(InAmount, false, false, false, InPayLoad);
 	}
 
-	if (InAmount > 0 || GetDefault<UStatusComponent>(InStatusClass)->bCanBeZero)
+	// 상태 컴포넌트를 찾지 못한 경우 새로운 컴포넌트를 생성
+	StatusComponent = CreateNewStatusComponent(InStatusClass);
+	if (StatusComponent)
 	{
-		FString ClassName = InStatusClass->GetName();
-		FString BaseName = FString::Printf(TEXT("%s_Component"), *ClassName);
-
-		FName UniqueName = MakeUniqueObjectName(this, InStatusClass, FName(*BaseName));
-		UStatusComponent* NewStatusComponent = NewObject<UStatusComponent>(this, InStatusClass, UniqueName);
-		NewStatusComponent->RegisterComponent();
-
-		NewStatusComponent->StatusValue = 0;
-		NewStatusComponent->OwnerUiRef = PlayerUI;
-		NewStatusComponent->bShowImmediately = false;
-		NewStatusComponent->GameplayTags = FGameplayTag();
-
-		NewStatusComponent->AddStatusValue(InAmount, false, false, true, InPayLoad);
+		StatusComponent->AddStatusValue(InAmount, false, false, true, InPayLoad);
 		return InAmount;
 	}
 
@@ -136,5 +151,5 @@ int32 ACardPlayer::AddToStatus_Implementation(TSubclassOf<UStatusComponent> InSt
 
 void ACardPlayer::InitializeStoryEncounter_Implementation(FDataTableRowHandle EncounterData, bool bIsFirstScreen)
 {
-	PlayerUI->InitializeStoryEncounter(EncounterData,bIsFirstScreen);
+	PlayerUI->InitializeStoryEncounter(EncounterData, bIsFirstScreen);
 }

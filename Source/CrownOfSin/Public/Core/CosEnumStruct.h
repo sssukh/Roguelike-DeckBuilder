@@ -138,7 +138,7 @@ struct FMinion : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
 	FTransform TransformOffset;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion", meta = (RowType="/Script/CrownOfSin.CardPattern"))
 	FDataTableRowHandle AttackPatternData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
@@ -312,7 +312,6 @@ struct FStatusAppearance
 		  , FriendlyName(InFriendlyName)
 	{
 	}
-	
 };
 
 USTRUCT(BlueprintType)
@@ -661,6 +660,6 @@ struct FDeck : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Deck")
 	FText DeckName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Deck")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Deck", meta = (RowType="/Script/CrownOfSin.Card"))
 	TArray<FDataTableRowHandle> Cards;
 };

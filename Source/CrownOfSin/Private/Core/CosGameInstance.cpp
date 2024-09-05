@@ -2,7 +2,7 @@
 
 #include "CardSystem/CardBase.h"
 #include "CardSystem/CardPlayer.h"
-#include "CardSystem/Piles/PileComponent_Deck.h"
+#include "CardSystem/Piles/PileDeckComponent.h"
 #include "Core/CosSaveGame.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -37,12 +37,10 @@ void UCosGameInstance::Init()
 
 UCosSaveGame* UCosGameInstance::GetSavedGameOrMakeIfInvalid(const FString& InSaveID)
 {
-	// 주어진 ID를 가진 저장된 게임이 존재하는지 확인합니다.
 	if (UGameplayStatics::DoesSaveGameExist(InSaveID, 0))
 	{
-		// 저장된 게임이 존재하는 경우, 해당 게임을 로드합니다.
 		UCosSaveGame* LoadedSaveGame = Cast<UCosSaveGame>(UGameplayStatics::LoadGameFromSlot(InSaveID, 0));
-		return LoadedSaveGame; // 로드된 저장 게임 객체를 반환합니다.
+		return LoadedSaveGame;
 	}
 
 	// 저장된 게임이 존재하지 않는 경우, 새로운 저장 게임 객체를 생성합니다.
@@ -132,6 +130,7 @@ void UCosGameInstance::SetGraphicsQuality(int32 InQuality)
 
 	// 해상도 품질 설정을 위한 문자열입니다.
 	FString ResolutionQualitySetting = FString(TEXT("sg.ResolutionQuality"));
+
 	// 해상도 품질 값을 설정합니다.
 	if (GlobalGraphicsQuality == 0)
 	{
@@ -147,13 +146,69 @@ void UCosGameInstance::SetGraphicsQuality(int32 InQuality)
 	}
 }
 
+void UCosGameInstance::SetFilteredStartingStatusesForMinion(FMinion& Minion, const FString& UniqueID)
+{
+	// 아티팩트를 필터링하여 영웅의 시작 상태를 설정
+	const TMap<TSubclassOf<UStatusComponent>, int32>& FilteredStatuses = FilterOutArtifactsFromMinion(Minion);
+	Minion.UniqueID = UniqueID;
+	Minion.StartingStatuses = FilteredStatuses;
+
+	// 건강 상태를 설정
+	SetHealthStatusLimits(Minion);
+
+	// 영웅을 영구적으로 게임 인스턴스에 추가
+	PersistentHeroes.Add(Minion);
+}
+
+void UCosGameInstance::SetHealthStatusLimits(FMinion& Minion)
+{
+	TSubclassOf<UStatusComponent> HealthStatusClass = UStatus_Health::StaticClass();
+
+	if (Minion.StartingStatuses.Contains(HealthStatusClass))
+	{
+		int32 StatusValue = Minion.StartingStatuses[HealthStatusClass];
+
+		// 건강 상태만 포함된 상태 제한을 설정
+		TMap<TSubclassOf<UStatusComponent>, int32> NewStatusLimits;
+		NewStatusLimits.Add(HealthStatusClass, StatusValue);
+
+		// Minion의 상태 제한을 업데이트
+		Minion.StatusLimits = NewStatusLimits;
+	}
+}
+
+bool UCosGameInstance::AssignHeroDeckToMinion(FDataTableRowHandle HeroDeck, const FString& UniqueID)
+{
+	FDeck* FoundDeck = HeroDeck.DataTable->FindRow<FDeck>(HeroDeck.RowName, TEXT(""));
+	if (!FoundDeck)
+	{
+		return false;
+	}
+
+	// 덱의 카드들을 찾아서 설정
+	for (FDataTableRowHandle CardRowHandle : FoundDeck->Cards)
+	{
+		FCard* FoundCard = CardRowHandle.DataTable->FindRow<FCard>(CardRowHandle.RowName, TEXT(""));
+		if (!FoundCard)
+		{
+			continue;
+		}
+
+		// 카드에 소유자 ID 설정
+		FoundCard->OwnerID = UniqueID;
+		Deck.Add(*FoundCard);
+	}
+
+	return true;
+}
+
 bool UCosGameInstance::AttemptSaveGame_Implementation(const FString& InLevelNameOverride, bool bIsUpdateDeck)
 {
 	if (bIsUpdateDeck)
 	{
 		if (ACardPlayer* CardPlayer = Cast<ACardPlayer>(UGameplayStatics::GetActorOfClass(this, ACardPlayer::StaticClass())))
 		{
-			UPileComponent_Deck* PileDeckComponent = CardPlayer->FindComponentByClass<UPileComponent_Deck>();
+			UPileDeckComponent* PileDeckComponent = CardPlayer->FindComponentByClass<UPileDeckComponent>();
 			Execute_UpdateDeckInInstance(this, PileDeckComponent->Cards);
 		}
 	}
@@ -238,6 +293,7 @@ void UCosGameInstance::ResetGame_Implementation()
 
 bool UCosGameInstance::AddPersistentHeroToInstance_Implementation(FDataTableRowHandle HeroData, FDataTableRowHandle HeroDeck, FString& OutUniqueID)
 {
+	// 영웅 데이터를 가져오고 유효성 검사
 	FMinion* FoundMinion = HeroData.DataTable->FindRow<FMinion>(HeroData.RowName,TEXT(""));
 	if (!FoundMinion)
 	{
@@ -247,43 +303,18 @@ bool UCosGameInstance::AddPersistentHeroToInstance_Implementation(FDataTableRowH
 	// 고유한 영웅 ID 생성
 	FString UniqueID = MakeUniqueHeroId(HeroData.RowName.ToString());
 
-	// 아티팩트를 필터링하여 영웅의 시작 상태 목록을 생성합니다.
-	TMap<TSubclassOf<UStatusComponent>, int32> FilteredStatuses = FilterOutArtifactsFromMinion(*FoundMinion);
+	// 영웅의 시작 상태에서 아티팩트를 필터링하고 상태를 설정
+	SetFilteredStartingStatusesForMinion(*FoundMinion, UniqueID);
 
-	// Minion 객체에 UniqueID와 필터링된 시작 상태를 설정
-	FoundMinion->UniqueID = UniqueID;
-	FoundMinion->StartingStatuses = FilteredStatuses;
-
-	// 건강 상태를 나타내는 StatusComponent 클래스 유형을 가져옵니다.
-	TSubclassOf<UStatusComponent> HealthStatusClass = UStatus_Health::StaticClass();
-	if (FoundMinion->StartingStatuses.Contains(HealthStatusClass))
+	// 영웅의 덱을 설정
+	if (!AssignHeroDeckToMinion(HeroDeck, UniqueID))
 	{
-		int32 StatusValue = FoundMinion->StartingStatuses[HealthStatusClass];
-
-		// 새로운 상태 제한을 설정하기 위한 맵을 생성하고, UStatus_Health 상태만 포함
-		TMap<TSubclassOf<UStatusComponent>, int32> NewStatusLimits;
-		NewStatusLimits.Add(HealthStatusClass, StatusValue);
-
-		// StatusLimits를 새로운 상태 제한으로 덮어씁니다.
-		FoundMinion->StatusLimits = NewStatusLimits;
-	}
-	PersistentHeroes.Add(*FoundMinion);
-
-	// HeroDeck으로부터 FDeck 구조체를 찾습니다.
-	if (FDeck* FoundDeck = HeroDeck.DataTable->FindRow<FDeck>(HeroDeck.RowName,TEXT("")))
-	{
-		for (FDataTableRowHandle Card : FoundDeck->Cards)
-		{
-			if (FCard* FoundCard = Card.DataTable->FindRow<FCard>(Card.RowName,TEXT("")))
-			{
-				FoundCard->OwnerID = UniqueID;
-				Deck.Add(*FoundCard);
-			}
-		}
+		return false;
 	}
 
-	// 생성된 고유한 영웅 ID를 반환 매개 변수에 설정합니다.
+	// 생성된 고유한 영웅 ID를 반환 매개 변수에 설정
 	OutUniqueID = UniqueID;
+
 	return true;
 }
 
@@ -297,17 +328,14 @@ bool UCosGameInstance::GetHeroWithIdFromInstance_Implementation(const FString& I
 		// 현재 영웅의 고유 ID가 입력된 ID와 동일한지 검사합니다.
 		if (UKismetStringLibrary::EqualEqual_StrStr(PersistentHero.UniqueID, InUniqueID))
 		{
-			// 동일한 ID를 가진 영웅을 찾은 경우
-			OutHero = PersistentHero; // 찾은 영웅을 OutHero에 복사합니다.
-			OutArrayIndex = CurrentIndex; // 해당 영웅의 인덱스를 OutArrayIndex에 설정합니다.
+			OutHero = PersistentHero;
+			OutArrayIndex = CurrentIndex;
 			return true; // 영웅을 성공적으로 찾았으므로 true를 반환합니다.
 		}
-
-		CurrentIndex++; // 다음 영웅을 검사하기 위해 인덱스를 증가시킵니다.
+		CurrentIndex++;
 	}
 
-	// 입력된 ID와 일치하는 영웅을 찾지 못한 경우
-	return false; // false를 반환하여 실패를 알립니다.
+	return false; // 입력된 ID와 일치하는 영웅을 찾지 못한 경우 false를 반환하여 실패를 알립니다. 
 }
 
 bool UCosGameInstance::AddArtifactToInstance_Implementation(const FStatusData& InArtifact)
@@ -320,16 +348,12 @@ bool UCosGameInstance::AddArtifactToInstance_Implementation(const FStatusData& I
 		{
 			// 기존 아티팩트의 값을 주어진 아티팩트의 값만큼 증가시킵니다.
 			ExistingArtifact.Value = ExistingArtifact.Value + InArtifact.Value;
-
-			// 성공적으로 업데이트되었으므로 true를 반환합니다.
 			return true;
 		}
 	}
 
 	// 동일한 클래스 유형의 아티팩트를 찾지 못한 경우, 새로운 아티팩트를 목록에 추가합니다.
 	Artifacts.Add(InArtifact);
-
-	// 새로운 아티팩트가 성공적으로 추가되었으므로 true를 반환합니다.
 	return true;
 }
 
@@ -393,7 +417,6 @@ void UCosGameInstance::AddDoneStoryEncounterToInstance_Implementation(FDataTable
 {
 	DoneStoryEncounters.Add(StoryEncounter);
 }
-
 
 TArray<FStatusData> UCosGameInstance::GetArtifactsFromInstance_Implementation()
 {

@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "PileComponent.h"
-#include "PileComponent_Deck.generated.h"
+#include "PileDeckComponent.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class CROWNOFSIN_API UPileComponent_Deck : public UPileComponent
+UCLASS(ClassGroup=("Cos"), meta=(BlueprintSpawnableComponent))
+class CROWNOFSIN_API UPileDeckComponent : public UPileComponent
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this component's properties
-	UPileComponent_Deck();
+	UPileDeckComponent();
 
 protected:
 	// Called when the game starts
