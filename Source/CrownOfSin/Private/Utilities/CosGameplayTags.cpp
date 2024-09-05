@@ -3,6 +3,8 @@
 
 namespace CosGameTags
 {
+	UE_DEFINE_GAMEPLAY_TAG(None, TEXT("None"))
+
 	UE_DEFINE_GAMEPLAY_TAG(Target, TEXT("Target"))
 	UE_DEFINE_GAMEPLAY_TAG(Target_Ally, TEXT("Target.Ally"))
 	UE_DEFINE_GAMEPLAY_TAG(Target_Hero, TEXT("Target.Hero"))
