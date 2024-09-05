@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "CardEffectComponent.h"
+#include "CardEffects/CardEffectComponent.h"
 #include "Core/CosEnumStruct.h"
 #include "GameFramework/Actor.h"
 #include "CardBase.generated.h"

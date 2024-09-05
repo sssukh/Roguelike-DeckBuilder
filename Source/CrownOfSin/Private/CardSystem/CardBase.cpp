@@ -3,7 +3,7 @@
 
 #include "CardSystem/CardBase.h"
 
-#include "CardSystem/CardEffectComponent.h"
+#include "CardSystem/CardEffects/CardEffectComponent.h"
 #include "CardSystem/CardActions/Action_Effect.h"
 #include "CombatSystem/CardUseRules/UseRuleComponent.h"
 #include "CombatSystem/TargetSystem/TargetingComponent.h"

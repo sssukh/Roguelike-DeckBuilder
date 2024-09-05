@@ -27,7 +27,7 @@ struct FMapEvent : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Map Event")
 	FDataTableRowHandle SpecificEvent;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Map Event")
 	TArray<UDataTable*> EncounterTables;
 
@@ -77,7 +77,6 @@ struct FEncounterData : public FTableRowBase
 	}
 };
 
-
 USTRUCT(BlueprintType)
 struct FStoryEncounter : public FTableRowBase
 {
@@ -98,3 +97,5 @@ struct FStoryEncounter : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Story Encounter")
 	TSubclassOf<UUserWidget> EncounterWidget;
 };
+
+
