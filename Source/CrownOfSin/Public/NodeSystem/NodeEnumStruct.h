@@ -39,7 +39,7 @@ struct FMapEvent : public FTableRowBase
 };
 
 USTRUCT(BlueprintType)
-struct FEncounter
+struct FEncounterData : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -54,6 +54,27 @@ struct FEncounter
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter")
 	FString Level = FString(TEXT("Arena"));
+
+	FEncounterData():Level("Default Level"){}
+
+	FEncounterData& operator=(const FEncounterData& Other)
+	{
+		if(this!= &Other)
+		{
+			GameplayTags = Other.GameplayTags;
+			Minions = Other.Minions;
+			Reward = Other.Reward;
+			Level = Other.Level;
+		}
+
+		return *this;
+	}
+
+	// 복사 생성자
+	FEncounterData(const FEncounterData& Other)
+	{
+		*this = Other; // 대입 연산자를 사용하여 복사
+	}
 };
 
 
@@ -61,6 +82,7 @@ USTRUCT(BlueprintType)
 struct FStoryEncounter : public FTableRowBase
 {
 	GENERATED_BODY()
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Story Encounter")
 	FGameplayTagContainer GameplayTags;
 

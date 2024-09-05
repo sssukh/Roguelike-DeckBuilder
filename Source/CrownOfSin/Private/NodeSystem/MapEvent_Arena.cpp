@@ -19,7 +19,7 @@ UMapEvent_Arena::UMapEvent_Arena()
 
 FGameplayTagContainer UMapEvent_Arena::GetEncounterTags(FDataTableRowHandle EncounterTags)
 {
-	return EncounterTags.DataTable->FindRow<FEncounter>(EncounterTags.RowName,TEXT("FEncounter"))->GameplayTags;
+	return EncounterTags.DataTable->FindRow<FEncounterData>(EncounterTags.RowName,TEXT("FEncounter"))->GameplayTags;
 }
 
 void UMapEvent_Arena::RunMapEvent(FDataTableRowHandle EventData)
@@ -43,7 +43,7 @@ void UMapEvent_Arena::RunMapEvent(FDataTableRowHandle EventData)
 
 void UMapEvent_Arena::ChangeLevel(FDataTableRowHandle EventData)
 {
-	FEncounter* Encounter = EventData.DataTable->FindRow<FEncounter>(EventData.RowName,TEXT("MapEvent in Arena"));
+	FEncounterData* Encounter = EventData.DataTable->FindRow<FEncounterData>(EventData.RowName,TEXT("MapEvent in Arena"));
 	
 	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(GetOuter());
 

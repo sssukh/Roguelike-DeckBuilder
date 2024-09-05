@@ -82,6 +82,7 @@ public:
 	virtual void SetPriority_Implementation(float InPriority) override;
 
 	virtual FText GetFriendlyName_Implementation() override;
+	
 
 
 	/*========================================================================================

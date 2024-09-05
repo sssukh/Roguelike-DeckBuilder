@@ -217,8 +217,8 @@ struct FToolTipValue
 	bool bValued;
 };
 
-USTRUCT(BlueprintType)
-struct FStatusData
+USTRUCT(BlueprintType,Blueprintable)
+struct FStatusData : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -315,7 +315,7 @@ struct FStatusAppearance
 };
 
 USTRUCT(BlueprintType)
-struct FCardEffect
+struct FCardEffect : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -426,7 +426,7 @@ struct FCardEffect
 };
 
 USTRUCT(BlueprintType)
-struct FUseRule
+struct FUseRule : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -483,7 +483,6 @@ USTRUCT(BlueprintType)
 struct FCard : public FTableRowBase
 {
 	GENERATED_BODY()
-
 	// 카드 소유자 ID
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
 	FString OwnerID;
@@ -506,7 +505,7 @@ struct FCard : public FTableRowBase
 
 	// 카드의 툴팁 데이터
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
-	FDataTableRowHandle Tooltips;
+	TArray<FDataTableRowHandle> Tooltips;
 
 	// 카드 효과
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
@@ -530,7 +529,7 @@ struct FCard : public FTableRowBase
 
 	// 카드 시작 상태
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
-	FStatusData StartingStatuses;
+	TArray<FStatusData> StartingStatuses;
 
 	// 카드 반복 횟수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
@@ -663,3 +662,4 @@ struct FDeck : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Deck", meta = (RowType="/Script/CrownOfSin.Card"))
 	TArray<FDataTableRowHandle> Cards;
 };
+

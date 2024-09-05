@@ -139,7 +139,7 @@ public:
 	virtual TArray<FDataTableRowHandle> GetDoneStoryEncountersFromInstance_Implementation() override;
 
 
-	virtual void SetCurrentEncounterInInstance_Implementation(FEncounter InCurrentEncoutner) override;
+	virtual void SetCurrentEncounterInInstance_Implementation(FEncounterData InCurrentEncoutner) override;
 
 	virtual void AddDoneStoryEncounterToInstance_Implementation(FDataTableRowHandle StoryEncounter) override;
 	/*========================================================================================
@@ -182,7 +182,7 @@ public:
 	TArray<FStatusData> Artifacts;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Cos Game Instance|Save & Load")
-	FEncounter CurrentEncounter;
+	FEncounterData CurrentEncounter;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Cos Game Instance|Save & Load")
 	FString CurrentNodeMap;

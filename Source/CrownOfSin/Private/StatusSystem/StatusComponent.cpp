@@ -211,3 +211,4 @@ FText UStatusComponent::GetFriendlyName_Implementation()
 {
 	return FriendlyName;
 }
+

@@ -73,7 +73,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 
-	void SetCurrentEncounterInInstance(FEncounter CurrentEncoutner);
+	void SetCurrentEncounterInInstance(FEncounterData CurrentEncoutner);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	void AddDoneStoryEncounterToInstance(FDataTableRowHandle StoryEncounter);
