@@ -63,6 +63,7 @@ void ANodeBase::BeginPlay()
 	}
 	MapEventRef = NewObject<UMapEventComponent>(this, MapEventClass);
 	MapEventRef->RegisterComponent();
+	
 }
 
 void ANodeBase::OnConstruction(const FTransform& Transform)
