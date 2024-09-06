@@ -151,5 +151,5 @@ int32 ACardPlayer::AddToStatus_Implementation(TSubclassOf<UStatusComponent> InSt
 
 void ACardPlayer::InitializeStoryEncounter_Implementation(FDataTableRowHandle EncounterData, bool bIsFirstScreen)
 {
-	PlayerUI->InitializeStoryEncounter(EncounterData, bIsFirstScreen);
+	IInterface_StoryEncounter::Execute_InitializeStoryEncounter(PlayerUI,EncounterData, bIsFirstScreen);
 }

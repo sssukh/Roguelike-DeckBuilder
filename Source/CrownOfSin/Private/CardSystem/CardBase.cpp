@@ -1,7 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "CardSystem/CardBase.h"
+﻿#include "CardSystem/CardBase.h"
 
 #include "CardSystem/CardEffects/CardEffectComponent.h"
 #include "CardSystem/CardActions/Action_Effect.h"
@@ -394,4 +391,25 @@ void ACardBase::QueueCardEffectAction(AActor* TargetActor, AActor* SourcePuppet,
 FGameplayTagContainer ACardBase::GetGameplayTags()
 {
 	return GameplayTagComponent->GameplayTags;
+}
+
+FText ACardBase::GetCardDescription(ECardDataType InCardDataType)
+{
+	if (InCardDataType == ECardDataType::Hand)
+	{
+		return CardDataHand.Description;
+	}
+	if (InCardDataType == ECardDataType::Deck)
+	{
+		return CardDataDeck.Description;
+	}
+	if (InCardDataType == ECardDataType::Base)
+	{
+		return CardDataBase.Description;
+	}
+	if (InCardDataType == ECardDataType::Pile)
+	{
+		return CardDataPile.Description;
+	}
+	return {};
 }

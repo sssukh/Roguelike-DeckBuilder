@@ -84,6 +84,9 @@ public:
 	TArray<ANodeBase*> Connections;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Node Base|Config|SetUp")
+	UMaterialInterface* NodeMeshMaterial;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Node Base|Config|SetUp")
 	TObjectPtr<UStaticMesh> SplineMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Node Base|Config|SetUp")

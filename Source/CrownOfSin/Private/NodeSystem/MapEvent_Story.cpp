@@ -29,7 +29,7 @@ FGameplayTagContainer UMapEvent_Story::GetEncounterTags(FDataTableRowHandle InSt
 void UMapEvent_Story::RunMapEvent(FDataTableRowHandle EventData)
 {
 	// 카드플레이어 가져와서 Interface 상속 확인
-	ACardPlayer* CardPlayer = Cast<ACardPlayer>(UGameplayStatics::GetActorOfClass(nullptr, ACardPlayer::StaticClass()));
+	ACardPlayer* CardPlayer = Cast<ACardPlayer>(UGameplayStatics::GetActorOfClass(this, ACardPlayer::StaticClass()));
 	if(!CardPlayer->GetClass()->ImplementsInterface(UInterface_StoryEncounter::StaticClass()))
 	{
 		COS_LOG_SCREEN(TEXT("카드 플레이어가 UInterface_StoryEncounter를 상속받지 않았습니다"));

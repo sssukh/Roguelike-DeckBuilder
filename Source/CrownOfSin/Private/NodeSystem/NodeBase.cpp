@@ -7,8 +7,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Libraries/AssetTableRef.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
 #include "Utilities/CosLog.h"
 #include "NodeSystem/MapEventComponent.h"
+#include "NodeSystem/MapEvent_Multi.h"
 #include "NodeSystem/NodeEnumStruct.h"
 #include "UI/UW_Layout_Cos.h"
 
@@ -24,6 +26,18 @@ ANodeBase::ANodeBase()
 	NodeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("NodeMesh"));
 	NodeMesh->SetupAttachment(RootComponent);
 
+	if (UStaticMesh* Plane = FAssetReferenceUtility::LoadAssetFromDataTable<UStaticMesh>(AssetRefPath::MeshesPath, FName("Plane")))
+	{
+		NodeMesh->SetStaticMesh(Plane);
+
+		if (UMaterialInterface* M_Node = FAssetReferenceUtility::LoadAssetFromDataTable<UMaterialInterface>(AssetRefPath::MaterialPath, FName("M_Node")))
+		{
+			NodeMeshMaterial = M_Node;
+			NodeMesh->SetMaterial(0, NodeMeshMaterial);
+		}
+	}
+
+
 	CrossMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CrossMesh"));
 	CrossMesh->SetupAttachment(NodeMesh);
 
@@ -31,6 +45,8 @@ ANodeBase::ANodeBase()
 	{
 		SplineMesh = SM_Edge;
 	}
+
+	MapEventClass = UMapEvent_Multi::StaticClass();
 }
 
 void ANodeBase::BeginPlay()
@@ -55,15 +71,7 @@ void ANodeBase::OnConstruction(const FTransform& Transform)
 
 	AddConnectionSplines();
 
-	// 기존 NodeMaterial이 존재하면 삭제를 위한 절차
-	if (NodeMaterial)
-	{
-		// 필요시 참조를 해제하고 가비지 컬렉션을 기다림
-		NodeMaterial->MarkAsGarbage();
-		NodeMaterial = nullptr; // 포인터 초기화
-	}
-
-	NodeMaterial = UMaterialInstanceDynamic::Create(NodeMesh->GetMaterial(0), this);
+	NodeMaterial = NodeMesh->CreateDynamicMaterialInstance(0, NodeMeshMaterial);
 
 	if (MapEvent.IsNull())
 	{
@@ -72,7 +80,7 @@ void ANodeBase::OnConstruction(const FTransform& Transform)
 	}
 	if (FMapEvent* MapEventData = MapEvent.DataTable->FindRow<FMapEvent>(MapEvent.RowName,TEXT("")))
 	{
-		NodeMaterial->SetTextureParameterValue(TEXT("Texture"), MapEventData->Icon);
+		NodeMaterial->SetTextureParameterValue(FName(TEXT("Texture")), MapEventData->Icon);
 	}
 }
 
@@ -145,15 +153,10 @@ void ANodeBase::DisplaySplinePath(USplineComponent* Spline, int32 ConnectionInde
 		if (USplineMeshComponent* SplineMeshComponent = NewObject<USplineMeshComponent>(this, *SplineMeshName))
 		{
 			// 스플라인 메시 컴포넌트를 루트 컴포넌트에 첨부하고 등록
-			SplineMeshComponent->SetupAttachment(RootComponent);
+			SplineMeshComponent->SetCastShadow(false);
 			SplineMeshComponent->RegisterComponent();
 			AddInstanceComponent(SplineMeshComponent);
 
-			// 기본 변환 설정 및 그림자 드리우기 비활성화
-			SplineMeshComponent->SetRelativeTransform(FTransform::Identity);
-			SplineMeshComponent->SetCastShadow(false);
-
-			// 메시 설정
 			SplineMeshComponent->SetStaticMesh(SplineMesh);
 
 			// 현재 스플라인 세그먼트의 시작 및 끝 위치와 탄젠트 계산
@@ -164,6 +167,10 @@ void ANodeBase::DisplaySplinePath(USplineComponent* Spline, int32 ConnectionInde
 
 			// 스플라인 메시 컴포넌트의 시작과 끝을 설정
 			SplineMeshComponent->SetStartAndEnd(StartPosition, StartTangent, EndPosition, EndTangent);
+
+			SplineMeshComponent->SetMobility(EComponentMobility::Movable);
+			FAttachmentTransformRules AttachmentRules = FAttachmentTransformRules(EAttachmentRule::KeepWorld, true);
+			SplineMeshComponent->AttachToComponent(RootComponent, AttachmentRules);
 		}
 	}
 }
@@ -171,14 +178,15 @@ void ANodeBase::DisplaySplinePath(USplineComponent* Spline, int32 ConnectionInde
 void ANodeBase::CrossOut()
 {
 	CrossMesh->SetVisibility(true);
-	NodeMaterial->SetVectorParameterValue(TEXT("Color"), TrueColor);
+	if (NodeMaterial)
+		NodeMaterial->SetVectorParameterValue(TEXT("Color"), TrueColor);
 }
 
 void ANodeBase::HoverOverNode_Implementation()
 {
 	if (bEnabled)
 	{
-		ACardPlayer* CardPlayer = Cast<ACardPlayer>(UGameplayStatics::GetActorOfClass(nullptr, ACardPlayer::StaticClass()));
+		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 		if (!CardPlayer)
 		{
 			COS_LOG_SCREEN(TEXT("레벨에 ACardPlayer가 존재하지 않습니다."));
@@ -187,9 +195,11 @@ void ANodeBase::HoverOverNode_Implementation()
 
 		if (!CardPlayer->PlayerUI->ShouldNodeMapBeBlocked())
 		{
-			TrueColor = NodeMaterial->K2_GetVectorParameterValue(TEXT("Color"));
-
-			NodeMaterial->SetVectorParameterValue(TEXT("Color"), FLinearColor::White);
+			if (NodeMaterial)
+			{
+				TrueColor = NodeMaterial->K2_GetVectorParameterValue(TEXT("Color"));
+				NodeMaterial->SetVectorParameterValue(TEXT("Color"), FLinearColor::White);
+			}
 		}
 	}
 }
@@ -198,7 +208,10 @@ void ANodeBase::HoverOffNode_Implementation()
 {
 	if (bEnabled)
 	{
-		NodeMaterial->SetVectorParameterValue(TEXT("Color"), TrueColor);
+		if (NodeMaterial)
+		{
+			NodeMaterial->SetVectorParameterValue(TEXT("Color"), TrueColor);
+		}
 	}
 }
 
@@ -206,7 +219,7 @@ void ANodeBase::ClickNode_Implementation()
 {
 	if (bEnabled)
 	{
-		ACardPlayer* CardPlayer = Cast<ACardPlayer>(UGameplayStatics::GetActorOfClass(nullptr, ACardPlayer::StaticClass()));
+		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 		if (!CardPlayer)
 		{
 			COS_LOG_SCREEN(TEXT("레벨에 ACardPlayer가 존재하지 않습니다."));

@@ -98,8 +98,13 @@ public:
 	void QueueCardEffectAction(AActor* TargetActor, AActor* SourcePuppet, UCardEffectComponent* CardEffect, bool bAnimateSourcePuppet);
 
 
+public:
 	UFUNCTION(BlueprintCallable, Category = "Card")
 	FGameplayTagContainer GetGameplayTags();
+
+	UFUNCTION(BlueprintPure, Category = "Card")
+	FText GetCardDescription(ECardDataType InCardDataType);
+	
 
 	/*========================================================================================
 	*	Field Members
