@@ -215,6 +215,9 @@ struct FToolTipValue
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tool Tip Value")
 	bool bValued;
+
+	FToolTipValue():bValued(false)
+	{};
 };
 
 USTRUCT(BlueprintType,Blueprintable)

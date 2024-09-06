@@ -31,6 +31,7 @@ ANodeBase::ANodeBase()
 	{
 		SplineMesh = SM_Edge;
 	}
+	
 }
 
 void ANodeBase::BeginPlay()
@@ -47,6 +48,7 @@ void ANodeBase::BeginPlay()
 	}
 	MapEventRef = NewObject<UMapEventComponent>(this, MapEventClass);
 	MapEventRef->RegisterComponent();
+	
 }
 
 void ANodeBase::OnConstruction(const FTransform& Transform)
@@ -54,17 +56,9 @@ void ANodeBase::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 
 	AddConnectionSplines();
-
-	// 기존 NodeMaterial이 존재하면 삭제를 위한 절차
-	if (NodeMaterial)
-	{
-		// 필요시 참조를 해제하고 가비지 컬렉션을 기다림
-		NodeMaterial->MarkAsGarbage();
-		NodeMaterial = nullptr; // 포인터 초기화
-	}
-
-	NodeMaterial = UMaterialInstanceDynamic::Create(NodeMesh->GetMaterial(0), this);
-
+	
+	NodeMaterial = NodeMesh->CreateDynamicMaterialInstance(0,NodeMesh->GetMaterial(0));
+	
 	if (MapEvent.IsNull())
 	{
 		COS_LOG_SCREEN(TEXT("%s 의 MapEvent가 설정되지 않았습니다. MapEvent를 설정해주세요."), *GetNameSafe(this));
@@ -72,7 +66,7 @@ void ANodeBase::OnConstruction(const FTransform& Transform)
 	}
 	if (FMapEvent* MapEventData = MapEvent.DataTable->FindRow<FMapEvent>(MapEvent.RowName,TEXT("")))
 	{
-		NodeMaterial->SetTextureParameterValue(TEXT("Texture"), MapEventData->Icon);
+		NodeMaterial->SetTextureParameterValue(FName(TEXT("Texture")), MapEventData->Icon);
 	}
 }
 
@@ -145,7 +139,8 @@ void ANodeBase::DisplaySplinePath(USplineComponent* Spline, int32 ConnectionInde
 		if (USplineMeshComponent* SplineMeshComponent = NewObject<USplineMeshComponent>(this, *SplineMeshName))
 		{
 			// 스플라인 메시 컴포넌트를 루트 컴포넌트에 첨부하고 등록
-			SplineMeshComponent->SetupAttachment(RootComponent);
+			
+
 			SplineMeshComponent->RegisterComponent();
 			AddInstanceComponent(SplineMeshComponent);
 
@@ -164,6 +159,11 @@ void ANodeBase::DisplaySplinePath(USplineComponent* Spline, int32 ConnectionInde
 
 			// 스플라인 메시 컴포넌트의 시작과 끝을 설정
 			SplineMeshComponent->SetStartAndEnd(StartPosition, StartTangent, EndPosition, EndTangent);
+
+
+			SplineMeshComponent->SetMobility(EComponentMobility::Movable);
+			FAttachmentTransformRules AttachmentRules = FAttachmentTransformRules(EAttachmentRule::KeepWorld, true);
+			SplineMeshComponent->AttachToComponent(RootComponent, AttachmentRules);			
 		}
 	}
 }
@@ -178,7 +178,7 @@ void ANodeBase::HoverOverNode_Implementation()
 {
 	if (bEnabled)
 	{
-		ACardPlayer* CardPlayer = Cast<ACardPlayer>(UGameplayStatics::GetActorOfClass(nullptr, ACardPlayer::StaticClass()));
+		ACardPlayer* CardPlayer = Cast<ACardPlayer>(UGameplayStatics::GetActorOfClass(this, ACardPlayer::StaticClass()));
 		if (!CardPlayer)
 		{
 			COS_LOG_SCREEN(TEXT("레벨에 ACardPlayer가 존재하지 않습니다."));

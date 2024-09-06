@@ -93,7 +93,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Node Base|Components")
 	TObjectPtr<USceneComponent> Scene;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Node Base|Components")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Node Base|Components")
 	TObjectPtr<UStaticMeshComponent> NodeMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Node Base|Components")
@@ -123,4 +123,5 @@ public:
 public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category="Node Base|Delegate")
 	FOnNodeSelected OnNodeSelected;
+
 };
