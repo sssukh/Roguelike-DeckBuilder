@@ -11,75 +11,36 @@ UMapEvent_Multi::UMapEvent_Multi()
 
 void UMapEvent_Multi::RunMapEvent(FDataTableRowHandle EventData)
 {
-	// 데이터 테이블이 유효한지 확인
-	if (!EventData.DataTable)
+	CurrentMapEventStruct = *EventData.DataTable->FindRow<FMapEvent>(EventData.RowName,TEXT("FMapEvent in MapEvent_Multi"));
+
+	UActorComponent* FindComponent = GetOwner()->GetComponentByClass(CurrentMapEventStruct.MapEventClass);
+
+	// 전달받은 EventData에 담긴 MapEventClass 정보로 찾은 걸 쓰거나 없으면 새로 생성
+	if (IsValid(FindComponent))
 	{
-		COS_LOG_SCREEN_ERROR(TEXT("EventData.DataTable is nullptr"));
-		return;
-	}
-
-	// 데이터 테이블에서 Row를 찾음
-	FMapEvent* MapEvent = EventData.DataTable->FindRow<FMapEvent>(EventData.RowName, TEXT("MapEvent_Multi의 FMapEvent"));
-	if (!MapEvent)
-	{
-		COS_LOG_SCREEN_ERROR(TEXT("Row not found: %s"), *EventData.RowName.ToString());
-		return;
-	}
-
-	CurrentMapEventStruct = *MapEvent; // 유효한 Row를 가져왔으므로 할당
-
-	// MapEventClass에 해당하는 컴포넌트를 가져옴
-	UMapEventComponent* FindComponent = Cast<UMapEventComponent>(GetOwner()->GetComponentByClass(CurrentMapEventStruct.MapEventClass));
-
-	// 컴포넌트가 유효한지 확인, 없으면 새로 생성
-	CurrentMapEventComponent = IsValid(FindComponent) ? FindComponent : CreateNewMapEventComponent(CurrentMapEventStruct.MapEventClass);
-
-	// 특정 이벤트가 있으면 실행, 없으면 랜덤 이벤트 실행
-	if (!RunSpecificEvent(CurrentMapEventComponent, CurrentMapEventStruct.SpecificEvent))
-	{
-		RunRandomEvent(CurrentMapEventComponent, CurrentMapEventStruct);
-	}
-}
-
-UMapEventComponent* UMapEvent_Multi::CreateNewMapEventComponent(TSubclassOf<UMapEventComponent> MapEventClass)
-{
-	// 새로운 컴포넌트 생성 및 등록
-	UMapEventComponent* NewMapEventComponent = NewObject<UMapEventComponent>(GetOwner(), MapEventClass, FName(TEXT("MapEventComponentCreated")));
-	if (NewMapEventComponent)
-	{
-		NewMapEventComponent->RegisterComponent();
+		CurrentMapEventComponent = FindComponent;
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("새로운 MapEventComponent를 생성하지 못했습니다."));
+		CurrentMapEventComponent = NewObject<UActorComponent>(GetOwner(), CurrentMapEventStruct.MapEventClass, FName(TEXT("MapEventComponentCreated")));
+		CurrentMapEventComponent->RegisterComponent();
 	}
-	return NewMapEventComponent;
-}
 
-bool UMapEvent_Multi::RunSpecificEvent(UMapEventComponent* MapEventComponent, FDataTableRowHandle SpecificEvent)
-{
-	// 특정 이벤트가 있는 경우 해당 이벤트 실행
-	if (!SpecificEvent.IsNull())
+	UMapEventComponent* MapEventComponent = Cast<UMapEventComponent>(CurrentMapEventComponent);
+
+	FDataTableRowHandle RowHandle = CurrentMapEventStruct.SpecificEvent;
+	// 있으면 해당 이벤트 전달시키고 실행 
+	if (!RowHandle.IsNull())
 	{
-		MapEventComponent->RunMapEvent(SpecificEvent);
-		return true;
+		MapEventComponent->RunMapEvent(CurrentMapEventStruct.SpecificEvent);
+		return;
 	}
-	return false;
-}
 
-void UMapEvent_Multi::RunRandomEvent(UMapEventComponent* MapEventComponent, const FMapEvent& MapEventStruct)
-{
-	// 랜덤 이벤트 처리
+
+	// 없으면 랜덤 인카운터를 통해 이벤트 받아오기
 	FDataTableRowHandle RandomEncounter;
-	MapEventComponent->ChooseRandomEncounter(MapEventStruct, RandomEncounter);
+	MapEventComponent->ChooseRandomEncounter(CurrentMapEventStruct, TMap<FGameplayTag, float>(), RandomEncounter);
 
-	if (!RandomEncounter.IsNull())
-	{
-		// 랜덤 이벤트 실행
-		MapEventComponent->RunMapEvent(RandomEncounter);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to choose a random encounter event"));
-	}
+	// 받아온 랜덤 이벤트 실행
+	MapEventComponent->RunMapEvent(RandomEncounter);
 }

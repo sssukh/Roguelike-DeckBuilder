@@ -1,3 +1,4 @@
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -36,22 +37,12 @@ public:
 
 	virtual void NativeDestruct() override;
 
-	/*========================================================================================
-	*	Interface_Event Holder
-	=========================================================================================*/
-public:
+	// Interface_EventHolder
 	virtual void RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags) override;
 
-	/*========================================================================================
-	*	Interface_StoryEncounter
-	=========================================================================================*/
-public: 
+	// Interface_StoryEncounter
 	virtual void InitializeStoryEncounter_Implementation(FDataTableRowHandle EncounterData, bool bIsFirstScreen) override;
-
-
-	 /*========================================================================================
-	  *	Field Members
-	  =========================================================================================*/
+	// Variables
 public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Story Encounter Widget",meta=(BindWidget))
 	TObjectPtr<UImage> Background;
@@ -68,7 +59,6 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Story Encounter Widget",meta=(BindWidget))
 	TArray<UUW_StoryButton*> StoryButtons;
 
-public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Story Encounter Widget | Config")
 	TSubclassOf<UUW_StoryButton> StoryButtonClass;
 

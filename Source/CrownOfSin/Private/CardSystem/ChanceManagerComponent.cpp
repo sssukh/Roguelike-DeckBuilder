@@ -1,5 +1,8 @@
-﻿
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+
 #include "CardSystem/ChanceManagerComponent.h"
+
 #include "Libraries/FunctionLibrary_ArrayUtils.h"
 
 
@@ -9,7 +12,6 @@ UChanceManagerComponent::UChanceManagerComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	PrimaryComponentTick.bStartWithTickEnabled = false;
 
 	// ...
 }
@@ -21,102 +23,91 @@ void UChanceManagerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	
 }
 
 
-TArray<FGameplayTag> UChanceManagerComponent::GetRandomTagsByWeights(const TMap<FGameplayTag, float>& WeightedTags, int InAmount)
+// Called every frame
+void UChanceManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	// 가중치 값을 저장할 배열 생성
-	TArray<float> WeightValues;
-	WeightedTags.GenerateValueArray(WeightValues);
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// 최소 및 최대 가중치 계산
-	float MinWeight = FMath::Min(WeightValues);
-	float MaxWeight = FMath::Max(WeightValues);
+	// ...
+}
 
-	TArray<FGameplayTag> PickedTags;
+TArray<FGameplayTag> UChanceManagerComponent::GetRandomTagsByWeights(const TMap<FGameplayTag, float>& WeightedTags,
+	int InAmount)
+{
+	TArray<float> MapValues;
+	
+	WeightedTags.GenerateValueArray(MapValues);
+	int32 tmp;
+	int32 minValue = FMath::Min(MapValues, &tmp);
+	int32 maxValue = FMath::Max(MapValues,&tmp);
 
-	// 모든 가중치가 동일한 경우 랜덤으로 태그를 선택
-	if (FMath::IsNearlyEqual(MinWeight, MaxWeight))
+	TArray<FGameplayTag> LocalPickedTags;
+	
+	// 모든 확률이 같다면 그냥 랜덤뽑기
+	if(maxValue==minValue)
 	{
-		PickedTags = GetRandomTagsWithoutWeight(WeightedTags, InAmount);
+		while(LocalPickedTags.Num()<InAmount) 
+		{
+			TArray<FGameplayTag> Keys;
+			WeightedTags.GetKeys(Keys);
+
+			UFunctionLibrary_ArrayUtils::ShuffleArray(Keys);
+			
+			LocalPickedTags.Add(Keys[0]);
+		}
+		return LocalPickedTags;
 	}
 	else
 	{
-		// 가중치 합을 계산하고, 가중치에 따라 태그 선택
-		float TotalWeight = GetTotalWeight(WeightValues);
-		PickedTags = GetRandomTagsWithWeight(WeightedTags, InAmount, TotalWeight);
-	}
+		float LocalWeightSum=0;
+		for (float MapValue :MapValues)
+		{
+			LocalWeightSum+=MapValue;
+		}
 
-	return PickedTags;
+		while(LocalPickedTags.Num()<InAmount)
+		{
+			FGameplayTag PickedTag;
+			if(PickTagFromWeightAndWeightSum(WeightedTags,LocalWeightSum,PickedTag))
+			{
+				LocalPickedTags.Add(PickedTag);
+			}
+
+			
+		}
+		return LocalPickedTags;
+	}
 }
 
-bool UChanceManagerComponent::PickTagFromWeightAndWeightSum(TMap<FGameplayTag, float> WeightedTags, float TotalWeight, FGameplayTag& OutPickedTag)
+bool UChanceManagerComponent::PickTagFromWeightAndWeightSum(TMap<FGameplayTag, float> WeightedTags, float WeightSum,
+	FGameplayTag& PickedTag)
 {
-	// 기준값: 0과 가중치 총합 사이에서 랜덤 값 선택
-	float RandomWeight = FMath::FRandRange(0.0f, TotalWeight);
+	// 기준값을 설정합니다
+	float LocalWeightSelection = FMath::FRandRange(0.0f, WeightSum);
 
-	// 누적 가중치
-	float AccumulatedWeight = 0.0f;
+	// WeightedTags의 키값들을 가져옵니다.
+	TArray<FGameplayTag> Keys;
+	WeightedTags.GetKeys(Keys);
 
-	// 가중치 맵을 순회하여 태그 선택
-	for (const TPair<FGameplayTag, float>& TagPair : WeightedTags)
+	float LocalWeightCount=0;
+	for (FGameplayTag Key : Keys)
 	{
-		AccumulatedWeight += TagPair.Value;
+		// 가중치들의 합을 누적시킵니다.
+		LocalWeightCount +=WeightedTags[Key];
 
-		// 누적된 가중치가 랜덤 값에 도달하면 해당 태그를 선택
-		if (AccumulatedWeight >= RandomWeight)
+		// 누적한 값이 설정한 기준값보다 높아지면 해당 GameplayTag를 반환합니다.
+		// 기준값은 가중치들의 총합보다 같거나 작기때문에 문제가 생기지 않는이상 if문 내부로 들어가게 됩니다.
+		if(LocalWeightCount>=LocalWeightSelection)
 		{
-			OutPickedTag = TagPair.Key;
+			PickedTag = Key;
 			return true;
 		}
 	}
 
-	// 만약 태그를 선택하지 못한 경우 (논리적으로는 실행되지 않음)
 	return false;
 }
 
-
-TArray<FGameplayTag> UChanceManagerComponent::GetRandomTagsWithoutWeight(const TMap<FGameplayTag, float>& WeightedTags, int32 InAmount)
-{
-	TArray<FGameplayTag> RandomTags;
-	TArray<FGameplayTag> Keys;
-	WeightedTags.GetKeys(Keys);
-
-	// ShuffleArray를 이용해 태그 배열 섞기
-	UFunctionLibrary_ArrayUtils::ShuffleArray(Keys);
-
-	// 태그를 임의로 선택하여 결과에 추가
-	while (RandomTags.Num() < InAmount)
-	{
-		RandomTags.Add(Keys[FMath::RandRange(0, Keys.Num() - 1)]);
-	}
-
-	return RandomTags;
-}
-
-float UChanceManagerComponent::GetTotalWeight(const TArray<float>& WeightValues)
-{
-	float TotalWeight = 0.0f;
-	for (float Weight : WeightValues)
-	{
-		TotalWeight += Weight;
-	}
-	return TotalWeight;
-}
-
-TArray<FGameplayTag> UChanceManagerComponent::GetRandomTagsWithWeight(const TMap<FGameplayTag, float>& WeightedTags, int32 InAmount, float TotalWeight)
-{
-	TArray<FGameplayTag> WeightedTagsResult;
-
-	while (WeightedTagsResult.Num() < InAmount)
-	{
-		FGameplayTag PickedTag;
-		if (PickTagFromWeightAndWeightSum(WeightedTags, TotalWeight, PickedTag))
-		{
-			WeightedTagsResult.Add(PickedTag);
-		}
-	}
-
-	return WeightedTagsResult;
-}

@@ -23,7 +23,7 @@ UMapEvent_Treasure::UMapEvent_Treasure()
 	// ...
 }
 
-FGameplayTagContainer UMapEvent_Treasure::GetEncounterTags(const FDataTableRowHandle& EncounterTags)
+FGameplayTagContainer UMapEvent_Treasure::GetEncounterTags(FDataTableRowHandle EncounterTags)
 {
 	FStoryEncounter* StoryEncounter = EncounterTags.DataTable->FindRow<FStoryEncounter>(EncounterTags.RowName,"FStoryEncounter in Treasure");
 

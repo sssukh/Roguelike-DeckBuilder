@@ -63,6 +63,7 @@ void ANodeBase::BeginPlay()
 	}
 	MapEventRef = NewObject<UMapEventComponent>(this, MapEventClass);
 	MapEventRef->RegisterComponent();
+	
 }
 
 void ANodeBase::OnConstruction(const FTransform& Transform)
@@ -228,9 +229,12 @@ void ANodeBase::ClickNode_Implementation()
 
 		if (!CardPlayer->PlayerUI->ShouldNodeMapBeBlocked())
 		{
-			UGameInstance* GameInstance = UFunctionLibrary_Singletons::GetValidCardGameInstance(this);
-			if (!GameInstance)
+			UGameInstance* GameInstance = GetGameInstance();
+			if (!GameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
+			{
+				COS_LOG_SCREEN(TEXT("게임 인스턴스가 UInterface_CardGameInstance를 상속받지 않았습니다"));
 				return;
+			}
 
 			IInterface_CardGameInstance::Execute_AddVisitedNodeToInstance(GameInstance, Id);
 

@@ -32,57 +32,51 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool ResolveCardEffect();
-
-
 	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
-	bool bInterrupt;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
-	bool bImmediated = true;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
-	bool bTargeted = true;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
-	TSubclassOf<UTargetingComponent> DefaultTargetingClass;
-	
-public:
-	//파티클 빼고는 다 들어가 있음 굳이 멤버변수로 따로 만들어야하나 ? FCard로 하면안되나 ?
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Card Effect | Variable")
 	int32 EffectValue;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Card Effect | Variable")
 	TSubclassOf<UActorComponent> TargetComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Card Effect | Variable")
 	TObjectPtr<ACardBase> ParentCard;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Card Effect | Variable")
 	FGameplayTagContainer GameplayTags;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Card Effect | Variable")
+	bool bTargeted = true;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Card Effect | Variable")
+	bool bImmediated = true;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Card Effect | Variable")
 	TSubclassOf<UTargetingComponent> TargetingClass;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Card Effect | Variable")
+	TSubclassOf<UTargetingComponent> DefaultTargetingClass;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Card Effect | Variable")
 	FGameplayTag HeroAnim;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Card Effect | Variable")
 	TSubclassOf<AAction_Effect> EffectAction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Card Effect | Variable")
 	FDataTableRowHandle UsedData;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Card Effect | Variable")
+	bool bInterrupt;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Card Effect | Variable")
 	FString Identifier;
-	
 
 	/*========================================================================================
 	*	Delegate
 	=========================================================================================*/
-	UPROPERTY(BlueprintAssignable,BlueprintCallable,Category="Card Effect | Delegate")
 	FOnCardResolved OnCardResolved;
 };

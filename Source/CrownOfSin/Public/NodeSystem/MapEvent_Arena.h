@@ -17,7 +17,7 @@ public:
 	UMapEvent_Arena();
 	
 
-	virtual FGameplayTagContainer GetEncounterTags(const FDataTableRowHandle& EncounterTags) override;
+	virtual FGameplayTagContainer GetEncounterTags(FDataTableRowHandle EncounterTags) override;
 
 	virtual void RunMapEvent(FDataTableRowHandle EventData) override;
 
