@@ -19,10 +19,9 @@ UMapEvent_Story::UMapEvent_Story()
 	// ...
 }
 
-FGameplayTagContainer UMapEvent_Story::GetEncounterTags(FDataTableRowHandle InStoryEncounter)
+FGameplayTagContainer UMapEvent_Story::GetEncounterTags(const FDataTableRowHandle& InStoryEncounter)
 {
 	FStoryEncounter StoryEncounter = *InStoryEncounter.DataTable->FindRow<FStoryEncounter>(InStoryEncounter.RowName,TEXT("Story Encounter in MapEvent_Story"));
-
 	return StoryEncounter.GameplayTags;
 }
 

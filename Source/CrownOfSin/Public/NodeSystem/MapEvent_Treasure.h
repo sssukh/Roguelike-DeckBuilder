@@ -17,7 +17,7 @@ public:
 	UMapEvent_Treasure();
 
 	// UFUNCTION(BlueprintCallable, Category = "MapEvent Treasure")
-	virtual FGameplayTagContainer GetEncounterTags(FDataTableRowHandle EncounterTags) override;
+	virtual FGameplayTagContainer GetEncounterTags(const FDataTableRowHandle& EncounterTags) override;
 
 	// UFUNCTION(BlueprintCallable, Category = "MapEvent Treasure")
 	virtual void RunMapEvent(FDataTableRowHandle EventData) override;
