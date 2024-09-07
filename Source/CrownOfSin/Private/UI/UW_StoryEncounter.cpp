@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "UI/UW_StoryEncounter.h"
 
 #include "Animation/WidgetAnimation.h"
@@ -15,7 +12,6 @@
 
 UUW_StoryEncounter::UUW_StoryEncounter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	
 }
 
 void UUW_StoryEncounter::SetupStoryEncounter(const FText& InDescription, UTexture2D* Image, TArray<FCard> EncounterOptions,
@@ -23,19 +19,19 @@ void UUW_StoryEncounter::SetupStoryEncounter(const FText& InDescription, UTextur
 {
 	Description->SetText(InDescription);
 
-	Background->SetBrushFromTexture(Image,false);
+	Background->SetBrushFromTexture(Image, false);
 
 	// 마진 패딩 설정값 미리 지정해둠.
-	FMargin ButtonPadding(0.0f,12.0f);
+	FMargin ButtonPadding(0.0f, 12.0f);
 
 	if (!StoryButtonClass)
 	{
 		COS_LOG_SCREEN(TEXT("StoryButtonClass 클래스를 설정해주세요!!!"));
 		return;
 	}
-	for (FCard Option : EncounterOptions)
+	for (const FCard& Option : EncounterOptions)
 	{
-		UUW_StoryButton* NewStoryButtonWidget = CreateWidget<UUW_StoryButton>(this,StoryButtonClass);
+		UUW_StoryButton* NewStoryButtonWidget = CreateWidget<UUW_StoryButton>(this, StoryButtonClass);
 
 		NewStoryButtonWidget->EncounterCard = Option;
 
@@ -50,7 +46,7 @@ void UUW_StoryEncounter::SetupStoryEncounter(const FText& InDescription, UTextur
 
 	PlayAnimation(StoryBoxFadeIn);
 
-	if(!bIsFirstScreen)
+	if (!bIsFirstScreen)
 	{
 		return;
 	}
@@ -60,32 +56,30 @@ void UUW_StoryEncounter::SetupStoryEncounter(const FText& InDescription, UTextur
 
 void UUW_StoryEncounter::BindRemovalToEmptyButton(UUW_StoryButton* StoryButton)
 {
-	// StoryButton에 있는 OnEmptyButtonClicked에 바인드
-	// StoryButton->OnEmptyButtonClicked.AddDynamic(this, &UUW_StoryEncounter::RemoveOnEmptyButtonClicked);
+	StoryButton->OnEmptyButtonClicked.AddDynamic(this, &UUW_StoryEncounter::RemoveOnEmptyButtonClicked);
 }
 
-void UUW_StoryEncounter::RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal,
-	UObject* PayLoad, const FGameplayTagContainer& CallTags)
+void UUW_StoryEncounter::RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags)
 {
-	for (UUW_StoryButton*  Button : StoryButtons)
+	for (UUW_StoryButton* Button : StoryButtons)
 	{
-		// Button->RefreshPlayability();
+		Button->RefreshPlayability();
 	}
 }
 
 void UUW_StoryEncounter::InitializeStoryEncounter_Implementation(FDataTableRowHandle EncounterData, bool bIsFirstScreen)
 {
-	UFunctionLibrary_Event::BindEventToGlobalDispatcherHub(this,CosGameTags::Event_PostModifyStatus);
+	UFunctionLibrary_Event::BindEventToGlobalDispatcherHub(this, CosGameTags::Event_PostModifyStatus);
 
-	if(EncounterData.IsNull())
+	if (EncounterData.IsNull())
 	{
 		COS_LOG_SCREEN(TEXT("EncounterData가 존재하지 않습니다. in %s"), *GetNameSafe(this));
 		return;
 	}
-	
+
 	FStoryEncounter StoryEncounter = *EncounterData.DataTable->FindRow<FStoryEncounter>(EncounterData.RowName,TEXT("FStoryEncounter in UW_StoryEncounter"));
 
-	SetupStoryEncounter(StoryEncounter.Description,StoryEncounter.Image,StoryEncounter.EncounterOptions,bIsFirstScreen);
+	SetupStoryEncounter(StoryEncounter.Description, StoryEncounter.Image, StoryEncounter.EncounterOptions, bIsFirstScreen);
 }
 
 void UUW_StoryEncounter::DisableOptions()
@@ -101,7 +95,7 @@ void UUW_StoryEncounter::RemoveOnEmptyButtonClicked(UUserWidget* CallingWidget)
 		return;
 	}
 
-	IInterface_CardGameInstance::Execute_AttemptSaveGame(GetGameInstance(),TEXT(""),true);
+	IInterface_CardGameInstance::Execute_AttemptSaveGame(GetGameInstance(),TEXT(""), true);
 
 	RemoveFromParent();
 }

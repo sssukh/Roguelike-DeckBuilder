@@ -5,6 +5,7 @@
 #include "Core/CosEnumStruct.h"
 #include "NodeEnumStruct.generated.h"
 
+class UMapEventComponent;
 
 // UENUM(BlueprintType)
 // enum class EHeight : uint8
@@ -20,7 +21,7 @@ struct FMapEvent : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Map Event")
-	TSubclassOf<UActorComponent> MapEventClass;
+	TSubclassOf<UMapEventComponent> MapEventClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Map Event")
 	TObjectPtr<UTexture2D> Icon;
