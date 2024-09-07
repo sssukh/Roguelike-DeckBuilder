@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "UI/UW_StoryEncounter.h"
@@ -61,7 +60,7 @@ void UUW_StoryEncounter::SetupStoryEncounter(const FText& InDescription, UTextur
 void UUW_StoryEncounter::BindRemovalToEmptyButton(UUW_StoryButton* StoryButton)
 {
 	// StoryButton에 있는 OnEmptyButtonClicked에 바인드
-	// StoryButton->OnEmptyButtonClicked.AddDynamic(this, &UUW_StoryEncounter::RemoveOnEmptyButtonClicked);
+	StoryButton->OnEmptyButtonClicked.AddDynamic(this, &UUW_StoryEncounter::RemoveOnEmptyButtonClicked);
 }
 
 void UUW_StoryEncounter::RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal,
@@ -69,7 +68,7 @@ void UUW_StoryEncounter::RunEvent_Implementation(const FGameplayTag& EventTag, U
 {
 	for (UUW_StoryButton*  Button : StoryButtons)
 	{
-		// Button->RefreshPlayability();
+		Button->RefreshPlayability();
 	}
 }
 
