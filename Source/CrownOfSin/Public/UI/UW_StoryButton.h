@@ -39,7 +39,6 @@ public:
 	UPROPERTY(BlueprintReadWrite,Category="UW Story Button")
 	ACardBase* SpawnedCard;
 
-
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category="UW Story Button|Delegate")
 	FOnEmptyButtonClicked OnEmptyButtonClicked;
 };

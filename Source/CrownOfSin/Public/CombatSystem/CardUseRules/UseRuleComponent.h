@@ -32,10 +32,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual bool ResolveUseConsequence(FUseRule UseRuleData);
+	
 	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/
-	
+public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Variable | Use Rule")
 	ACardBase* ParentCard;
 };

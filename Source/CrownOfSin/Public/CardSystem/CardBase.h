@@ -4,6 +4,7 @@
 #include "CardEffects/CardEffectComponent.h"
 #include "Core/CosEnumStruct.h"
 #include "GameFramework/Actor.h"
+#include "Interfaces/Interface_Interrupt.h"
 #include "CardBase.generated.h"
 
 class UGameplayTagComponent;
@@ -15,7 +16,7 @@ class UDispatcherHubLocalComponent;
  *카드 속성은 데이터 테이블(예: DT_Cards)에 정의됩니다.
  *사용되면 TargetingComponent를 통해 대상을 찾고 최종적으로 이러한 대상에 대한 CardEffect를 해결하기 전에 모든 CardUseRules가 유효한지 확인합니다.*/
 UCLASS()
-class CROWNOFSIN_API ACardBase : public AActor
+class CROWNOFSIN_API ACardBase : public AActor, public IInterface_Interrupt
 {
 	GENERATED_BODY()
 
@@ -24,13 +25,14 @@ public:
 	ACardBase();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	/*ToDo:구현해야합니다,*/
+	void InitializeFromData()
+	{
+	};
 
+public:
 	/*
 	 *  CheckIfPlayable()을 통해 Play가능 여부를 확인하고 UseCard를 호출한다.
 	 *  SkipPlayableCheck를 통해 가능 여부 확인하는 단계를 스킵할 수 있다.
@@ -43,14 +45,14 @@ public:
 	 * 
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Card")
-	void UseCard(bool SkipConsequences, bool AutoPlay);
+	void UseCard(bool bSkipConsequences, bool bAutoPlay);
 
 	/*
 	 * 이 카드를 사용할 수 있는지 체크하는 함수이다.
 	 *  @ Params FailMessage : 에러 메세지를 받아오기위한 매개변수 
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Card")
-	bool CheckIfPlayable(FString& FailMessage);
+	bool CheckIfPlayable(FString& OutFailMessage);
 
 	/*
 	 * 규칙들을 순회하면서 그 안에 정의된 결과를 적용한다(resolve).
@@ -97,14 +99,28 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Card")
 	void QueueCardEffectAction(AActor* TargetActor, AActor* SourcePuppet, UCardEffectComponent* CardEffect, bool bAnimateSourcePuppet);
 
-
 public:
 	UFUNCTION(BlueprintCallable, Category = "Card")
 	FGameplayTagContainer GetGameplayTags();
 
 	UFUNCTION(BlueprintPure, Category = "Card")
 	FText GetCardDescription(ECardDataType InCardDataType);
+
+protected:
+	void InitializeCurrentCardEffect(const FCardEffect& CardEffect);
+
+	void HandleImmediateCardEffect();
 	
+	void ExecuteEffectAction();
+	
+	AActor* GetValidTargetPuppet(AActor* TargetActor) const;
+
+	/*========================================================================================
+	*	IInterface_Interrupt
+	=========================================================================================*/
+public:
+	virtual void Interrupt_Implementation() override;;
+	virtual void CancelInterruption_Implementation() override;
 
 	/*========================================================================================
 	*	Field Members

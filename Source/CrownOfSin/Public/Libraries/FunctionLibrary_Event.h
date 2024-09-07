@@ -25,5 +25,5 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Function Library|Event")
 	static bool QueueEventInGlobalDispatcherHub(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject,
-		float EndDelay, UObject* Payload, FGameplayTagContainer CallTags);
+		float EndDelay=-1.0f, UObject* Payload=nullptr, FGameplayTagContainer CallTags=FGameplayTagContainer());
 };
