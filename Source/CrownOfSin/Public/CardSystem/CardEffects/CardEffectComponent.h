@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
+#include "Core/CosEnumStruct.h"
 #include "CardEffectComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCardResolved);

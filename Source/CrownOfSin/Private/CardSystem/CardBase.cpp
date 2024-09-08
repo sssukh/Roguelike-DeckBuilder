@@ -43,7 +43,7 @@ bool ACardBase::AttemptUseCard(TArray<AActor*> Targets, bool SkipPlayableCheck, 
 		UseCard(SkipConsequences, AutoPlay);
 		return true;
 	}
-	
+
 	// CheckIfPlayable로 가능 여부 확인 후 UseCard
 	FString FailMessage;
 	if (CheckIfPlayable(FailMessage))
@@ -144,6 +144,11 @@ void ACardBase::ContinueToNextRepetition()
 					ContinueToNextEffect();
 				}
 			));
+		}
+		else
+		{
+			EffectLoopIndex = -1;
+			ContinueToNextEffect();
 		}
 	}
 	else
