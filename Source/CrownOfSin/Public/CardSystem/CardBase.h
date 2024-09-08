@@ -31,7 +31,21 @@ protected:
 	// Story 선택지로서는 RunMapEvent_Story->CardPlayer->Layout_Cos->StoryEncounter->StoryButton으로 이어지는 흐름에서
 	// 받아온 Encounter Card 정보로 카드를 생성할 때 Deck에 값을 넣어주기 때문에 그 값으로 세팅을 하는것 같다.
 	void InitializeFromData();
-	
+
+	// 카드 데이터 테이블에서 데이터를 찾고, 초기화하는 함수
+	bool InitializeCardDataFromRow(const FDataTableRowHandle& CardDataRowHandle);
+
+	// 유효하지 않은 카드 데이터를 처리하는 함수
+	bool HandleInvalidCardData(const FDataTableRowHandle& CardDataRowHandle);
+
+	// 카드 데이터를 초기화하는 함수
+	void InitializeCardData();
+
+	// 카드 사용 규칙 컴포넌트를 설정하는 함수
+	void SetupUseRuleComponents();
+
+	// 카드의 초기 상태 컴포넌트를 설정하는 함수
+	void SetupStatusComponents();
 
 public:
 	/*
@@ -84,10 +98,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Card")
 	FGameplayTagContainer GetCardTags(ECardDataType Type);
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Card")
 	TArray<FStatusData> GetCardStartingStatuses(ECardDataType Type);
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Card")
 	int32 GetCardRepetitions(ECardDataType Type);
 
@@ -116,28 +130,33 @@ public:
 	// rarity tag들만 바로 순회해서 Rarity 멤버변수를 세팅하는 함수입니다.
 	UFUNCTION(BlueprintCallable, Category = "Card")
 	FGameplayTag SetCardRarityFromTags();
-	
+
 	// 카드의 타입을 알아야할 때 모든 게임플레이 태그를 순회하지 않도록 하는 캐싱함수입니다.
 	// effect tag들만 바로 순회해서 Type 멤버변수를 세팅하는 함수입니다.
 	UFUNCTION(BlueprintCallable, Category = "Card")
 	FGameplayTag SetCardTypeFromTags();
+
+	UFUNCTION(BlueprintCallable, Category = "Card")
+	bool CallLocalEventOnCard(const FGameplayTag& EventTag, ECallGlobal AlsoCallGlobal = ECallGlobal::CallAfter);
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "Card")
 	FGameplayTagContainer GetGameplayTags();
 
 	UFUNCTION(BlueprintPure, Category = "Card")
 	FText GetCardDescription(ECardDataType InCardDataType);
+	
+
 
 protected:
 	void InitializeCurrentCardEffect(const FCardEffect& CardEffect);
 
 	void HandleImmediateCardEffect();
-	
+
 	void ExecuteEffectAction();
-	
+
 	AActor* GetValidTargetPuppet(AActor* TargetActor) const;
 
-	
 
 	/*========================================================================================
 	*	IInterface_Interrupt
@@ -206,7 +225,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Variables | Card")
 	FGameplayTag CardType;
-	
+
 	// 확인 필요 <class 정보, 객체> 맵이다.
 	UPROPERTY(BlueprintReadWrite, Category = "Variables | Card")
 	TMap<TSubclassOf<UUseRuleComponent>, UUseRuleComponent*> UseRuleInstances;

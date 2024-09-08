@@ -1,26 +1,21 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "CardSystem/CardEffects/CardEffectComponent.h"
 #include "CardEffect_Story_ModHeroHealth.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+// 게임 인스턴스의 모든 지속 영웅의 체력에 효과 값을 추가하여 최대 체력으로 제한합니다.
+UCLASS(ClassGroup=("Cos|Card"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UCardEffect_Story_ModHeroHealth : public UCardEffectComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UCardEffect_Story_ModHeroHealth();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual bool ResolveCardEffect(AActor* TargetActor) override;
 };

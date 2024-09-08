@@ -1,5 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,13 +6,12 @@
 #include "CardEffect_RevealShop.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=("COS|Card"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UCardEffect_RevealShop : public UCardEffectComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UCardEffect_RevealShop();
 
 protected:
@@ -21,6 +19,5 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual bool ResolveCardEffect(AActor* TargetActor) override;
 };

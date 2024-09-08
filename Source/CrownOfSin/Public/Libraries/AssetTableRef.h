@@ -18,10 +18,9 @@ namespace AssetRefPath
 	const FString MaterialPath = TEXT("DataTable'/Game/CrownOfSin/AssetRef/DT_Materials.DT_Materials'");
 	const FString BluePrintPath = TEXT("DataTable'/Game/CrownOfSin/AssetRef/DT_BluePrints.DT_BluePrints'");
 	const FString TexturesPath = TEXT("DataTable'/Game/CrownOfSin/AssetRef/DT_Textures.DT_Textures'");
+	const FString DataTablePath = TEXT("DataTable'/Game/CrownOfSin/AssetRef/DT_DataTable.DT_DataTable'");
+
 	
-
-
-	// const FString DataTablePath = TEXT("DataTable'/Game/OverLoad/AssetRef/DT_DataTable.DT_DataTable'");
 
 
 	// const FString WidgetPath = TEXT("DataTable'/Game/Game_/AssetRef/AssetRef_Widget.AssetRef_Widget'");

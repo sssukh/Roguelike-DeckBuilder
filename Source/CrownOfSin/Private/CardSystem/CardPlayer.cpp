@@ -116,7 +116,7 @@ UStatusComponent* ACardPlayer::CreateNewStatusComponent(TSubclassOf<UStatusCompo
 	NewStatusComponent->StatusValue = 0;
 	NewStatusComponent->OwnerUiRef = PlayerUI;
 	NewStatusComponent->bShowImmediately = false;
-	NewStatusComponent->GameplayTags = FGameplayTag();
+	NewStatusComponent->GameplayTags = FGameplayTagContainer();
 
 	return NewStatusComponent;
 }
@@ -151,5 +151,5 @@ int32 ACardPlayer::AddToStatus_Implementation(TSubclassOf<UStatusComponent> InSt
 
 void ACardPlayer::InitializeStoryEncounter_Implementation(FDataTableRowHandle EncounterData, bool bIsFirstScreen)
 {
-	IInterface_StoryEncounter::Execute_InitializeStoryEncounter(PlayerUI,EncounterData, bIsFirstScreen);
+	IInterface_StoryEncounter::Execute_InitializeStoryEncounter(PlayerUI, EncounterData, bIsFirstScreen);
 }

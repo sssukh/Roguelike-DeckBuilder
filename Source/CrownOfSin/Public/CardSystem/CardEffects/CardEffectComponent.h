@@ -1,11 +1,10 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
 #include "Core/CosEnumStruct.h"
+#include "Interfaces/Interface_Interrupt.h"
 #include "CardEffectComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCardResolved);
@@ -14,26 +13,35 @@ class AAction_Effect;
 class UTargetingComponent;
 class ACardBase;
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class CROWNOFSIN_API UCardEffectComponent : public UActorComponent
+/*카드의 다양한 효과를 처리하는 기본 클래스입니다.
+ *카드를 사용하면 카드의 타겟팅 모드에 의해 입력된 대상에 대해 순서대로 모든 카드 효과를 해결하려고 시도합니다.
+ *카드 효과는 DT_Cards를 통해 카드에 추가됩니다.*/
+UCLASS(ClassGroup=("Cos|Card"), meta=(BlueprintSpawnableComponent))
+class CROWNOFSIN_API UCardEffectComponent : public UActorComponent, public IInterface_Interrupt
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UCardEffectComponent();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UFUNCTION(BlueprintCallable, Category="Card Effect Event")
+	virtual void InitializeCardEffect();
 
-	UFUNCTION(BlueprintCallable)
-	bool ResolveCardEffect();
+	UFUNCTION(BlueprintCallable, Category="Card Effect Event")
+	virtual bool ResolveCardEffect(AActor* TargetActor);
 
+
+	/*========================================================================================
+	*	IInterface_Interrupt
+	=========================================================================================*/
+public:
+	virtual void Interrupt_Implementation() override;
+
+	virtual void CancelInterruption_Implementation() override;
 
 	/*========================================================================================
 	*	Field Members
@@ -43,14 +51,14 @@ public:
 	bool bInterrupt;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
-	bool bImmediated = true;
+	bool bImmediate = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
 	bool bTargeted = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
 	TSubclassOf<UTargetingComponent> DefaultTargetingClass;
-	
+
 public:
 	//파티클 빼고는 다 들어가 있음 굳이 멤버변수로 따로 만들어야하나 ? FCard로 하면안되나 ?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
@@ -67,7 +75,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
 	TSubclassOf<UTargetingComponent> TargetingClass;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
 	FGameplayTag HeroAnim;
 
@@ -79,11 +87,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
 	FString Identifier;
-	
+
 
 	/*========================================================================================
 	*	Delegate
 	=========================================================================================*/
-	UPROPERTY(BlueprintAssignable,BlueprintCallable,Category="Card Effect | Delegate")
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category="Card Effect | Delegate")
 	FOnCardResolved OnCardResolved;
 };

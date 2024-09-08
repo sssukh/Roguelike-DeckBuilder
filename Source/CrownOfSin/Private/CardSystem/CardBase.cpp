@@ -1,5 +1,6 @@
 ﻿#include "CardSystem/CardBase.h"
 
+#include "BlueprintGameplayTagLibrary.h"
 #include "CardSystem/CardEffects/CardEffectComponent.h"
 #include "CardSystem/CardActions/Action_Effect.h"
 #include "CombatSystem/CardUseRules/UseRuleComponent.h"
@@ -27,7 +28,7 @@ ACardBase::ACardBase()
 	GameplayTagComponent = CreateDefaultSubobject<UGameplayTagComponent>(TEXT("GameplayTagComponent"));
 	DispatcherHubLocal = CreateDefaultSubobject<UDispatcherHubLocalComponent>(TEXT("DispatcherHubLocal"));
 
-	
+	CardType = CosGameTags::Effect_Invalid;
 }
 
 void ACardBase::BeginPlay()
@@ -39,97 +40,121 @@ void ACardBase::BeginPlay()
 
 void ACardBase::InitializeFromData()
 {
-	// 지정 타입의 RowHandle(FCard 정보 들어있음)을 가져옵니다.
-	const FDataTableRowHandle CardDataRowHandleStruct = GetCardDataRowHandle(ECardDataType::Deck);
+	// 카드 데이터 테이블에서 Deck 데이터를 가져옴
+	const FDataTableRowHandle CardDataRowHandle = GetCardDataRowHandle(ECardDataType::Deck);
 
-	// 받아온 데이터가 유효한지 확인합니다.
-	if(!CardDataRowHandleStruct.IsNull())
+	// 데이터 핸들이 유효하지 않으면 로그 출력 후 종료
+	if (!InitializeCardDataFromRow(CardDataRowHandle))
 	{
-		FCard* CardFound = CardDataRowHandleStruct.DataTable->FindRow<FCard>(CardDataRowHandleStruct.RowName,TEXT("FCard in ACardBase"));
+		return;
+	}
 
-		// 받아온 정보를 CardDataBase와 CardDataDeck에 캐싱합니다.
-		if(CardFound)
+	// Owner가 유효한지 확인하고, 인터페이스를 구현하는지 검사
+	if (IsValid(GetOwner()))
+	{
+		if (GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+		{
+			FString UniqueID = IInterface_CardTarget::Execute_GetMinionUniqueID(GetOwner());
+			CardDataDeck.OwnerID = UniqueID;
+		}
+	}
+
+	// 카드 데이터 설정
+	InitializeCardData();
+
+	// 카드 사용 규칙 컴포넌트 추가
+	SetupUseRuleComponents();
+
+	// 카드 상태 컴포넌트 추가
+	SetupStatusComponents();
+
+	// 카드 희귀도 및 타입 설정
+	SetCardRarityFromTags();
+	SetCardTypeFromTags();
+}
+
+bool ACardBase::InitializeCardDataFromRow(const FDataTableRowHandle& CardDataRowHandle)
+{
+	if (!CardDataRowHandle.IsNull())
+	{
+		if (FCard* CardFound = CardDataRowHandle.DataTable->FindRow<FCard>(CardDataRowHandle.RowName, TEXT("FCard in ACardBase")))
 		{
 			CardDataBase = *CardFound;
 
-			if(GetCardName(ECardDataType::Deck).IsEmpty())
+			// Deck 카드 이름이 비어있으면 CardDataDeck을 초기화
+			if (GetCardName(ECardDataType::Deck).IsEmpty())
 			{
 				CardDataDeck = CardDataBase;
 			}
 		}
-	}
-
-	// CardDataRowHandleStruct이 유효하지 않고 CardFound가 유효하지 않으면(받아온 정보가 유효하지 않으면)
-	// 둘 다 유효하다면 위에서 설정해준 상태이다.
-	if(GetCardName(ECardDataType::Deck).IsEmpty())
-	{
-		COS_LOG_SCREEN(TEXT("ERROR: Attempted to initialize invalid card from data table (%s) with name (%s)"),*CardDataRowHandleStruct.DataTable.GetName(),*CardDataRowHandleStruct.RowName.ToString());
-		
-		return;
-	}
-
-	// 받아온 정보가 유효하지 않지만 카드 이름은 있는 경우 받아온 정보를 일단 CardDataBase에 넣어줍니다.
-	CardDataBase = CardDataDeck;
-
-	// 카드 Owner ID를 찾아서 설정해줍니다.
-	if(IsValid(GetOwner()))
-	{
-		if(!GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+		else
 		{
-			COS_LOG_SCREEN(TEXT("Owner가 Interface_CardTarget를 상속받지 않았습니다."));
-			return;
+			// 카드가 없을 때도 Deck 카드 이름이 비어있으면 로그 출력 후 종료
+			if (HandleInvalidCardData(CardDataRowHandle))
+			{
+				return false;
+			}
 		}
-
-		FString UniqueID = IInterface_CardTarget::Execute_GetMinionUniqueID(GetOwner());
-
-		CardDataDeck.OwnerID = UniqueID;
 	}
+	else
+	{
+		// 데이터 핸들이 Null인 경우
+		if (HandleInvalidCardData(CardDataRowHandle))
+		{
+			return false;
+		}
+	}
+	return true;
+}
 
-	// 나머지 카드 데이터 타입에도 받은 정보를 넣어줍니다.
+bool ACardBase::HandleInvalidCardData(const FDataTableRowHandle& CardDataRowHandle)
+{
+	if (GetCardName(ECardDataType::Deck).IsEmpty())
+	{
+		COS_LOG_SCREEN(TEXT("ERROR: Attempted to initialize invalid card from data table (%s) with name (%s)"),
+		               *CardDataRowHandle.DataTable->GetName(), *CardDataRowHandle.RowName.ToString());
+		return true;
+	}
+	else
+	{
+		CardDataDeck = CardDataBase;
+		return false;
+	}
+}
+
+void ACardBase::InitializeCardData()
+{
 	CardDataPile = CardDataDeck;
 	CardDataHand = CardDataDeck;
-
-	// 컴포넌트의 GameplayTags 변수에 Hand타입 카드 태그들을 넣어줍니다.
 	GameplayTagComponent->GameplayTags = GetCardTags(ECardDataType::Hand);
+}
 
-	// 카드의 UseRule들을 가져옵니다.
+void ACardBase::SetupUseRuleComponents()
+{
 	TArray<FUseRule> UseRulesArray = GetCardUseRules(ECardDataType::Hand);
-
-	// 카드의 UseRule을 순회하면서 규칙에 해당하는 컴포넌트들을 생성해줍니다.
 	for (const FUseRule& Rule : UseRulesArray)
 	{
-		UUseRuleComponent* RuleComponent = NewObject<UUseRuleComponent>(this, Rule.Rule);
-		if(!RuleComponent)
-		{
-			COS_LOG_SCREEN(TEXT("CardBase내의 RuleComponent가 올바르게 생성되지 않았습니다."));
-			return;
-		}
-		RuleComponent->RegisterComponent();
+		FName UniqueComponentName = MakeUniqueObjectName(this, UUseRuleComponent::StaticClass());
+		UUseRuleComponent* NewRuleComponent = NewObject<UUseRuleComponent>(this, Rule.Rule, UniqueComponentName);
 
-		// 이 카드의 UseRule을 관리하는 UseRuleInstance에 추가해줍니다.
-		UseRuleInstances.Add(Rule.Rule,RuleComponent);
+		NewRuleComponent->RegisterComponent();
+		NewRuleComponent->InitializeUseRule();
+		UseRuleInstances.Add(Rule.Rule, NewRuleComponent);
 	}
+}
 
-	// 카드의 FStatusData들을 가져옵니다.
+void ACardBase::SetupStatusComponents()
+{
 	TArray<FStatusData> CardStartingStatuses = GetCardStartingStatuses(ECardDataType::Hand);
-
-	// FStatusData를 순회하면서 해당하는 컴포넌트들을 생성해줍니다.
-	for (const FStatusData& CardStarting : CardStartingStatuses)
+	for (const FStatusData& Status : CardStartingStatuses)
 	{
-		UStatusComponent* StatusComponent = NewObject<UStatusComponent>(this,CardStarting.StatusClass);
+		FName UniqueStatusComponentName = MakeUniqueObjectName(this, UStatusComponent::StaticClass());
+		UStatusComponent* NewStatusComponent = NewObject<UStatusComponent>(this, Status.StatusClass, UniqueStatusComponentName);
 
-		if(!StatusComponent)
-		{
-			COS_LOG_SCREEN(TEXT("CardBase내의 StatusComponent가 올바르게 생성되지 않았습니다."));
-			return;
-		}
-
-		StatusComponent->RegisterComponent();
+		NewStatusComponent->StatusValue = Status.Value;
+		NewStatusComponent->GameplayTags = Status.GameplayTags;
+		NewStatusComponent->RegisterComponent();
 	}
-	
-	SetCardRarityFromTags();
-
-	SetCardTypeFromTags();
 }
 
 bool ACardBase::AttemptUseCard(TArray<AActor*> Targets, bool SkipPlayableCheck, bool SkipConsequences, bool AutoPlay)
@@ -337,7 +362,7 @@ void ACardBase::ContinueToNextTarget()
 	InitializeCurrentCardEffect(TempCardEffect);
 
 	// 즉시 실행 카드 효과 처리
-	if (CurrentCardEffect->bImmediated)
+	if (CurrentCardEffect->bImmediate)
 	{
 		HandleImmediateCardEffect();
 	}
@@ -469,43 +494,58 @@ void ACardBase::QueueCardEffectAction(AActor* TargetActor, AActor* SourcePuppet,
 
 FGameplayTag ACardBase::SetCardRarityFromTags()
 {
-	FGameplayTagContainer CardTagsContainer = GetCardTags(ECardDataType::Base);
-	
-	Rarity = CosGameTags::Rarity_Invalid;
-
-	TArray<FGameplayTag> LocalRarities = {CosGameTags::Rarity_Common,CosGameTags::Rarity_Curse,CosGameTags::Rarity_Epic,CosGameTags::Rarity_Invalid, CosGameTags::Rarity_Legendary,CosGameTags::Rarity_Rare};
-	
-	for (FGameplayTag LocalRarity : LocalRarities)
+	FGameplayTagContainer CardTags = GetCardTags(ECardDataType::Base);
+	if (UBlueprintGameplayTagLibrary::HasTag(CardTags, CosGameTags::Rarity, false))
 	{
-		if(CardTagsContainer.HasTag(LocalRarity))
-		{
-			Rarity = LocalRarity;
+		TArray<FGameplayTag> Rarities = {
+			CosGameTags::Rarity_Common,
+			CosGameTags::Rarity_Curse,
+			CosGameTags::Rarity_Epic,
+			CosGameTags::Rarity_Invalid,
+			CosGameTags::Rarity_Legendary,
+			CosGameTags::Rarity_Rare
+		};
 
-			return Rarity;
+		for (FGameplayTag LocalRarity : Rarities)
+		{
+			if (CardTags.HasTagExact(LocalRarity))
+			{
+				Rarity = LocalRarity;
+				return Rarity;
+			}
 		}
 	}
 
-	return Rarity;
+	return CosGameTags::Rarity_Invalid;
 }
 
 FGameplayTag ACardBase::SetCardTypeFromTags()
 {
-	TArray<FGameplayTag> LocalTypes = {CosGameTags::Effect_Attack,CosGameTags::Effect_Curse,CosGameTags::Effect_Power,CosGameTags::Effect_Skill};
+	TArray<FGameplayTag> EffectTypes =
+	{
+		CosGameTags::Effect_Attack,
+		CosGameTags::Effect_Curse,
+		CosGameTags::Effect_Power,
+		CosGameTags::Effect_Skill
+	};
 
 	FGameplayTagContainer CardTags = GetCardTags(ECardDataType::Base);
 
-	CardType =  CosGameTags::Effect_Invalid;
-	
-	for (FGameplayTag LocalType : LocalTypes)
+	for (FGameplayTag EffectType : EffectTypes)
 	{
-		if(CardTags.HasTag(LocalType))
+		if (CardTags.HasTagExact(EffectType))
 		{
-			CardType = LocalType;
+			CardType = EffectType;
 			return CardType;
 		}
 	}
 
-	return CardType;
+	return CosGameTags::Effect_Invalid;
+}
+
+bool ACardBase::CallLocalEventOnCard(const FGameplayTag& EventTag, ECallGlobal AlsoCallGlobal)
+{
+	return DispatcherHubLocal->CallEvent(EventTag, this, nullptr, AlsoCallGlobal);
 }
 
 FGameplayTagContainer ACardBase::GetGameplayTags()
@@ -545,8 +585,8 @@ void ACardBase::HandleImmediateCardEffect()
 	}
 
 	// 카드 효과를 처리하고, 즉시 후속 작업으로 넘어간다
-	CurrentCardEffect->ResolveCardEffect();
-	if (CurrentCardEffect->bImmediated)
+	CurrentCardEffect->ResolveCardEffect(CurrentValidTargets[TargetLoopIndex]);
+	if (CurrentCardEffect->bImmediate)
 	{
 		ContinueAfterCardResolved();
 	}

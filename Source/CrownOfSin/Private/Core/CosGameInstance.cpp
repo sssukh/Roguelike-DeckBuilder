@@ -7,9 +7,11 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetStringLibrary.h"
+#include "Libraries/FunctionLibrary_Event.h"
 #include "Utilities/CosLog.h"
 #include "StatusSystem/Status_Health.h"
 #include "StatusSystem/Artifacts/Status_Artifact.h"
+#include "Utilities/CosGameplayTags.h"
 
 UCosGameInstance::UCosGameInstance(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -408,14 +410,56 @@ TArray<FDataTableRowHandle> UCosGameInstance::GetDoneStoryEncountersFromInstance
 	return DoneStoryEncounters;
 }
 
-void UCosGameInstance::SetCurrentEncounterInInstance_Implementation(FEncounterData InCurrentEncoutner)
+void UCosGameInstance::SetCurrentEncounterInInstance_Implementation(FEncounterData InCurrentEncounter)
 {
-	CurrentEncounter = InCurrentEncoutner;
+	CurrentEncounter = InCurrentEncounter;
 }
 
 void UCosGameInstance::AddDoneStoryEncounterToInstance_Implementation(FDataTableRowHandle StoryEncounter)
 {
 	DoneStoryEncounters.Add(StoryEncounter);
+}
+
+bool UCosGameInstance::UpdateHeroPersistentHealth_Implementation(const FString& HeroUniqueID, int32 NewHealth)
+{
+	int32 ArrayIndex;
+	FMinion Hero;
+	if (Execute_GetHeroWithIdFromInstance(this, HeroUniqueID, Hero, ArrayIndex))
+	{
+		Hero.StartingStatuses[UStatus_Health::StaticClass()] = NewHealth;
+
+		if (Execute_CheckIfAllHeroesAreDead(this))
+		{
+			UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_GameOver, this);
+			UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(CosGameTags::Event_Action_GameOver, this);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+bool UCosGameInstance::CheckIfAllHeroesAreDead_Implementation()
+{
+	int32 DeadHeroCount = 0;
+
+	for (const FMinion& PersistentHero : PersistentHeroes)
+	{
+		if (PersistentHero.StartingStatuses.Contains(UStatus_Health::StaticClass()))
+		{
+			if (PersistentHero.StartingStatuses[UStatus_Health::StaticClass()] <= 0)
+			{
+				DeadHeroCount++;
+			}
+		}
+		else
+		{
+			DeadHeroCount++;
+		}
+	}
+
+	return PersistentHeroes.Num() == DeadHeroCount;
 }
 
 TArray<FStatusData> UCosGameInstance::GetArtifactsFromInstance_Implementation()

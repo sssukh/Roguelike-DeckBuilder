@@ -7,7 +7,7 @@
 #include "PileDeckComponent.generated.h"
 
 
-UCLASS(ClassGroup=("Cos"), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=("COS|Card"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UPileDeckComponent : public UPileComponent
 {
 	GENERATED_BODY()

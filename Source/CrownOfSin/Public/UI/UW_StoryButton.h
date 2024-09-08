@@ -7,6 +7,7 @@
 #include "UW_StoryButton.generated.h"
 
 
+class UUW_ToolTip;
 class UButton;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEmptyButtonClicked, UUserWidget*, InCallingWidget);
 
@@ -20,6 +21,12 @@ class CROWNOFSIN_API UUW_StoryButton : public UUserWidget
 
 public:
 	UUW_StoryButton(const FObjectInitializer& ObjectInitializer);
+	
+	virtual void NativeConstruct() override;
+
+protected:
+	UFUNCTION()
+	void OnClicked_StoryButton();
 
 public:
 	UFUNCTION(BlueprintCallable, Category="UW Story Button Event")
@@ -30,13 +37,17 @@ public:
 	*	Field Members
 	=========================================================================================*/
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Story Button",meta=(BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Story Button|Desinger", meta=(BindWidget))
 	UButton* StoryButton;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="UW Story Button", meta=(ExposeOnSpawn="true"))
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Story Button|Config|Setup")
+	TSubclassOf<UUW_ToolTip> WBPToolTipClass;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="UW Story Button", meta=(ExposeOnSpawn="true"))
 	FCard EncounterCard;
 
-	UPROPERTY(BlueprintReadWrite,Category="UW Story Button")
+	UPROPERTY(BlueprintReadWrite, Category="UW Story Button")
 	ACardBase* SpawnedCard;
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category="UW Story Button|Delegate")

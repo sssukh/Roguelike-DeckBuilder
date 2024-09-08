@@ -126,7 +126,7 @@ public:
 	EStatusSlot SlotType = EStatusSlot::Passive;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Status Component", meta=(ExposeOnSpawn="true"))
-	FGameplayTag GameplayTags;
+	FGameplayTagContainer GameplayTags;
 
 	UPROPERTY(BlueprintReadWrite, Category="Status Component")
 	UTexture2D* Icon;

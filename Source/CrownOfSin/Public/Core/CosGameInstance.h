@@ -137,11 +137,16 @@ public:
 	virtual TArray<FStatusData> GetArtifactsFromInstance_Implementation() override;
 
 	virtual TArray<FDataTableRowHandle> GetDoneStoryEncountersFromInstance_Implementation() override;
-
-
-	virtual void SetCurrentEncounterInInstance_Implementation(FEncounterData InCurrentEncoutner) override;
+	
+	virtual void SetCurrentEncounterInInstance_Implementation(FEncounterData InCurrentEncounter) override;
 
 	virtual void AddDoneStoryEncounterToInstance_Implementation(FDataTableRowHandle StoryEncounter) override;
+
+	virtual bool UpdateHeroPersistentHealth_Implementation(const FString& HeroUniqueID, int32 NewHealth) override;
+
+	virtual bool CheckIfAllHeroesAreDead_Implementation() override;
+
+	
 	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/

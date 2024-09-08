@@ -1,7 +1,6 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffect_RevealShop.h"
 
-
-#include "CardSystem/CardEffects/CardEffect_RevealShop.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
 
 
 // Sets default values for this component's properties
@@ -14,22 +13,18 @@ UCardEffect_RevealShop::UCardEffect_RevealShop()
 	// ...
 }
 
-
-// Called when the game starts
 void UCardEffect_RevealShop::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_RevealShop::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_RevealShop::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
+	if (!CardPlayer)
+		return false;
 
-	// ...
+	//ToDo: 구현해야합니다. PlayerUI의 WBP_Shop가 구현되어야 할수있습니다.
 }
-

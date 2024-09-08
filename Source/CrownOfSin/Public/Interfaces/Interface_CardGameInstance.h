@@ -72,8 +72,7 @@ public:
 	bool IsDebugMode();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
-
-	void SetCurrentEncounterInInstance(FEncounterData CurrentEncoutner);
+	void SetCurrentEncounterInInstance(FEncounterData InCurrentEncounter);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	void AddDoneStoryEncounterToInstance(FDataTableRowHandle StoryEncounter);
@@ -81,4 +80,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	TArray<FStatusData> GetArtifactsFromInstance();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
+	bool UpdateHeroPersistentHealth(const FString& HeroUniqueID, int32 NewHealth);
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
+	bool CheckIfAllHeroesAreDead();
 };

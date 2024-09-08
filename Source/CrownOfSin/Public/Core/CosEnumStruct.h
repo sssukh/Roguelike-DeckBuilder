@@ -557,11 +557,11 @@ struct FCard : public FTableRowBase
 	// 기본 생성자
 	FCard()
 		: OwnerID(TEXT(""))
-		  , CardName(FText::FromString(TEXT("Default Card Name")))
-		  , Description(FText::FromString(TEXT("Default Card Description")))
+		  , CardName(FText::FromString(TEXT("")))
+		  , Description(FText::FromString(TEXT("")))
 		  , Portrait(nullptr)
 		  , bTargeted(false)
-		  , Repetitions(1)
+		  , Repetitions(0)
 		  , Frame(nullptr)
 		  , FrameTint(FSlateColor::UseForeground())
 	{

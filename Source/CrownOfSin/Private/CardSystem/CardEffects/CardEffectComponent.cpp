@@ -1,10 +1,7 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffectComponent.h"
 
+#include "CombatSystem/TargetSystem/TargetingComponent.h"
 
-#include "CardSystem/CardEffects/CardEffectComponent.h"
-
-
-// Sets default values for this component's properties
 UCardEffectComponent::UCardEffectComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -13,29 +10,34 @@ UCardEffectComponent::UCardEffectComponent()
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 
 	// ...
+
+	//ToDo:
+	// DefaultTargetingClass = 설정해줘야함
 }
 
-
-// Called when the game starts
 void UCardEffectComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	if (!IsValid(TargetingClass))
+		TargetingClass = DefaultTargetingClass;
 }
 
-
-// Called every frame
-void UCardEffectComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UCardEffectComponent::InitializeCardEffect()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
-bool UCardEffectComponent::ResolveCardEffect()
+bool UCardEffectComponent::ResolveCardEffect(AActor* TargetActor)
 {
 	return true;
 }
 
+void UCardEffectComponent::Interrupt_Implementation()
+{
+	bInterrupt = true;
+}
+
+void UCardEffectComponent::CancelInterruption_Implementation()
+{
+	bInterrupt = false;
+}

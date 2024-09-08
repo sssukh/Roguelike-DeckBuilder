@@ -12,7 +12,7 @@ class ACardBase;
 
 /*데크와 카드 패를 포함한 모든 카드 더미의 상위 클래스입니다.
  *더미에 있는 모든 카드에 대한 참조와 더미에서 카드를 추가하고 제거하는 방법을 보유합니다.*/
-UCLASS(ClassGroup=("Cos"), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=("COS|Card"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UPileComponent : public UActorComponent, public IInterface_Pile
 {
 	GENERATED_BODY()

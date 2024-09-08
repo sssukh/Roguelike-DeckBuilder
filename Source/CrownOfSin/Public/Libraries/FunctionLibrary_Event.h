@@ -21,9 +21,9 @@ public:
 	static void UnBindEventFromGlobalDispatcherHub(UObject* EventHolder, FGameplayTag EventTag);
 	
 	UFUNCTION(BlueprintCallable, Category="Function Library|Event")
-	static bool CallEventInGlobalDispatcherHub(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject);
+	static bool CallEventInGlobalDispatcherHub(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject=nullptr);
 
 	UFUNCTION(BlueprintCallable, Category="Function Library|Event")
-	static bool QueueEventInGlobalDispatcherHub(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject,
+	static bool QueueEventInGlobalDispatcherHub(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject=nullptr,
 		float EndDelay=-1.0f, UObject* Payload=nullptr, FGameplayTagContainer CallTags=FGameplayTagContainer());
 };
