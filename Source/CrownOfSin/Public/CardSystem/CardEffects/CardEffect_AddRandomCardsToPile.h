@@ -6,7 +6,7 @@
 #include "CardSystem/Piles/PileComponent.h"
 #include "CardEffect_AddRandomCardsToPile.generated.h"
 
-
+/*대상 구성 요소에 지정된 더미에 희귀도의 효과 값과 동일한 수의 무작위 카드를 추가합니다.*/
 UCLASS(ClassGroup=("COS|Card"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UCardEffect_AddRandomCardsToPile : public UCardEffectComponent
 {

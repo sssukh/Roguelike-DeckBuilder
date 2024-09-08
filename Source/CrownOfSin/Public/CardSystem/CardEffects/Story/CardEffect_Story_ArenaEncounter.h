@@ -1,13 +1,12 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
 #include "CardSystem/CardEffects/CardEffectComponent.h"
 #include "CardEffect_Story_ArenaEncounter.generated.h"
 
-
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+/*사용된 데이터에 저장된 모든 인카운터 데이터에 액세스하여 게임 인스턴스에서 이 인카운터를 설정하고 인카운터에 지정된 레벨을 엽니다.*/
+UCLASS(ClassGroup=("COS|Card"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UCardEffect_Story_ArenaEncounter : public UCardEffectComponent
 {
 	GENERATED_BODY()
@@ -21,6 +20,5 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual bool ResolveCardEffect(AActor* TargetActor) override;
 };

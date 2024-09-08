@@ -6,6 +6,7 @@
 #include "CardSystem/Piles/PileComponent.h"
 #include "CardSystem/Piles/PileDestroyComponent.h"
 #include "Core/DispatcherHubLocalComponent.h"
+#include "Core/PayloadHolderComponent.h"
 #include "Interfaces/Interface_CardGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Libraries/FunctionLibrary_Event.h"
@@ -26,6 +27,7 @@ ACardPlayer::ACardPlayer(): ChanceManagerComponent(nullptr)
 	DispatcherHubLocalComponent = CreateDefaultSubobject<UDispatcherHubLocalComponent>(TEXT("DispatcherHubLocalComponent"));
 	ChanceManagerComponent = CreateDefaultSubobject<UChanceManagerComponent>(TEXT("ChanceManagerComponent"));
 	PileDestroyComponent = CreateDefaultSubobject<UPileDestroyComponent>(TEXT("PileDestroyComponent"));
+	PayloadHolderComponent = CreateDefaultSubobject<UPayloadHolderComponent>(TEXT("PayloadHolderComponent"));
 }
 
 void ACardPlayer::BeginPlay()

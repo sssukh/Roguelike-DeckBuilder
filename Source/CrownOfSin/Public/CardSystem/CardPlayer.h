@@ -7,6 +7,7 @@
 #include "Interfaces/Interface_StoryEncounter.h"
 #include "CardPlayer.generated.h"
 
+class UPayloadHolderComponent;
 class UPileDestroyComponent;
 class UDispatcherHubLocalComponent;
 class UPileComponent;
@@ -84,6 +85,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
 	UDispatcherHubLocalComponent* DispatcherHubLocalComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
+	UPayloadHolderComponent* PayloadHolderComponent;
 
 
 

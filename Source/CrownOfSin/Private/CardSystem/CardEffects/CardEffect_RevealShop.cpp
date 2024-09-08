@@ -1,6 +1,9 @@
 ﻿#include "CardSystem/CardEffects/CardEffect_RevealShop.h"
 
+#include "CardSystem/CardPlayer.h"
 #include "Libraries/FunctionLibrary_Singletons.h"
+#include "UI/UW_Layout_Cos.h"
+#include "UI/UW_Shop.h"
 
 
 // Sets default values for this component's properties
@@ -26,5 +29,7 @@ bool UCardEffect_RevealShop::ResolveCardEffect(AActor* TargetActor)
 	if (!CardPlayer)
 		return false;
 
-	//ToDo: 구현해야합니다. PlayerUI의 WBP_Shop가 구현되어야 할수있습니다.
+	CardPlayer->PlayerUI->WBP_Shop->UpdateShopCards();
+	CardPlayer->PlayerUI->WBP_Shop->SetVisibility(ESlateVisibility::Visible);
+	return true;
 }

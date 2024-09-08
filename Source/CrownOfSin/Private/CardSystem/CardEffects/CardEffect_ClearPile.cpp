@@ -1,7 +1,8 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffect_ClearPile.h"
 
-
-#include "CardSystem/CardEffects/CardEffect_ClearPile.h"
+#include "CardSystem/CardPlayer.h"
+#include "CardSystem/Piles/PileComponent.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
 
 
 // Sets default values for this component's properties
@@ -21,15 +22,23 @@ void UCardEffect_ClearPile::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_ClearPile::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_ClearPile::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (TargetComponent->IsChildOf(UPileComponent::StaticClass()))
+	{
+		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
+		if (!CardPlayer)
+		{
+			return false;
+		}
 
-	// ...
+		UActorComponent* FoundPileComponent = CardPlayer->GetComponentByClass(TargetComponent);
+		if (FoundPileComponent->GetClass()->ImplementsInterface(UInterface_Pile::StaticClass()))
+		{
+			return IInterface_Pile::Execute_ClearPile(FoundPileComponent);
+		}
+	}
+	return false;
 }
-
