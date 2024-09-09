@@ -5,7 +5,7 @@
 #include "CardSystem/CardActions/Action_Effect.h"
 #include "CombatSystem/CardUseRules/UseRuleComponent.h"
 #include "CombatSystem/TargetSystem/TargetingComponent.h"
-#include "CombatSystem/TargetSystem/Targeting_UnTargetedComponent.h"
+#include "CombatSystem/TargetSystem/TargetingComponent_Untargeted.h"
 #include "Core/DispatcherHubComponent.h"
 #include "Core/DispatcherHubLocalComponent.h"
 #include "Core/GameplayTagComponent.h"
@@ -453,7 +453,7 @@ UTargetingComponent* ACardBase::AccessTargetingClassLazy(AActor* TargetingHolder
 	}
 
 	// 건네받은 TargetingClass도 유효하지 않으면 UTargeting_UnTargetedComponent를 클래스로 해서 다시 접근
-	return AccessTargetingClassLazy(TargetingHolderActor, UTargeting_UnTargetedComponent::StaticClass());
+	return AccessTargetingClassLazy(TargetingHolderActor, UTargetingComponent_Untargeted::StaticClass());
 }
 
 void ACardBase::ProceedOnInputTargetsReceived(TArray<AActor*> Targets)
