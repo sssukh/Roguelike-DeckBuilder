@@ -2,35 +2,33 @@
 
 
 #include "CombatSystem/TargetSystem/TargetingComponent_OpposingFront.h"
+#include "Core/MinionBase.h"
 
 
 // Sets default values for this component's properties
 UTargetingComponent_OpposingFront::UTargetingComponent_OpposingFront()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-}
-
-
-// Called when the game starts
-void UTargetingComponent_OpposingFront::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
 	
 }
 
-
-// Called every frame
-void UTargetingComponent_OpposingFront::TickComponent(float DeltaTime, ELevelTick TickType,
-                                                      FActorComponentTickFunction* ThisTickFunction)
+bool UTargetingComponent_OpposingFront::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
+                                                         const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	ValidTargets.Reset();
+	
+	AMinionTrack* OwnerTrack = nullptr;
+	AMinionTrack* OpposingTrack = nullptr;
+	
+	FindMinionTracks(Card,OwnerTrack,OpposingTrack);
 
-	// ...
+	if(OpposingTrack && OpposingTrack->Minions.Num()>0)
+	{
+		ValidTargets.Add(OpposingTrack->Minions[0]);
+		return true;
+	}
+
+	return false;
 }
+
+
 

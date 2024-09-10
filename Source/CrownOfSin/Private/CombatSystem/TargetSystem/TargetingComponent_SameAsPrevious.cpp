@@ -3,6 +3,8 @@
 
 #include "CombatSystem/TargetSystem/TargetingComponent_SameAsPrevious.h"
 
+#include "CardSystem/CardBase.h"
+
 
 // Sets default values for this component's properties
 UTargetingComponent_SameAsPrevious::UTargetingComponent_SameAsPrevious()
@@ -14,23 +16,21 @@ UTargetingComponent_SameAsPrevious::UTargetingComponent_SameAsPrevious()
 	// ...
 }
 
-
-// Called when the game starts
-void UTargetingComponent_SameAsPrevious::BeginPlay()
+bool UTargetingComponent_SameAsPrevious::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
+                                                          const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
 {
-	Super::BeginPlay();
-
-	// ...
+	ValidTargets.Reset();
 	
+	for (AActor* Target : Card->CurrentValidTargets)
+	{
+		if(IsValid(Target))
+		{
+			ValidTargets.Add(Target);
+		}
+	}
+
+	return ValidTargets.Num() > 0;
 }
 
 
-// Called every frame
-void UTargetingComponent_SameAsPrevious::TickComponent(float DeltaTime, ELevelTick TickType,
-                                                       FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
 

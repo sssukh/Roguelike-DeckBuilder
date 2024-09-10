@@ -5,13 +5,13 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Core/MinionTrack.h"
+#include "Core/CosEnumStruct.h"
 #include "TargetingComponent.generated.h"
 
 class AMinionTrack;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInputTargetsReceived, TArray<AActor*>, Targets);
 
 class ACardBase;
-struct FCardEffect;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UTargetingComponent : public UActorComponent
@@ -34,7 +34,7 @@ public:
 	// 입력한 매개변수에 기반해 유효한 Target 배열을 찾고 가져옵니다.
 	// 자식 클래스에서 override해서 재정의합니다.
 	UFUNCTION(BlueprintCallable, Category="Targeting Component")
-	bool FindValidTargets(TArray<AActor*> SpecifiedTargets, FCardEffect CardEffect,ACardBase* Card,bool Preview, TArray<AActor*>& ValidTargets);
+	virtual bool FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets);
 
 	// 맵 상의 모든 미니언들을 찾고 매개변수에 입력한 게임플레이 태그들을 하나라도 갖고있는 미니언들을 가져옵니다.
 	UFUNCTION(BlueprintCallable, Category="Targeting Component")

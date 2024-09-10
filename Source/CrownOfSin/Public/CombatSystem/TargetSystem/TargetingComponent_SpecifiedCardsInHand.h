@@ -7,6 +7,8 @@
 #include "TargetingComponent_SpecifiedCardsInHand.generated.h"
 
 
+class UUW_CardHand;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UTargetingComponent_SpecifiedCardsInHand : public UTargetingComponent
 {
@@ -16,12 +18,19 @@ public:
 	// Sets default values for this component's properties
 	UTargetingComponent_SpecifiedCardsInHand();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+	virtual bool FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets) override;
 
+	UFUNCTION(BlueprintCallable, Category = "TargetSystem SpecifiedCardsInHand")
+	void BindToCardConfirm(UUW_CardHand* Hand);
+
+	UFUNCTION(BlueprintCallable, Category = "TargetSystem SpecifiedCardsInHand")
+	void ValidateAndTransferSelectedCards(TArray<ACardBase*>& Cards);
+
+	// Member Variables
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TargetSystem SpecifiedCardsInHand")
+	FGameplayTagContainer EmptyTagContainer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TargetSystem SpecifiedCardsInHand")
+	TObjectPtr<UUW_CardHand> BoundHand;
 };

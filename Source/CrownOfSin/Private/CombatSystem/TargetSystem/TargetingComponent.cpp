@@ -39,8 +39,8 @@ void UTargetingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	// ...
 }
 
-bool UTargetingComponent::FindValidTargets(TArray<AActor*> SpecifiedTargets, FCardEffect CardEffect, ACardBase* Card,
-	bool Preview, TArray<AActor*>& ValidTargets)
+bool UTargetingComponent::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card,
+                                           bool bPreview, TArray<AActor*>& ValidTargets)
 {
 	ValidTargets = TArray<AActor*>();
 	return true;

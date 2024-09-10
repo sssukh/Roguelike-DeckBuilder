@@ -3,34 +3,26 @@
 
 #include "CombatSystem/TargetSystem/TargetingComponent_CardOwner.h"
 
+#include "CardSystem/CardBase.h"
+
 
 // Sets default values for this component's properties
 UTargetingComponent_CardOwner::UTargetingComponent_CardOwner()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-}
-
-
-// Called when the game starts
-void UTargetingComponent_CardOwner::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
 	
 }
 
-
-// Called every frame
-void UTargetingComponent_CardOwner::TickComponent(float DeltaTime, ELevelTick TickType,
-                                                  FActorComponentTickFunction* ThisTickFunction)
+bool UTargetingComponent_CardOwner::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
+                                                     ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	ValidTargets.Reset();
+	
+	if(!Card->GetOwner())
+		return false;
 
-	// ...
+	ValidTargets.Add(Card->GetOwner());
+	return true;
 }
+
+
 

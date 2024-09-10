@@ -16,12 +16,7 @@ public:
 	// Sets default values for this component's properties
 	UTargetingComponent_AllValidTargets();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
 
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
+	virtual bool FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets) override;
+
 };

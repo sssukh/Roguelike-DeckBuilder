@@ -8,6 +8,7 @@
 #include "Interfaces/Interface_StoryEncounter.h"
 #include "UW_Layout_Cos.generated.h"
 
+class UUW_CardHand;
 class UUW_Shop;
 class UButton;
 class UUW_ScreenFade;
@@ -75,4 +76,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Layout Cos", meta=(BindWidget))
 	UUW_Shop* WBP_Shop;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Layout Cos", meta=(BindWidget))
+	TObjectPtr<UUW_CardHand> WBP_Hand;
 };

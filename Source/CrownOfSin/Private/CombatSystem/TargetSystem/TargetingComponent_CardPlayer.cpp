@@ -3,34 +3,30 @@
 
 #include "CombatSystem/TargetSystem/TargetingComponent_CardPlayer.h"
 
+#include "Libraries/FunctionLibrary_Singletons.h"
+
+#include "CardSystem/CardPlayer.h"
+
+
 
 // Sets default values for this component's properties
 UTargetingComponent_CardPlayer::UTargetingComponent_CardPlayer()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-}
-
-
-// Called when the game starts
-void UTargetingComponent_CardPlayer::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
 	
 }
 
-
-// Called every frame
-void UTargetingComponent_CardPlayer::TickComponent(float DeltaTime, ELevelTick TickType,
-                                                   FActorComponentTickFunction* ThisTickFunction)
+bool UTargetingComponent_CardPlayer::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
+                                                      ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	ValidTargets.Reset();
 
-	// ...
+	ACardPlayer* CardPlayer =UFunctionLibrary_Singletons::GetCardPlayer(this);
+	
+	ValidTargets.Add(CardPlayer);
+
+	return true;
 }
+
+
+
 

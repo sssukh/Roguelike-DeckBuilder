@@ -3,34 +3,35 @@
 
 #include "CombatSystem/TargetSystem/TargetingComponent_AllOpposing.h"
 
+#include "Algo/ForEach.h"
+#include "Core/MinionBase.h"
+
 
 // Sets default values for this component's properties
 UTargetingComponent_AllOpposing::UTargetingComponent_AllOpposing()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-}
-
-
-// Called when the game starts
-void UTargetingComponent_AllOpposing::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
 	
 }
 
 
-// Called every frame
-void UTargetingComponent_AllOpposing::TickComponent(float DeltaTime, ELevelTick TickType,
-                                                    FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+
+bool UTargetingComponent_AllOpposing::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
+                                                       ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
+{
+	ValidTargets.Reset();
+	
+	TArray<AMinionBase*> Minions;
+	
+	if(GetAllMinionsOnOpposingTrack(Card,Minions))
+	{
+		for (AActor* Minion : Minions)
+		{
+			ValidTargets.Add(Minion);
+		}
+		return true;
+	}
+	
+	return false;
 }
 

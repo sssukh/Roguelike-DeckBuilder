@@ -2,6 +2,7 @@
 
 
 #include "CombatSystem/TargetSystem/TargetingComponent_Self.h"
+#include "CardSystem/CardBase.h"
 
 
 // Sets default values for this component's properties
@@ -14,23 +15,16 @@ UTargetingComponent_Self::UTargetingComponent_Self()
 	// ...
 }
 
-
-// Called when the game starts
-void UTargetingComponent_Self::BeginPlay()
+bool UTargetingComponent_Self::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
+                                                ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
 {
-	Super::BeginPlay();
+	ValidTargets.Reset();
 
-	// ...
-	
+	ValidTargets.Add(Card);
+
+	return true;
 }
 
 
-// Called every frame
-void UTargetingComponent_Self::TickComponent(float DeltaTime, ELevelTick TickType,
-                                             FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
-}
 
