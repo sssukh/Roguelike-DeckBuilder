@@ -3,6 +3,8 @@
 
 #include "CardSystem/CardEffects/CardEffect_QueueGlobalEvents.h"
 
+#include "Libraries/FunctionLibrary_Event.h"
+
 
 // Sets default values for this component's properties
 UCardEffect_QueueGlobalEvents::UCardEffect_QueueGlobalEvents()
@@ -21,15 +23,14 @@ void UCardEffect_QueueGlobalEvents::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_QueueGlobalEvents::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_QueueGlobalEvents::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	for (FGameplayTag EventTag : GameplayTags.GetGameplayTagArray())
+	{
+		UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(EventTag, TargetActor, nullptr);
+	}
 
-	// ...
+	return true;
 }
-

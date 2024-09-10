@@ -228,7 +228,7 @@ void ANodeBase::ClickNode_Implementation()
 
 		if (!CardPlayer->PlayerUI->ShouldNodeMapBeBlocked())
 		{
-			UGameInstance* GameInstance = UFunctionLibrary_Singletons::GetValidCardGameInstance(this);
+			UGameInstance* GameInstance = UFunctionLibrary_Singletons::GetCardGameInstance(this);
 			if (!GameInstance)
 				return;
 

@@ -1,7 +1,7 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffect_AddStatus.h"
 
-
-#include "CardSystem/CardEffects/CardEffect_AddStatus.h"
+#include "Interfaces/Interface_CardTarget.h"
+#include "StatusSystem/StatusComponent.h"
 
 
 // Sets default values for this component's properties
@@ -15,21 +15,25 @@ UCardEffect_AddStatus::UCardEffect_AddStatus()
 }
 
 
-// Called when the game starts
 void UCardEffect_AddStatus::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_AddStatus::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_AddStatus::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (TargetComponent->IsChildOf(UStatusComponent::StaticClass()))
+	{
+		if (TargetActor->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+		{
+			//TargetComponent를 TSubclassOf<UStatusComponent>로 캐스팅
+			TSubclassOf<UStatusComponent> StatusComponentClass = *TargetComponent;
+			IInterface_CardTarget::Execute_AddToStatus(TargetActor, StatusComponentClass, EffectValue, true, this);
+		}
+		return true;
+	}
 
-	// ...
+	return false;
 }
-

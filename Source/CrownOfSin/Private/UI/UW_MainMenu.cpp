@@ -155,7 +155,7 @@ void UUW_MainMenu::AddStartingStatusesToHero(UGameInstance* GameInstance, const 
 		// UStatus_Artifact의 서브클래스인지 확인하고 게임 인스턴스에 추가
 		if (ArtifactClass->IsChildOf(UStatus_Artifact::StaticClass()))
 		{
-			IInterface_CardGameInstance::Execute_AddArtifactToInstance(GameInstance, FStatusData(ArtifactValue, FGameplayTagContainer(), ArtifactClass));
+			IInterface_CardGameInstance::Execute_AddArtifactToInstance(GameInstance, FStatusData(ArtifactClass, ArtifactValue, FGameplayTagContainer()));
 		}
 	}
 }

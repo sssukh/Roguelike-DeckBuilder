@@ -36,8 +36,6 @@ bool UCardEffect_StoreTargetAsPayload::ResolveCardEffect(AActor* TargetActor)
 	}
 
 	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
-
 	CardPlayer->PayloadHolderComponent->AddPayload(Identifier, TargetActor);
-
 	return true;
 }

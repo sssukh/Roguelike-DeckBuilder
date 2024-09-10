@@ -1,35 +1,36 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffect_AddDamageToAttackCard.h"
+
+#include "CardSystem/CardBase.h"
+#include "Utilities/CosGameplayTags.h"
 
 
-#include "CardSystem/CardEffects/CardEffect_AddDamageToAttackCard.h"
-
-
-// Sets default values for this component's properties
 UCardEffect_AddDamageToAttackCard::UCardEffect_AddDamageToAttackCard()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bStartWithTickEnabled = false;
 
 	// ...
 }
 
 
-// Called when the game starts
 void UCardEffect_AddDamageToAttackCard::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_AddDamageToAttackCard::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_AddDamageToAttackCard::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	ACardBase* TargetCard = Cast<ACardBase>(TargetActor);
+	if (!TargetCard)
+		return false;
 
-	// ...
+	FGameplayTagContainer RequiredTags{CosGameTags::Effect_Attack};
+	TargetCard->ModifyCardEffectValues(EffectValue, ECardDataType::Hand, FGameplayTagContainer(), RequiredTags);
+	TargetCard->ModifyCardEffectValues(EffectValue, ECardDataType::Pile, FGameplayTagContainer(), RequiredTags);
+	TargetCard->CallLocalEventOnCard(CosGameTags::Event_Card_ModifyInHand, ECallGlobal::CallBefore);
+	return true;
 }
-

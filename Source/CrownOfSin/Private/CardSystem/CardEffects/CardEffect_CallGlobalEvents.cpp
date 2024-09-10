@@ -1,7 +1,6 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffect_CallGlobalEvents.h"
 
-
-#include "CardSystem/CardEffects/CardEffect_CallGlobalEvents.h"
+#include "Libraries/FunctionLibrary_Event.h"
 
 
 // Sets default values for this component's properties
@@ -14,22 +13,14 @@ UCardEffect_CallGlobalEvents::UCardEffect_CallGlobalEvents()
 	// ...
 }
 
-
-// Called when the game starts
 void UCardEffect_CallGlobalEvents::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_CallGlobalEvents::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_CallGlobalEvents::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	return UFunctionLibrary_Event::CallMultipleEventsInGlobalDispatcherHub(GameplayTags, TargetActor, nullptr);
 }
-

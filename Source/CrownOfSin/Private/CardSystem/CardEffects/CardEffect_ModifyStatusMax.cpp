@@ -3,6 +3,8 @@
 
 #include "CardSystem/CardEffects/CardEffect_ModifyStatusMax.h"
 
+#include "StatusSystem/StatusComponent.h"
+
 
 // Sets default values for this component's properties
 UCardEffect_ModifyStatusMax::UCardEffect_ModifyStatusMax()
@@ -21,15 +23,27 @@ void UCardEffect_ModifyStatusMax::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_ModifyStatusMax::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_ModifyStatusMax::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (!TargetComponent->IsChildOf(UStatusComponent::StaticClass()))
+	{
+		return false;
+	}
 
-	// ...
+	UActorComponent* FoundTargetComponent = TargetActor->GetComponentByClass(TargetComponent);
+	if (IsValid(FoundTargetComponent))
+	{
+		UStatusComponent* StatusComponent = Cast<UStatusComponent>(FoundTargetComponent);
+		if (StatusComponent->bMaxAble)
+		{
+			int32 CalculateValue = StatusComponent->MaxValue + EffectValue;
+			int32 NewValue = FMath::Max(CalculateValue, 0);
+			StatusComponent->SetStatusMax(NewValue);
+			return true;
+		}
+	}
+
+	return false;
 }
-

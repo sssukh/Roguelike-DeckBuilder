@@ -3,6 +3,12 @@
 
 #include "CardSystem/CardEffects/CardEffect_DrawSpecificCard.h"
 
+#include "CardSystem/CardBase.h"
+#include "CardSystem/CardPlayer.h"
+#include "CardSystem/Piles/PileComponent.h"
+#include "CardSystem/Piles/PileHandComponent.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
+
 
 // Sets default values for this component's properties
 UCardEffect_DrawSpecificCard::UCardEffect_DrawSpecificCard()
@@ -12,24 +18,48 @@ UCardEffect_DrawSpecificCard::UCardEffect_DrawSpecificCard()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	bTargeted = false;
 }
 
 
-// Called when the game starts
 void UCardEffect_DrawSpecificCard::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_DrawSpecificCard::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_DrawSpecificCard::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (EffectValue <= 0)
+		return true;
 
-	// ...
+	ACardBase* TargetCard = Cast<ACardBase>(TargetActor);
+	if (!TargetCard)
+		return false;
+
+	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
+	if (!CardPlayer)
+	{
+		return false;
+	}
+
+	UPileHandComponent* PileHandComponent = Cast<UPileHandComponent>(CardPlayer->GetComponentByClass(UPileHandComponent::StaticClass()));
+	if (!PileHandComponent)
+	{
+		return false;
+	}
+
+	if (TargetComponent->IsChildOf(UPileComponent::StaticClass()))
+	{
+		ACardBase* DrawnCard;
+		PileHandComponent->DrawCard(TargetCard,*TargetComponent,DrawnCard);
+	}
+	else
+	{
+		ACardBase* DrawnCard;
+		PileHandComponent->DrawCard(TargetCard,UPileComponent::StaticClass(),DrawnCard);
+	}
+
+	return true;
 }
-

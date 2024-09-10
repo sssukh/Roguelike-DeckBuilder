@@ -146,6 +146,10 @@ public:
 
 	virtual bool CheckIfAllHeroesAreDead_Implementation() override;
 
+	virtual bool GetMainHero_Implementation(AActor*& OutMainHero) override;
+
+	virtual void ChangeNodeMapInInstance_Implementation(const FString& NewNodeMap) override;
+
 	
 	/*========================================================================================
 	*	Field Members
@@ -168,8 +172,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Cos Game Instance|Debug")
 	bool bDebugMode = true;
-
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Cos Game Instance|Save & Load")
 	FString SaveId;
 

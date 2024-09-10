@@ -1,7 +1,7 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffect_AddToStatusCapped.h"
 
-
-#include "CardSystem/CardEffects/CardEffect_AddToStatusCapped.h"
+#include "Libraries/FunctionLibrary_CardEffect.h"
+#include "StatusSystem/StatusComponent.h"
 
 
 // Sets default values for this component's properties
@@ -21,15 +21,13 @@ void UCardEffect_AddToStatusCapped::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_AddToStatusCapped::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_AddToStatusCapped::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (!TargetComponent->IsChildOf(UStatusComponent::StaticClass()))
+		return false;
 
-	// ...
+	UFunctionLibrary_CardEffect::AddToStatusCappedToMax(TargetActor, *TargetComponent, EffectValue, true, this);
+	return true;
 }
-

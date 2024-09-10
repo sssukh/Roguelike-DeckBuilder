@@ -1,13 +1,12 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
 #include "CardEffectComponent.h"
 #include "CardEffect_Attack.generated.h"
 
-
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+/*대상의 방어구에서 효과 값을 빼고 나머지는 체력에서 뺍니다. 입힌 피해에 따라 화면 흔들기 동작을 호출합니다.*/
+UCLASS(ClassGroup=("COS|Card"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UCardEffect_Attack : public UCardEffectComponent
 {
 	GENERATED_BODY()
@@ -21,6 +20,16 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual bool ResolveCardEffect(AActor* TargetActor) override;
+
+	/*========================================================================================
+	*	Field Members
+	=========================================================================================*/
+public:
+	UPROPERTY(BlueprintReadWrite,Category="Card Effect Attack")
+	AActor* AttackTarget;
+	
+	UPROPERTY(BlueprintReadWrite,Category="Card Effect Attack")
+	float DamageScaleFactor = 0.15f;
+	
 };

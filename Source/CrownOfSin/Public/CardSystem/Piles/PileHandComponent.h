@@ -1,5 +1,4 @@
-﻿
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "PileComponent.h"
@@ -20,5 +19,15 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	
+	/*ToDo 구현해야함*/
+	UFUNCTION(BlueprintCallable, Category="Pile Hand Component Event")
+	void AttemptDraw()
+	{
+	}
+
+	/*ToDo 구현해야함*/
+	bool DrawCard(ACardBase* SpecifiedCard, TSubclassOf<UPileHandComponent> SourcePile, ACardBase*& OutDrawnCard)
+	{
+		return false;
+	}
 };

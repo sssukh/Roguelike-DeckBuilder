@@ -1,7 +1,7 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffect_GainStatusByStatusCount.h"
 
-
-#include "CardSystem/CardEffects/CardEffect_GainStatusByStatusCount.h"
+#include "Interfaces/Interface_CardTarget.h"
+#include "StatusSystem/StatusComponent.h"
 
 
 // Sets default values for this component's properties
@@ -14,22 +14,40 @@ UCardEffect_GainStatusByStatusCount::UCardEffect_GainStatusByStatusCount()
 	// ...
 }
 
-
-// Called when the game starts
 void UCardEffect_GainStatusByStatusCount::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_GainStatusByStatusCount::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_GainStatusByStatusCount::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	TArray<UActorComponent*> StatusComponents;
+	TargetActor->GetComponents(UStatusComponent::StaticClass(), StatusComponents);
 
-	// ...
+	int32 ValidStatusCount = 0;
+	for (int i = StatusComponents.Num() - 1; i >= 0; --i)
+	{
+		UStatusComponent* StatusComponent = Cast<UStatusComponent>(StatusComponents[i]);
+		if (!StatusComponent) continue;
+
+		if (StatusComponent->GameplayTags.HasAnyExact(GameplayTags))
+		{
+			ValidStatusCount = ValidStatusCount + StatusComponent->StatusValue;
+		}
+	}
+
+	if (!TargetComponent->IsChildOf(UStatusComponent::StaticClass()))
+	{
+		return false;
+	}
+
+	if (!TargetActor->Implements<UInterface_CardTarget>())
+	{
+		return false;
+	}
+
+	IInterface_CardTarget::Execute_AddToStatus(TargetActor, *TargetComponent, ValidStatusCount, true, nullptr);
+	return true;
 }
-

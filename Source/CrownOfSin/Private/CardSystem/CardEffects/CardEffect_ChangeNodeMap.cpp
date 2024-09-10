@@ -3,6 +3,9 @@
 
 #include "CardSystem/CardEffects/CardEffect_ChangeNodeMap.h"
 
+#include "Interfaces/Interface_CardGameInstance.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
+
 
 // Sets default values for this component's properties
 UCardEffect_ChangeNodeMap::UCardEffect_ChangeNodeMap()
@@ -21,15 +24,14 @@ void UCardEffect_ChangeNodeMap::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_ChangeNodeMap::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_ChangeNodeMap::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetCardGameInstance(this);
+	if (!CardGameInstance)
+		return false;
 
-	// ...
+	IInterface_CardGameInstance::Execute_ChangeNodeMapInInstance(CardGameInstance, Identifier);
+	return true;
 }
-

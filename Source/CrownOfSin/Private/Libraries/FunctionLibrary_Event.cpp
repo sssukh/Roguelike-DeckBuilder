@@ -55,3 +55,15 @@ bool UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(FGameplayTag EventT
 	GlobalDispatcherHub->DispatcherHubComponent->QueueEventWithPayloadAndCallTags(EventTag, CallingObject, CallSpecificObject, EndDelay, Payload, CallTags);
 	return true;
 }
+
+bool UFunctionLibrary_Event::CallMultipleEventsInGlobalDispatcherHub(FGameplayTagContainer EventTags, UObject* CallingObject, UObject* CallSpecificObject)
+{
+	AGlobalDispatcherHub* GlobalDispatcherHub = Cast<AGlobalDispatcherHub>(UGameplayStatics::GetActorOfClass(CallingObject, AGlobalDispatcherHub::StaticClass()));
+	if (!GlobalDispatcherHub)
+	{
+		COS_LOG_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
+		return false;
+	}
+
+	return GlobalDispatcherHub->DispatcherHubComponent->CallMultipleBoundEvents(EventTags.GetGameplayTagArray(), CallingObject, CallSpecificObject, ECallGlobal::CallAfter);
+}

@@ -5,6 +5,7 @@
 #include "CardEffect_RemoveCardFromPile.generated.h"
 
 
+/*대상 구성요소 더미에서 대상 카드를 제거합니다.*/
 UCLASS(ClassGroup=("COS|Card"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UCardEffect_RemoveCardFromPile : public UCardEffectComponent
 {

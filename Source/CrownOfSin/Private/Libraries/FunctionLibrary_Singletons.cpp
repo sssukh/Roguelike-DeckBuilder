@@ -15,10 +15,16 @@ ACardPlayer* UFunctionLibrary_Singletons::GetCardPlayer(const UObject* WorldCont
 		return nullptr;
 	}
 
+	if (!CardPlayerActor->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+	{
+		COS_LOG_SCREEN(TEXT("게임 인스턴스가 UInterface_CardTarget을 상속받지 않았습니다"));
+		return nullptr;
+	}
+
 	return Cast<ACardPlayer>(CardPlayerActor);
 }
 
-UGameInstance* UFunctionLibrary_Singletons::GetValidCardGameInstance(const UObject* WorldContextObject)
+UGameInstance* UFunctionLibrary_Singletons::GetCardGameInstance(const UObject* WorldContextObject)
 {
 	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(WorldContextObject);
 	if (!GameInstance)

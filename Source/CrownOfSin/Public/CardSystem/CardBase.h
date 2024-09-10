@@ -11,6 +11,8 @@ class UGameplayTagComponent;
 class UDispatcherHubLocalComponent;
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnThisCardModified);
+
 /*툴킷의 중심 행위자.
  *카드 액터는 눈에 보이지 않지만 WBP_Card를 통해 시각화되고 입력을 받습니다.
  *카드 속성은 데이터 테이블(예: DT_Cards)에 정의됩니다.
@@ -89,6 +91,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Card")
 	FCard GetCardDataByCardDataType(ECardDataType Type);
+	
+	FCard& GetCardDataByCardDataTypeRef(ECardDataType Type);
 
 	UFUNCTION(BlueprintCallable, Category = "Card")
 	FDataTableRowHandle GetCardDataRowHandle(ECardDataType Type);
@@ -125,7 +129,22 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Card")
 	void QueueCardEffectAction(AActor* TargetActor, AActor* SourcePuppet, UCardEffectComponent* CardEffect, bool bAnimateSourcePuppet);
+	
 
+	UFUNCTION(BlueprintCallable, Category = "Card")
+	bool CallLocalEventOnCard(const FGameplayTag& EventTag, ECallGlobal AlsoCallGlobal = ECallGlobal::CallAfter);
+
+	UFUNCTION(BlueprintCallable, Category = "Card")
+	void Discard(FGameplayTagContainer CallTags);
+	
+	UFUNCTION(BlueprintCallable, Category = "Card")
+	void ModifyCardEffectValues(int32 Modification, ECardDataType InCardType, FGameplayTagContainer PossibleTags, FGameplayTagContainer RequiredTags);
+
+	UFUNCTION(BlueprintCallable, Category = "Card")
+	void Exhaust();
+
+public:
+	
 	// 카드의 Rarity를 알아야할 때 모든 게임플레이 태그를 순회하지 않도록 하는 캐싱함수입니다.
 	// rarity tag들만 바로 순회해서 Rarity 멤버변수를 세팅하는 함수입니다.
 	UFUNCTION(BlueprintCallable, Category = "Card")
@@ -136,8 +155,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Card")
 	FGameplayTag SetCardTypeFromTags();
 
-	UFUNCTION(BlueprintCallable, Category = "Card")
-	bool CallLocalEventOnCard(const FGameplayTag& EventTag, ECallGlobal AlsoCallGlobal = ECallGlobal::CallAfter);
+	
+	void SetCardEffects(ECardDataType InCardType, const TArray<FCardEffect>& NewCardEffects);
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Card")
@@ -229,4 +248,8 @@ public:
 	// 확인 필요 <class 정보, 객체> 맵이다.
 	UPROPERTY(BlueprintReadWrite, Category = "Variables | Card")
 	TMap<TSubclassOf<UUseRuleComponent>, UUseRuleComponent*> UseRuleInstances;
+
+public:
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category="Card|Delegate")
+	FOnThisCardModified OnThisCardModified;
 };

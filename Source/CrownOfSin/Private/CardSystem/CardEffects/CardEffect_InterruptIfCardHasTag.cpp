@@ -1,7 +1,6 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffect_InterruptIfCardHasTag.h"
 
-
-#include "CardSystem/CardEffects/CardEffect_InterruptIfCardHasTag.h"
+#include "CardSystem/CardBase.h"
 
 
 // Sets default values for this component's properties
@@ -21,15 +20,20 @@ void UCardEffect_InterruptIfCardHasTag::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_InterruptIfCardHasTag::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_InterruptIfCardHasTag::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	FGameplayTagContainer CardGameplayTags = ParentCard->GetGameplayTags();
+	if (CardGameplayTags.HasAnyExact(GameplayTags))
+	{
+		if (ParentCard->Implements<UInterface_Interrupt>())
+		{
+			IInterface_Interrupt::Execute_Interrupt(ParentCard);
+		}
 
-	// ...
+		return true;
+	}
+
+	return true;
 }
-

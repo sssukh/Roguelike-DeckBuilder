@@ -4,6 +4,7 @@
 #include "CardSystem/CardPlayer.h"
 #include "CardSystem/Piles/PileDeckComponent.h"
 #include "Core/CosSaveGame.h"
+#include "Core/MinionBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetStringLibrary.h"
@@ -460,6 +461,34 @@ bool UCosGameInstance::CheckIfAllHeroesAreDead_Implementation()
 	}
 
 	return PersistentHeroes.Num() == DeadHeroCount;
+}
+
+bool UCosGameInstance::GetMainHero_Implementation(AActor*& OutMainHero)
+{
+	TArray<AActor*> MinionActors;
+	UGameplayStatics::GetAllActorsOfClass(this, AMinionBase::StaticClass(), MinionActors);
+
+	for (AActor* MinionActor : MinionActors)
+	{
+		AMinionBase* Minion = Cast<AMinionBase>(MinionActor);
+		if (!Minion)
+			continue;
+
+		if (UKismetStringLibrary::EqualEqual_StrStr(Minion->MinionData.UniqueID, PersistentHeroes[0].UniqueID))
+		{
+			OutMainHero = Minion;
+			return true;
+		}
+	}
+
+	OutMainHero = nullptr;
+	return false;
+}
+
+void UCosGameInstance::ChangeNodeMapInInstance_Implementation(const FString& NewNodeMap)
+{
+	CurrentNodeMap = NewNodeMap;
+	VisitedNodes = {0};
 }
 
 TArray<FStatusData> UCosGameInstance::GetArtifactsFromInstance_Implementation()

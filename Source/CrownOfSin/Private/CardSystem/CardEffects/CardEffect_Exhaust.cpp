@@ -1,7 +1,6 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffect_Exhaust.h"
 
-
-#include "CardSystem/CardEffects/CardEffect_Exhaust.h"
+#include "CardSystem/CardBase.h"
 
 
 // Sets default values for this component's properties
@@ -12,6 +11,7 @@ UCardEffect_Exhaust::UCardEffect_Exhaust()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	bTargeted = false;
 }
 
 
@@ -21,15 +21,14 @@ void UCardEffect_Exhaust::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_Exhaust::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_Exhaust::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	ACardBase* TargetCard = Cast<ACardBase>(TargetActor);
+	if (!TargetCard)
+		return false;
 
-	// ...
+	TargetCard->Exhaust();
+	return true;
 }
-

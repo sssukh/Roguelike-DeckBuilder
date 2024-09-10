@@ -394,6 +394,28 @@ FCard ACardBase::GetCardDataByCardDataType(ECardDataType Type)
 	return FCard(); // 혹은 적절한 기본 FCard 객체
 }
 
+FCard& ACardBase::GetCardDataByCardDataTypeRef(ECardDataType Type)
+{
+	// 각 ECardDataType에 대응하는 FCard를 저장하는 맵
+	TMap<ECardDataType, FCard*> CardDataMap =
+	{
+		{ECardDataType::Base, &CardDataBase},
+		{ECardDataType::Deck, &CardDataDeck},
+		{ECardDataType::Hand, &CardDataHand},
+		{ECardDataType::Pile, &CardDataPile}
+	};
+
+	// 유효한 카드 타입이 있는지 확인 후 반환, 없을 경우 기본값 반환
+	if (CardDataMap.Contains(Type))
+	{
+		return *CardDataMap[Type];
+	}
+
+	// 잘못된 Type에 대해 기본값 반환 (기본값은 에러 처리 방식을 따로 고려해 주세요)
+	static FCard DefaultCard; // 기본 FCard 객체를 static으로 선언하여 참조를 반환
+	return DefaultCard;
+}
+
 FDataTableRowHandle ACardBase::GetCardDataRowHandle(ECardDataType Type)
 {
 	return GetCardDataByCardDataType(Type).DataRow;
@@ -543,9 +565,53 @@ FGameplayTag ACardBase::SetCardTypeFromTags()
 	return CosGameTags::Effect_Invalid;
 }
 
+void ACardBase::SetCardEffects(ECardDataType InCardType, const TArray<FCardEffect>& NewCardEffects)
+{
+	GetCardDataByCardDataTypeRef(InCardType).CardEffects = NewCardEffects;
+}
+
 bool ACardBase::CallLocalEventOnCard(const FGameplayTag& EventTag, ECallGlobal AlsoCallGlobal)
 {
 	return DispatcherHubLocal->CallEvent(EventTag, this, nullptr, AlsoCallGlobal);
+}
+
+void ACardBase::Discard(FGameplayTagContainer CallTags)
+{
+	DispatcherHubLocal->CallEventWithCallTags(CosGameTags::Event_Card_Discard, this, nullptr, ECallGlobal::CallAfter, CallTags);
+}
+
+void ACardBase::ModifyCardEffectValues(int32 Modification, ECardDataType InCardType, FGameplayTagContainer PossibleTags, FGameplayTagContainer RequiredTags)
+{
+	bool bLocalNoPossibleTags = PossibleTags.Num() == 0;
+	bool bLocalNoRequiredTags = RequiredTags.Num() == 0;
+
+	bool bLocalCardModified = false;
+
+	int32 Index = 0;
+	TArray<FCardEffect> CardTypeEffects = GetCardEffects(InCardType);
+	for (const FCardEffect& CardEffect : CardTypeEffects)
+	{
+		if (UBlueprintGameplayTagLibrary::HasAnyTags(CardEffect.GameplayTags, PossibleTags, true) || bLocalNoPossibleTags &&
+			UBlueprintGameplayTagLibrary::HasAllTags(CardEffect.GameplayTags, RequiredTags, true) || bLocalNoRequiredTags)
+		{
+			bLocalCardModified = true;
+		}
+		CardTypeEffects[Index].EffectValue = FMath::Max(CardEffect.EffectValue + Modification, 0);
+		Index++;
+	}
+
+
+	if (bLocalCardModified)
+	{
+		SetCardEffects(InCardType, CardTypeEffects);
+		if (OnThisCardModified.IsBound())
+			OnThisCardModified.Broadcast();
+	}
+}
+
+void ACardBase::Exhaust()
+{
+	DispatcherHubLocal->CallEvent(CosGameTags::Event_Card_Exhaust, this);
 }
 
 FGameplayTagContainer ACardBase::GetGameplayTags()

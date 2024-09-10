@@ -1,7 +1,6 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffect_CallLocalEvents.h"
 
-
-#include "CardSystem/CardEffects/CardEffect_CallLocalEvents.h"
+#include "Core/DispatcherHubLocalComponent.h"
 
 
 // Sets default values for this component's properties
@@ -15,21 +14,20 @@ UCardEffect_CallLocalEvents::UCardEffect_CallLocalEvents()
 }
 
 
-// Called when the game starts
 void UCardEffect_CallLocalEvents::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_CallLocalEvents::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_CallLocalEvents::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	UDispatcherHubLocalComponent* DispatcherHubLocalComponent = Cast<UDispatcherHubLocalComponent>(TargetActor->GetComponentByClass(UDispatcherHubLocalComponent::StaticClass()));
+	if (IsValid(DispatcherHubLocalComponent))
+	{
+		return DispatcherHubLocalComponent->CallMultipleBoundEvents(GameplayTags.GetGameplayTagArray(), TargetActor, nullptr, ECallGlobal::CallBefore);
+	}
 
-	// ...
+	return false;
 }
-

@@ -1,35 +1,36 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffect_AddSpecifiedArtifact.h"
 
+#include "Interfaces/Interface_CardTarget.h"
+#include "StatusSystem/StatusComponent.h"
 
-#include "CardSystem/CardEffects/CardEffect_AddSpecifiedArtifact.h"
-
-
-// Sets default values for this component's properties
 UCardEffect_AddSpecifiedArtifact::UCardEffect_AddSpecifiedArtifact()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bStartWithTickEnabled = false;
 
 	// ...
 }
 
-
-// Called when the game starts
 void UCardEffect_AddSpecifiedArtifact::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_AddSpecifiedArtifact::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_AddSpecifiedArtifact::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	if (TargetComponent->IsChildOf(UStatusComponent::StaticClass()))
+	{
+		if (TargetActor->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+		{
+			//TargetComponent를 TSubclassOf<UStatusComponent>로 캐스팅
+			TSubclassOf<UStatusComponent> StatusComponentClass = *TargetComponent;
+			IInterface_CardTarget::Execute_AddToStatus(TargetActor, StatusComponentClass, EffectValue, false, this);
+		}
+		return true;
+	}
+	return false;
 }
-

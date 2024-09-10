@@ -82,7 +82,13 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	bool UpdateHeroPersistentHealth(const FString& HeroUniqueID, int32 NewHealth);
-	
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	bool CheckIfAllHeroesAreDead();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
+	bool GetMainHero(AActor*& OutMainHero);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
+	void ChangeNodeMapInInstance(const FString& NewNodeMap);
 };

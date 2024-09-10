@@ -1,7 +1,6 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffect_ShowRewardScreen.h"
 
-
-#include "CardSystem/CardEffects/CardEffect_ShowRewardScreen.h"
+#include "CardSystem/CardActions/Action_RewardScreen.h"
 
 
 // Sets default values for this component's properties
@@ -14,22 +13,23 @@ UCardEffect_ShowRewardScreen::UCardEffect_ShowRewardScreen()
 	// ...
 }
 
-
-// Called when the game starts
 void UCardEffect_ShowRewardScreen::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_ShowRewardScreen::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_ShowRewardScreen::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	FTransform SpawnTransform = FTransform::Identity;
 
-	// ...
+	if (AAction_RewardScreen* NewActionRewardScreen = GetWorld()->SpawnActorDeferred<AAction_RewardScreen>(AAction_RewardScreen::StaticClass(), SpawnTransform,
+	                                                                                                       nullptr, nullptr,
+	                                                                                                       ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
+	{
+		NewActionRewardScreen->FinishSpawning(SpawnTransform);
+	}
+
+	return true;
 }
-

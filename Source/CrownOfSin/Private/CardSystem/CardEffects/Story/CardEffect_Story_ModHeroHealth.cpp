@@ -22,7 +22,7 @@ void UCardEffect_Story_ModHeroHealth::BeginPlay()
 
 bool UCardEffect_Story_ModHeroHealth::ResolveCardEffect(AActor* TargetActor)
 {
-	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetValidCardGameInstance(this);
+	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetCardGameInstance(this);
 	if (!CardGameInstance)
 		return false;
 

@@ -1,7 +1,9 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffect_AddStatusFromDrawPileSize.h"
 
-
-#include "CardSystem/CardEffects/CardEffect_AddStatusFromDrawPileSize.h"
+#include "CardSystem/CardPlayer.h"
+#include "CardSystem/Piles/PileDrawComponent.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
+#include "StatusSystem/StatusComponent.h"
 
 
 // Sets default values for this component's properties
@@ -21,15 +23,29 @@ void UCardEffect_AddStatusFromDrawPileSize::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_AddStatusFromDrawPileSize::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_AddStatusFromDrawPileSize::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (!TargetComponent->IsChildOf(UStatusComponent::StaticClass()))
+	{
+		return false;
+	}
 
-	// ...
+	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
+	if (!CardPlayer)
+	{
+		return false;
+	}
+
+	if (!TargetActor->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+	{
+		return false;
+	}
+
+	int32 Amount = FMath::FloorToInt(CardPlayer->PileDrawComponent->Cards.Num() / static_cast<float>(EffectValue));
+
+	TSubclassOf<UStatusComponent> StatusComponentClass = *TargetComponent;
+	IInterface_CardTarget::Execute_AddToStatus(TargetActor, StatusComponentClass, Amount, true, this);
+	return true;
 }
-

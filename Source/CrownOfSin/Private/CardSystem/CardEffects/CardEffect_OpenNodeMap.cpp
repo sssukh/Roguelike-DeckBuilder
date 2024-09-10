@@ -3,6 +3,10 @@
 
 #include "CardSystem/CardEffects/CardEffect_OpenNodeMap.h"
 
+#include "Interfaces/Interface_CardGameInstance.h"
+#include "Kismet/GameplayStatics.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
+
 
 // Sets default values for this component's properties
 UCardEffect_OpenNodeMap::UCardEffect_OpenNodeMap()
@@ -21,15 +25,25 @@ void UCardEffect_OpenNodeMap::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_OpenNodeMap::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_OpenNodeMap::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetCardGameInstance(this);
+	if (!CardGameInstance)
+		return false;
 
-	// ...
+
+	if (Identifier.IsEmpty())
+	{
+		FString CurrentNodeMap = IInterface_CardGameInstance::Execute_GetCurrentNodeMapFromInstance(CardGameInstance);
+		UGameplayStatics::OpenLevel(this, FName(*CurrentNodeMap));
+	}
+	else
+	{
+		IInterface_CardGameInstance::Execute_ChangeNodeMapInInstance(CardGameInstance, Identifier);
+		UGameplayStatics::OpenLevel(this, FName(*Identifier));
+	}
+
+	return true;
 }
-

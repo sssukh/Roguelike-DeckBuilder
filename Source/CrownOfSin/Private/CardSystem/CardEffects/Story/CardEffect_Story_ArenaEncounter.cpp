@@ -34,7 +34,7 @@ bool UCardEffect_Story_ArenaEncounter::ResolveCardEffect(AActor* TargetActor)
 
 	FEncounterData EncounterData = *FoundEncounter;
 
-	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetValidCardGameInstance(this);
+	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetCardGameInstance(this);
 	if (!CardGameInstance)
 		return false;
 

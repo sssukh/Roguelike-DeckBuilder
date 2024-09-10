@@ -1,8 +1,12 @@
 ﻿#include "CardSystem/ChanceManagerComponent.h"
 
 #include "BlueprintGameplayTagLibrary.h"
+#include "Interfaces/Interface_CardGameInstance.h"
 #include "Libraries/AssetTableRef.h"
 #include "Libraries/FunctionLibrary_ArrayUtils.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
+#include "StatusSystem/StatusComponent.h"
+#include "StatusSystem/Artifacts/Status_Artifact_Lollipop.h"
 #include "Utilities/CosGameplayTags.h"
 #include "Utilities/CosLog.h"
 
@@ -21,6 +25,11 @@ UChanceManagerComponent::UChanceManagerComponent()
 		CardRewardDataRowHandle.DataTable = DT_Cards_Rewards;
 		CardRewardDataRowHandle.RowName = FName(TEXT("ConsolationPrize"));
 	}
+
+	DefaultArtifactRarityWeights.Add(CosGameTags::Rarity_Common, 1.0f);
+	DefaultArtifactRarityWeights.Add(CosGameTags::Rarity_Rare, 0.0f);
+	DefaultArtifactRarityWeights.Add(CosGameTags::Rarity_Epic, 0.0f);
+	DefaultArtifactRarityWeights.Add(CosGameTags::Rarity_Legendary, 0.0f);
 }
 
 void UChanceManagerComponent::BeginPlay()
@@ -101,6 +110,37 @@ bool UChanceManagerComponent::FindPickedTagAmongFilteredCards(FGameplayTag Picke
 		return true;
 	}
 
+	return false;
+}
+
+bool UChanceManagerComponent::FindPickedTagAmongFilteredArtifacts(FGameplayTag PickedTag, TArray<FStatusData>& FilteredArtifacts, bool bPreventDuplicates, FStatusData& OutPickedArtifact)
+{
+	// 인덱스를 초기화
+	int32 Index = 0;
+
+	// 필터링된 아티팩트에서 선택된 태그를 찾음
+	for (const FStatusData& FilteredArtifact : FilteredArtifacts)
+	{
+		// 태그가 정확히 일치하는 아티팩트를 찾음
+		if (FilteredArtifact.GameplayTags.HasTagExact(PickedTag))
+		{
+			// 중복 방지가 설정된 경우, 해당 아티팩트를 리스트에서 제거
+			if (bPreventDuplicates)
+			{
+				FilteredArtifacts.RemoveAt(Index);
+			}
+
+			// 찾은 아티팩트를 반환
+			OutPickedArtifact = FilteredArtifact;
+			return true;
+		}
+
+		// 다음 인덱스로 이동
+		Index++;
+	}
+
+	// 태그와 일치하는 아티팩트를 찾지 못한 경우 기본값 반환
+	OutPickedArtifact = FStatusData();
 	return false;
 }
 
@@ -192,6 +232,87 @@ TArray<FCard> UChanceManagerComponent::GetTrueRandomCardsOfAnyRarity(int32 InAmo
 
 	PickedCards.Add(RandomCards[0]);
 	return PickedCards;
+}
+
+TArray<FStatusData> UChanceManagerComponent::GetRemainingArtifacts()
+{
+	// '남은 아티팩트' 리스트를 '모든 아티팩트'로 초기화합니다.
+	TArray<FStatusData> RemainingArtifacts = AllArtifacts;
+
+	// 현재 게임 인스턴스를 가져옵니다.
+	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetCardGameInstance(this);
+	if (!CardGameInstance)
+	{
+		// 게임 인스턴스를 찾을 수 없으면 모든 아티팩트를 그대로 반환합니다.
+		return RemainingArtifacts;
+	}
+
+	// 게임 인스턴스에서 이미 획득한 아티팩트 리스트를 가져옵니다.
+	const TArray<FStatusData>& AcquiredArtifacts = IInterface_CardGameInstance::Execute_GetArtifactsFromInstance(CardGameInstance);
+
+	// 이미 획득한 아티팩트를 '모든 아티팩트' 리스트에서 제거합니다.
+	for (const FStatusData& AcquiredArtifact : AcquiredArtifacts)
+	{
+		for (const FStatusData& Artifact : AllArtifacts)
+		{
+			// 아티팩트 클래스가 동일한 경우 해당 아티팩트를 남은 아티팩트 리스트에서 제거합니다.
+			if (Artifact.StatusClass == AcquiredArtifact.StatusClass)
+			{
+				RemainingArtifacts.Remove(Artifact);
+			}
+		}
+	}
+
+	// 남은 아티팩트 리스트를 반환합니다.
+	return RemainingArtifacts;
+}
+
+bool UChanceManagerComponent::GetRandomArtifactsByCustomTagWeights(TMap<FGameplayTag, float> TagWeights, int32 InAmount, bool bExactMatch, TArray<FStatusData>& OutPickedArtifacts)
+{
+	// 남아있는 아티팩트를 가져옴
+	TArray<FStatusData> RemainingArtifacts = GetRemainingArtifacts();
+
+	// 아티팩트 리스트를 무작위로 섞음
+	UFunctionLibrary_ArrayUtils::ShuffleArray(RemainingArtifacts);
+
+	// 주어진 가중치 맵을 사용하여 선택된 태그들을 가져옴
+	TArray<FGameplayTag> PickedTags = GetRandomTagsByWeights(TagWeights, InAmount);
+
+	// 선택된 아티팩트 리스트를 저장할 배열 초기화
+	TArray<FStatusData> PickedArtifacts;
+
+	// 각 선택된 태그에 대해 아티팩트를 찾아서 선택
+	for (FGameplayTag PickedTag : PickedTags)
+	{
+		FStatusData PickedArtifact;
+
+		// 필터링된 아티팩트에서 태그가 일치하는 아티팩트를 찾아서 추가
+		if (FindPickedTagAmongFilteredArtifacts(PickedTag, RemainingArtifacts, bExactMatch, PickedArtifact))
+		{
+			PickedArtifacts.Add(PickedArtifact);
+		}
+	}
+
+	// 만약 선택된 아티팩트 수가 원하는 수량보다 적다면, 기본 아티팩트를 채워 넣음
+	FStatusData FillerArtifact;
+	FillerArtifact.Value = 1;
+	FillerArtifact.StatusClass = UStatus_Artifact_Lollipop::StaticClass();
+
+	// 부족한 아티팩트 수만큼 기본 아티팩트를 추가
+	while (PickedArtifacts.Num() < InAmount)
+	{
+		PickedArtifacts.Add(FillerArtifact);
+	}
+
+	// 결과를 출력 배열에 저장
+	OutPickedArtifacts = PickedArtifacts;
+
+	return true;
+}
+
+bool UChanceManagerComponent::GetRandomArtifactsByDefaultRarityWeights(int32 InAmount, TArray<FStatusData>& OutPickedArtifacts)
+{
+	return GetRandomArtifactsByCustomTagWeights(DefaultArtifactRarityWeights, InAmount, true, OutPickedArtifacts);
 }
 
 TArray<FGameplayTag> UChanceManagerComponent::GetRandomTagsWithoutWeight(const TMap<FGameplayTag, float>& WeightedTags, int32 InAmount)
@@ -367,140 +488,3 @@ TArray<FCard> UChanceManagerComponent::HandleNoFilteredCards(int32 InAmount)
 
 	return FallbackCards;
 }
-
-
-// TArray<FCard> UChanceManagerComponent::GetRandomCardsByTagWeights(TMap<FGameplayTag, float> TagWeights, FGameplayTagContainer PossibleTags, FGameplayTagContainer RequiredTags, bool bExactMatch,
-//                                                                   int32 InAmount)
-// {
-// 	TArray<FCard> LocalPickedCards;
-// 	TArray<FCard> LocalFilteredCards = AllCards;
-//
-// 	{
-// 		TArray<FGameplayTag> RequiredTagsArray;
-// 		RequiredTags.GetGameplayTagArray(RequiredTagsArray);
-//
-// 		if (RequiredTagsArray.Num() > 0)
-// 		{
-// 			LocalFilteredCards = GetFilteredCardsWithAllTags(RequiredTags, LocalFilteredCards, bExactMatch);
-// 		}
-// 	}
-//
-// 	{
-// 		TArray<FGameplayTag> PossibleTagsArray;
-// 		PossibleTags.GetGameplayTagArray(PossibleTagsArray);
-//
-// 		if (PossibleTags.Num() > 0)
-// 		{
-// 			LocalFilteredCards = GetFilteredCardsWithAnyTag(PossibleTags, LocalFilteredCards, bExactMatch);
-// 		}
-// 	}
-//
-//
-// 	if (LocalFilteredCards.Num() > 0)
-// 	{
-// 		if (TagWeights.Num() > 0)
-// 		{
-// 			TArray<FGameplayTag> TagWeightsKeyArray;
-// 			TagWeights.GetKeys(TagWeightsKeyArray);
-// 			FGameplayTagContainer TagWeightKeyContainer = FGameplayTagContainer::CreateFromArray(TagWeightsKeyArray);
-// 			LocalFilteredCards = GetFilteredCardsWithAnyTag(TagWeightKeyContainer, LocalFilteredCards, bExactMatch);
-// 			UFunctionLibrary_ArrayUtils::ShuffleArray(LocalFilteredCards);
-//
-// 			TArray<FGameplayTag> PickedTags = GetRandomTagsByWeights(TagWeights, InAmount);
-//
-// 			for (const FGameplayTag& PickedTag : PickedTags)
-// 			{
-// 				FCard PickedCard;
-// 				if (FindPickedTagAmongFilteredCards(PickedTag, LocalFilteredCards, true, PickedCard))
-// 				{
-// 					LocalPickedCards.Add(PickedCard);
-// 				}
-// 			}
-//
-//
-// 			if (LocalPickedCards.Num() > 0)
-// 			{
-// 				TArray<FCard> LocalPickedCardsWithDuplicates = LocalPickedCards;
-//
-// 				while (LocalPickedCardsWithDuplicates.Num() < InAmount)
-// 				{
-// 					int32 RandomIndex;
-// 					FCard RandomCard = UFunctionLibrary_ArrayUtils::GetRandomElementFromArray(LocalPickedCards, RandomIndex);
-// 					LocalPickedCardsWithDuplicates.Add(RandomCard);
-// 				}
-//
-// 				return LocalPickedCardsWithDuplicates;
-// 			}
-// 			else
-// 			{
-// 				//구현해야함 로직이 똑같음
-// 				if (!DataTableRowHandle_CardsRewards.IsNull())
-// 				{
-// 					if (FCard* FoundCard = DataTableRowHandle_CardsRewards.DataTable->FindRow<FCard>(DataTableRowHandle_CardsRewards.RowName,TEXT("")))
-// 					{
-// 						FCard RewardsCard = *FoundCard;
-// 						RewardsCard.DataRow = DataTableRowHandle_CardsRewards;
-//
-// 						while (LocalPickedCards.Num() < InAmount)
-// 						{
-// 							LocalPickedCards.Add(RewardsCard);
-// 						}
-//
-// 						return LocalPickedCards;
-// 					}
-// 					else
-// 					{
-// 						COS_LOG_SCREEN(TEXT("오류: 유효한 카드 옵션이 충분하지 않으며 유효한 백업 옵션이 없습니다."));
-// 					}
-//
-// 					return LocalPickedCards;
-// 				}
-// 				else
-// 				{
-// 					COS_LOG_SCREEN(TEXT("DataTableRowHandle_CardsRewards을 반드시 설정해주세요!"));
-// 					return LocalPickedCards;
-// 				}
-// 			}
-// 		}
-// 		else
-// 		{
-// 			UFunctionLibrary_ArrayUtils::ShuffleArray(LocalFilteredCards);
-// 			for (int32 i = 1; i < InAmount; ++i)
-// 			{
-// 				int32 Index = i % LocalFilteredCards.Num();
-// 				LocalPickedCards.Add(LocalFilteredCards[Index]);
-// 			}
-// 			return LocalPickedCards;
-// 		}
-// 	}
-// 	else
-// 	{
-// 		//구현해야함 로직이 똑같음
-// 		if (!DataTableRowHandle_CardsRewards.IsNull())
-// 		{
-// 			if (FCard* FoundCard = DataTableRowHandle_CardsRewards.DataTable->FindRow<FCard>(DataTableRowHandle_CardsRewards.RowName,TEXT("")))
-// 			{
-// 				FCard RewardsCard = *FoundCard;
-// 				RewardsCard.DataRow = DataTableRowHandle_CardsRewards;
-//
-// 				while (LocalPickedCards.Num() < InAmount)
-// 				{
-// 					LocalPickedCards.Add(RewardsCard);
-// 				}
-//
-// 				return LocalPickedCards;
-// 			}
-// 			else
-// 			{
-// 				COS_LOG_SCREEN(TEXT("오류: 유효한 카드 옵션이 충분하지 않으며 유효한 백업 옵션이 없습니다."));
-// 			}
-//
-// 			return LocalPickedCards;
-// 		}
-// 		else
-// 		{
-// 			COS_LOG_SCREEN(TEXT("DataTableRowHandle_CardsRewards을 반드시 설정해주세요!"));
-// 			return LocalPickedCards;
-// 		}
-// 	}
-// }

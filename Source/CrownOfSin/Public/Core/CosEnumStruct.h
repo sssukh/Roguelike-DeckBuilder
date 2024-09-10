@@ -216,11 +216,12 @@ struct FToolTipValue
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tool Tip Value")
 	bool bValued;
 
-	FToolTipValue():bValued(false)
-	{};
+	FToolTipValue(): bValued(false)
+	{
+	};
 };
 
-USTRUCT(BlueprintType,Blueprintable)
+USTRUCT(BlueprintType, Blueprintable)
 struct FStatusData : public FTableRowBase
 {
 	GENERATED_BODY()
@@ -243,7 +244,7 @@ struct FStatusData : public FTableRowBase
 	}
 
 
-	FStatusData(int32 InValue, const FGameplayTagContainer& InGameplayTags, TSubclassOf<UStatusComponent> InStatusClass)
+	FStatusData(const TSubclassOf<UStatusComponent>& InStatusClass, int32 InValue, const FGameplayTagContainer& InGameplayTags)
 		: Value(InValue), GameplayTags(InGameplayTags), StatusClass(InStatusClass)
 	{
 	}
@@ -263,7 +264,12 @@ struct FStatusData : public FTableRowBase
 		}
 		return *this;
 	}
+
+	// == 연산자 오버로딩 (동등성 비교)
+	bool operator==(const FStatusData& Other) const;
 };
+
+
 
 
 USTRUCT(BlueprintType)
@@ -665,4 +671,3 @@ struct FDeck : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Deck", meta = (RowType="/Script/CrownOfSin.Card"))
 	TArray<FDataTableRowHandle> Cards;
 };
-

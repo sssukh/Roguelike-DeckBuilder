@@ -17,11 +17,8 @@ UCardEffect_AddRandomCardsToPile::UCardEffect_AddRandomCardsToPile()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-
 	bTargeted = false;
-
-	//ToDo:해야함
-	// DataRowHandle = 설정해야함 
+	
 }
 
 
@@ -32,50 +29,6 @@ void UCardEffect_AddRandomCardsToPile::BeginPlay()
 
 	// ...
 }
-
-// bool UCardEffect_AddRandomCardsToPile::ResolveCardEffect(AActor* TargetActor)
-// {
-// 	TSubclassOf<UPileComponent> TargetPileClass;
-// 	if (TargetComponent->IsChildOf(UPileComponent::StaticClass()))
-// 	{
-// 		TargetPileClass = TargetComponent;
-// 	}
-// 	else
-// 	{
-// 		TargetPileClass = UPileHandComponent::StaticClass();
-// 	}
-//
-// 	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
-// 	if (!CardPlayer)
-// 		return false;
-//
-// 	TArray<ACardBase*> LocalCards;
-// 	const TArray<FCard>& RandomCards = CardPlayer->ChanceManagerComponent->GetTrueRandomCardsOfAnyRarity(EffectValue);
-//
-// 	for (const FCard& RandomCard : RandomCards)
-// 	{
-// 		FTransform SpawnTransform = FTransform::Identity;
-//
-// 		ACardBase* NewCard = GetWorld()->SpawnActorDeferred<ACardBase>(ACardBase::StaticClass(), SpawnTransform,
-// 		                                                               ParentCard->GetOwner(), nullptr,
-// 		                                                               ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-// 		NewCard->CardDataDeck = RandomCard;
-// 		NewCard->FinishSpawning(SpawnTransform);
-// 		LocalCards.Add(NewCard);
-//
-// 		UActorComponent* TargetPileComponent = CardPlayer->GetComponentByClass(TargetPileClass);
-// 		if (!TargetPileComponent->GetClass()->ImplementsInterface(UInterface_Pile::StaticClass()))
-// 			continue;
-//
-// 		if (IInterface_Pile::Execute_AttemptAddExistingCard(TargetPileComponent,NewCard))
-// 		{
-// 			NewCard->CallLocalEventOnCard(CosGameTags::Event_Card_GenerateCard,ECallGlobal::CallAfter);
-// 		}
-// 	}
-//
-// 	return true;
-// }
-
 
 bool UCardEffect_AddRandomCardsToPile::ResolveCardEffect(AActor* TargetActor)
 {

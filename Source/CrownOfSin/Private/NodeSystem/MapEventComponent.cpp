@@ -59,7 +59,7 @@ bool UMapEventComponent::ChooseRandomEncounter(const FMapEvent& MapEventData, FD
 	FGameplayTag SelectedTag;
 
 	// 현재 게임 인스턴스에서 이미 완료된 Encounter를 가져옵니다.
-	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetValidCardGameInstance(this);
+	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetCardGameInstance(this);
 	TArray<FDataTableRowHandle> CompletedStoryEncounters = IInterface_CardGameInstance::Execute_GetDoneStoryEncountersFromInstance(CardGameInstance);
 
 	// Encounter를 찾을 때까지 무한 루프를 돌립니다.

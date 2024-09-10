@@ -1,7 +1,6 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/CardEffect_AddToAllStatusesWithTags.h"
 
-
-#include "CardSystem/CardEffects/CardEffect_AddToAllStatusesWithTags.h"
+#include "StatusSystem/StatusComponent.h"
 
 
 // Sets default values for this component's properties
@@ -21,15 +20,24 @@ void UCardEffect_AddToAllStatusesWithTags::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_AddToAllStatusesWithTags::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_AddToAllStatusesWithTags::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	TArray<UActorComponent*> StatusComponents;
+	TargetActor->GetComponents(UStatusComponent::StaticClass(), StatusComponents);
+	
+	for (int i = StatusComponents.Num() - 1; i >= 0; --i)
+	{
+		UStatusComponent* StatusComponent = Cast<UStatusComponent>(StatusComponents[i]);
+		if (!StatusComponent) continue;
 
-	// ...
+		if (StatusComponent->GameplayTags.HasAnyExact(GameplayTags))
+		{
+			bool bIsCondition = EffectValue > 0;
+			StatusComponent->AddStatusValue(EffectValue, bIsCondition, bIsCondition, true, nullptr);
+		}
+	}
+
+	return true;
 }
-

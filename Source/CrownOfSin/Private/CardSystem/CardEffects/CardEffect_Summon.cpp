@@ -3,6 +3,9 @@
 
 #include "CardSystem/CardEffects/CardEffect_Summon.h"
 
+#include "CardSystem/CardBase.h"
+#include "Core/MinionBase.h"
+
 
 // Sets default values for this component's properties
 UCardEffect_Summon::UCardEffect_Summon()
@@ -21,15 +24,26 @@ void UCardEffect_Summon::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_Summon::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_Summon::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	AMinionBase* MinionBase = Cast<AMinionBase>(ParentCard->GetOwner());
+	if (!MinionBase)
+	{
+		return false;
+	}
 
-	// ...
+	FMinion* FoundMinion = UsedData.DataTable->FindRow<FMinion>(UsedData.RowName,TEXT(""));
+	if (!FoundMinion)
+	{
+		return false;
+	}
+
+	int32 LastIndex = FMath::Max(0, EffectValue);
+	for (int i = 0; i < LastIndex; ++i)
+	{
+	}
+
+	return true;
 }
-
