@@ -117,7 +117,7 @@ bool UPileComponent::RequestCardFromPile_Implementation(TSubclassOf<UPileCompone
 		// 태그 조건이 있는 경우
 		if (RequiredTags.Num() > 0)
 		{
-			return TryGetCardWithTags(RequiredTags, OutCard);
+			 return TryGetCardWithTags(RequiredTags, OutCard);
 		}
 
 		// 무작위 카드 요청인 경우

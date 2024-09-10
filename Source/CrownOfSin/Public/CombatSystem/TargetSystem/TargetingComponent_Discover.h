@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "TargetingComponent.h"
-#include "Targeting_UnTargetedComponent.generated.h"
+#include "TargetingComponent_Discover.generated.h"
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class CROWNOFSIN_API UTargeting_UnTargetedComponent : public UTargetingComponent
+class CROWNOFSIN_API UTargetingComponent_Discover : public UTargetingComponent
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this component's properties
-	UTargeting_UnTargetedComponent();
+	UTargetingComponent_Discover();
 
 protected:
 	// Called when the game starts
