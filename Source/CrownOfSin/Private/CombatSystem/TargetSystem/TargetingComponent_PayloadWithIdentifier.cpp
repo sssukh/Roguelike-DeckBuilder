@@ -3,34 +3,39 @@
 
 #include "CombatSystem/TargetSystem/TargetingComponent_PayloadWithIdentifier.h"
 
+#include "CardSystem/CardPlayer.h"
+#include "Core/PayloadHolderComponent.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
+#include "Utilities/CosGameplayTags.h"
+
 
 // Sets default values for this component's properties
 UTargetingComponent_PayloadWithIdentifier::UTargetingComponent_PayloadWithIdentifier()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-}
-
-
-// Called when the game starts
-void UTargetingComponent_PayloadWithIdentifier::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
 	
 }
 
-
-// Called every frame
-void UTargetingComponent_PayloadWithIdentifier::TickComponent(float DeltaTime, ELevelTick TickType,
-                                                              FActorComponentTickFunction* ThisTickFunction)
+bool UTargetingComponent_PayloadWithIdentifier::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
+	const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	ValidTargets.Reset();
+	
+	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 
-	// ...
+	UObject* Payload = nullptr;
+
+	if(CardPlayer->PayloadHolderComponent->AccessPayload(CardEffect.Identifier, !CardEffect.GameplayTags.HasTagExact(CosGameTags::Flag_DoNotClear),Payload))
+	{
+		if(AActor* Target = Cast<AActor>(Payload))
+		{
+			ValidTargets.Add(Target);
+
+			return true;
+		}
+	}
+
+	return false;
 }
+
+
 

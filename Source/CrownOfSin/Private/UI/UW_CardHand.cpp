@@ -38,7 +38,7 @@ void UUW_CardHand::UpdatePeriodically()
 
 void UUW_CardHand::EnableSelectionMode(int32 CardCount, const FGameplayTagContainer& ValidCardTags)
 {
-	WBP_HandSelect->Initialize(CardCount,this, ValidCardTags);
+	WBP_HandSelect->InitializeEvent(CardCount,this, ValidCardTags);
 
 	bSelectionMode = true;
 

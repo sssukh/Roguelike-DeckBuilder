@@ -21,7 +21,7 @@ void UUW_HandSelect::NativeConstruct()
 	ConfirmButton->OnClicked.AddDynamic(this, &UUW_HandSelect::ConfirmButtonOnClicked);
 }
 
-void UUW_HandSelect::Initialize(int32 CardCount, UUW_CardHand* InSourceHand, const FGameplayTagContainer& InValidCardTags)
+void UUW_HandSelect::InitializeEvent(int32 CardCount, UUW_CardHand* InSourceHand, const FGameplayTagContainer& InValidCardTags)
 {
 	if(CardCount<=0)
 		return;
@@ -51,6 +51,8 @@ void UUW_HandSelect::Initialize(int32 CardCount, UUW_CardHand* InSourceHand, con
 		NewCardListCard->OnCardClicked.AddDynamic(this, &UUW_HandSelect::ReturnCardIfValid);
 	}
 }
+
+
 
 
 bool UUW_HandSelect::EnableConfirmIfFull()

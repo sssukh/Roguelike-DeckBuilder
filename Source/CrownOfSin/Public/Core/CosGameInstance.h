@@ -150,6 +150,7 @@ public:
 
 	virtual void ChangeNodeMapInInstance_Implementation(const FString& NewNodeMap) override;
 
+	virtual FGameplayTagContainer GetAllowedCardRewardsFromInstance_Implementation() override;
 	
 	/*========================================================================================
 	*	Field Members

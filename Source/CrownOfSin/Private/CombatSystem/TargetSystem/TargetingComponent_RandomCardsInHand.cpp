@@ -3,34 +3,55 @@
 
 #include "CombatSystem/TargetSystem/TargetingComponent_RandomCardsInHand.h"
 
+#include "CardSystem/CardBase.h"
+#include "CardSystem/CardPlayer.h"
+#include "CardSystem/Piles/PileComponent.h"
+#include "Core/GameplayTagComponent.h"
+#include "Libraries/FunctionLibrary_ArrayUtils.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
+
 
 // Sets default values for this component's properties
 UTargetingComponent_RandomCardsInHand::UTargetingComponent_RandomCardsInHand()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-}
-
-
-// Called when the game starts
-void UTargetingComponent_RandomCardsInHand::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
 	
 }
 
-
-// Called every frame
-void UTargetingComponent_RandomCardsInHand::TickComponent(float DeltaTime, ELevelTick TickType,
-                                                          FActorComponentTickFunction* ThisTickFunction)
+bool UTargetingComponent_RandomCardsInHand::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
+	const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	ValidTargets.Reset();
 
-	// ...
+	TArray<AActor*> FoundTargets;
+	
+	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
+
+	UPileComponent* PileComp = Cast<UPileComponent>(CardPlayer->GetComponentByClass(UPileComponent::StaticClass()));
+
+	for (ACardBase* CardInPile : PileComp->Cards)
+	{
+		UGameplayTagComponent* GameplayTagComponent = Cast<UGameplayTagComponent>(CardInPile->GetComponentByClass(UGameplayTagComponent::StaticClass()));
+		bool bCardHasGameTag = CardEffect.GameplayTags.HasAny(GameplayTagComponent->GameplayTags);
+
+		if(bCardHasGameTag || CardEffect.GameplayTags.Num()==0)
+		{
+			FoundTargets.Add(CardInPile);
+		}
+	}
+
+	while (FoundTargets.Num()>0 && ValidTargets.Num()<CardEffect.EffectValue)
+	{
+		int32 Index;
+		
+		UFunctionLibrary_ArrayUtils::GetRandomElementFromArray(FoundTargets,Index);
+
+		ValidTargets.Add(FoundTargets[Index]);
+		
+		FoundTargets.RemoveAt(Index);
+	}
+
+	return ValidTargets.Num()>0;
 }
+
+
 

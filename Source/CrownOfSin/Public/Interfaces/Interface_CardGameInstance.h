@@ -91,4 +91,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	void ChangeNodeMapInInstance(const FString& NewNodeMap);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
+	FGameplayTagContainer GetAllowedCardRewardsFromInstance();
 };

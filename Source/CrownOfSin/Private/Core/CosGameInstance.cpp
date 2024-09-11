@@ -491,7 +491,14 @@ void UCosGameInstance::ChangeNodeMapInInstance_Implementation(const FString& New
 	VisitedNodes = {0};
 }
 
+FGameplayTagContainer UCosGameInstance::GetAllowedCardRewardsFromInstance_Implementation()
+{
+	// TODO
+	return FGameplayTagContainer();
+}
+
 TArray<FStatusData> UCosGameInstance::GetArtifactsFromInstance_Implementation()
 {
+	// TODO
 	return Artifacts;
 }

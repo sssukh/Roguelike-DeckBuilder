@@ -33,12 +33,6 @@ void AActionBase::BeginPlay()
 	ActionManager->QueueAction(this);
 }
 
-// Called every frame
-void AActionBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
 void AActionBase::AnimateAction_Implementation(UObject* CallingActionManager)
 {
 	ActionManagerRef = CallingActionManager;
