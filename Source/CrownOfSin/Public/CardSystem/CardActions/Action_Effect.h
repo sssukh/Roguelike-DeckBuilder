@@ -1,9 +1,10 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
 #include "ActionBase.h"
+#include "GameplayTagContainer.h"
+#include "Core/CosEnumStruct.h"
 #include "Action_Effect.generated.h"
 
 UCLASS()

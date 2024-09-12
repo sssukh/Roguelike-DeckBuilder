@@ -4,7 +4,6 @@
 #include "Core/CosEnumStruct.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/Interface_Interrupt.h"
-#include "Utilities/CosLog.h"
 #include "CardBase.generated.h"
 
 class UUseRule_StatCost;

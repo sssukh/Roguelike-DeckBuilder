@@ -26,7 +26,10 @@ void UCardEffect_Story_Encounter::BeginPlay()
 
 bool UCardEffect_Story_Encounter::ResolveCardEffect(AActor* TargetActor)
 {
-	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
-	CardPlayer->InitializeStoryEncounter(UsedData, false);
+	
+	if (ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this))
+	{
+		IInterface_StoryEncounter::Execute_InitializeStoryEncounter(CardPlayer, UsedData, false);
+	}
 	return true;
 }

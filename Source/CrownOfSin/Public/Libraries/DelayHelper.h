@@ -29,10 +29,14 @@ public:
 	 */
 	void Reset();
 
+protected:
+	void OnTick(const TFunction<bool()>& Condition, const TFunction<void(int32 Index)>& LoopBody, const TFunction<void()>& Completed, int32& OutLoopIndex);
+
 private:
 	UWorld* GetWorldFromContextObject(UObject* WorldContextObject);
 
 private:
 	FTimerHandle LoopTimerHandle; // 단일 타이머 핸들 사용
+	
 	int32 LoopIndex; // 반복 횟수 추적을 위한 멤버 변수
 };

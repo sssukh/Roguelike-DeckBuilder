@@ -11,13 +11,13 @@ ACardPlayer* UFunctionLibrary_Singletons::GetCardPlayer(const UObject* WorldCont
 
 	if (!CardPlayerActor)
 	{
-		COS_LOG_SCREEN(TEXT("World에서 CardPlayer를 찾지 못했습니다. 스폰하거나 월드에 배치해주세요!!!"));
+		COS_SCREEN(TEXT("World에서 CardPlayer를 찾지 못했습니다. 스폰하거나 월드에 배치해주세요!!!"));
 		return nullptr;
 	}
 
 	if (!CardPlayerActor->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
 	{
-		COS_LOG_SCREEN(TEXT("게임 인스턴스가 UInterface_CardTarget을 상속받지 않았습니다"));
+		COS_SCREEN(TEXT("게임 인스턴스가 UInterface_CardTarget을 상속받지 않았습니다"));
 		return nullptr;
 	}
 
@@ -34,7 +34,7 @@ UGameInstance* UFunctionLibrary_Singletons::GetCardGameInstance(const UObject* W
 
 	if (!GameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
 	{
-		COS_LOG_SCREEN(TEXT("게임 인스턴스가 UInterface_CardGameInstance를 상속받지 않았습니다"));
+		COS_SCREEN(TEXT("게임 인스턴스가 UInterface_CardGameInstance를 상속받지 않았습니다"));
 		return nullptr;
 	}
 

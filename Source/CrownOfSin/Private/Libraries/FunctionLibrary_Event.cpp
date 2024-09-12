@@ -11,7 +11,7 @@ void UFunctionLibrary_Event::BindEventToGlobalDispatcherHub(UObject* EventHolder
 	AGlobalDispatcherHub* GlobalDispatcherHub = Cast<AGlobalDispatcherHub>(UGameplayStatics::GetActorOfClass(EventHolder, AGlobalDispatcherHub::StaticClass()));
 	if (!GlobalDispatcherHub)
 	{
-		COS_LOG_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
+		COS_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
 		return;
 	}
 
@@ -23,7 +23,7 @@ void UFunctionLibrary_Event::UnBindEventFromGlobalDispatcherHub(UObject* EventHo
 	AGlobalDispatcherHub* GlobalDispatcherHub = Cast<AGlobalDispatcherHub>(UGameplayStatics::GetActorOfClass(EventHolder, AGlobalDispatcherHub::StaticClass()));
 	if (!GlobalDispatcherHub)
 	{
-		COS_LOG_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
+		COS_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
 		return;
 	}
 
@@ -35,7 +35,7 @@ bool UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(FGameplayTag EventTa
 	AGlobalDispatcherHub* GlobalDispatcherHub = Cast<AGlobalDispatcherHub>(UGameplayStatics::GetActorOfClass(CallingObject, AGlobalDispatcherHub::StaticClass()));
 	if (!GlobalDispatcherHub)
 	{
-		COS_LOG_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
+		COS_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
 		return false;
 	}
 
@@ -48,7 +48,7 @@ bool UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(FGameplayTag EventT
 	AGlobalDispatcherHub* GlobalDispatcherHub = Cast<AGlobalDispatcherHub>(UGameplayStatics::GetActorOfClass(CallingObject, AGlobalDispatcherHub::StaticClass()));
 	if (!GlobalDispatcherHub)
 	{
-		COS_LOG_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
+		COS_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
 		return false;
 	}
 
@@ -61,7 +61,7 @@ bool UFunctionLibrary_Event::CallMultipleEventsInGlobalDispatcherHub(FGameplayTa
 	AGlobalDispatcherHub* GlobalDispatcherHub = Cast<AGlobalDispatcherHub>(UGameplayStatics::GetActorOfClass(CallingObject, AGlobalDispatcherHub::StaticClass()));
 	if (!GlobalDispatcherHub)
 	{
-		COS_LOG_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
+		COS_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
 		return false;
 	}
 
@@ -73,7 +73,7 @@ void UFunctionLibrary_Event::BindMultipleEventsToGlobalDispatcherHub(UObject* Ev
 	AGlobalDispatcherHub* GlobalDispatcherHub = Cast<AGlobalDispatcherHub>(UGameplayStatics::GetActorOfClass(EventHolder, AGlobalDispatcherHub::StaticClass()));
 	if (!GlobalDispatcherHub)
 	{
-		COS_LOG_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
+		COS_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
 		return;
 	}
 

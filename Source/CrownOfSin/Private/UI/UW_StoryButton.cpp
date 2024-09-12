@@ -14,7 +14,7 @@ void UUW_StoryButton::NativeConstruct()
 
 	if (!WBPToolTipClass)
 	{
-		COS_LOG_SCREEN(TEXT("WBPToolTipClass 클래스를 설정해주세요!!"));
+		COS_SCREEN(TEXT("WBPToolTipClass 클래스를 설정해주세요!!"));
 		return;
 	}
 

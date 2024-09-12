@@ -21,22 +21,22 @@ UTargetingComponent::UTargetingComponent()
 }
 
 
-
 bool UTargetingComponent::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card,
                                            bool bPreview, TArray<AActor*>& ValidTargets)
 {
-	ValidTargets.Reset();
-	
+	TArray<AActor*> NewTargets;
+	NewTargets.Add(nullptr);
+	ValidTargets = NewTargets;
 	return true;
 }
 
 TArray<AActor*> UTargetingComponent::FindAllMinionsWithMatchingTags(FGameplayTagContainer GameplayTags)
 {
 	TArray<AActor*> MatchingTargets;
-	
+
 	TArray<AActor*> FoundMinions;
 
-	UGameplayStatics::GetAllActorsWithTag(this,FName(TEXT("Minion")),FoundMinions);
+	UGameplayStatics::GetAllActorsWithTag(this, FName(TEXT("Minion")), FoundMinions);
 
 	for (AActor* FoundMinion : FoundMinions)
 	{
@@ -55,10 +55,10 @@ void UTargetingComponent::FindMinionTracks(ACardBase* Card, AMinionTrack*& Owner
 {
 	AMinionBase* Minion = Cast<AMinionBase>(Card->GetOwner());
 
-	if(Minion)
+	if (Minion)
 	{
 		OwnerTrack = Minion->MinionTrack;
-		if(Minion->MinionTrack->IsValidLowLevel())
+		if (Minion->MinionTrack->IsValidLowLevel())
 		{
 			OpposingTrack = Minion->MinionTrack->OpposingTrack;
 		}
@@ -68,17 +68,17 @@ void UTargetingComponent::FindMinionTracks(ACardBase* Card, AMinionTrack*& Owner
 bool UTargetingComponent::GetAllMinionsOnOpposingTrack(ACardBase* Card, TArray<AMinionBase*>& Minions)
 {
 	Minions.Reset();
-	
+
 	AMinionTrack* OwnerTrack = nullptr;
 	AMinionTrack* OpposingTrack = nullptr;
-	FindMinionTracks(Card,OwnerTrack,OpposingTrack);
+	FindMinionTracks(Card, OwnerTrack, OpposingTrack);
 
-	if(OpposingTrack->IsValidLowLevel()&&OpposingTrack->Minions.Num()>0)
+	if (OpposingTrack->IsValidLowLevel() && OpposingTrack->Minions.Num() > 0)
 	{
-		Minions =OpposingTrack->Minions;
+		Minions = OpposingTrack->Minions;
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -87,13 +87,8 @@ bool UTargetingComponent::CheckTargetHasGameplayTag(AActor* Target, const FCardE
 	UGameplayTagComponent* GameplayTagComponent = Cast<UGameplayTagComponent>(Target->GetComponentByClass(UGameplayTagComponent::StaticClass()));
 	if (!GameplayTagComponent)
 	{
-		return false;	
+		return false;
 	}
 
 	return CardEffect.GameplayTags.HasAnyExact(GameplayTagComponent->GameplayTags);
 }
-
-
-
-
-

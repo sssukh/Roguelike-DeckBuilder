@@ -247,7 +247,7 @@ bool UCosGameInstance::AttemptLoadGame_Implementation(const FString& InSaveId, b
 	UCosSaveGame* CosSaveGame = Cast<UCosSaveGame>(SaveGame);
 	if (!CosSaveGame)
 	{
-		COS_LOG_SCREEN(TEXT("SaveGame 타입이 CosSaveGame 으로 캐스팅에 실패했습니다. "));
+		COS_SCREEN(TEXT("SaveGame 타입이 CosSaveGame 으로 캐스팅에 실패했습니다. "));
 		return false;
 	}
 
@@ -495,6 +495,11 @@ bool UCosGameInstance::GetDeckFromInstance_Implementation(TArray<FCard>& OutDeck
 {
 	OutDeck = Deck;
 	return true;
+}
+
+FGameplayTagContainer UCosGameInstance::GetAllowedCardRewardsFromInstance_Implementation()
+{
+	return AllowedCardRewardTags;
 }
 
 TArray<FStatusData> UCosGameInstance::GetArtifactsFromInstance_Implementation()

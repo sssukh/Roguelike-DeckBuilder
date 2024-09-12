@@ -147,8 +147,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dispatcher Hub|Config")
 	bool bGlobal=false;
 
-	UPROPERTY(BlueprintReadWrite, Category="Dispatcher Hub|Config|SetUp")
-	TSubclassOf<AAction_DispatcherEvent> Action_DispatcherEventClass;
+	// UPROPERTY(BlueprintReadWrite, Category="Dispatcher Hub|Config|SetUp")
+	// TSubclassOf<AAction_DispatcherEvent> Action_DispatcherEventClass;
 
 	UPROPERTY(BlueprintReadWrite, Category="Dispatcher Hub")
 	bool bInterrupt=false;

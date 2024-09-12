@@ -75,7 +75,7 @@ int32 UStatusComponent::AddStatusValue(int32 InAmount, bool bShowSplashNumber, b
 	UDispatcherHubComponent* DispatcherHub = GetOwnersDispatcherHub();
 	if (!DispatcherHub)
 	{
-		COS_LOG_SCREEN(TEXT("Owner가 DispatcherHub를 가지고 있지 않습니다."));
+		COS_SCREEN(TEXT("Owner가 DispatcherHub를 가지고 있지 않습니다."));
 		return 0;
 	}
 

@@ -90,7 +90,7 @@ void UTargetingComponent_SpecifiedCardsInHand::BindToCardConfirm(UUW_CardHand* H
 {
 	if(!Hand)
 	{
-		COS_LOG_SCREEN(TEXT("전달받은 위젯 CardHand가 유효하지 않습니다. in %s"),*this->GetName());
+		COS_SCREEN(TEXT("전달받은 위젯 CardHand가 유효하지 않습니다. in %s"),*this->GetName());
 		return;
 	}
 	

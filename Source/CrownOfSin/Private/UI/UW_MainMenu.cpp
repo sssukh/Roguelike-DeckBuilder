@@ -23,7 +23,7 @@ void UUW_MainMenu::NativeConstruct()
 	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(this);
 	if (!GameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
 	{
-		COS_LOG_SCREEN(TEXT("Game Instacne에서 UInterface_CardGameInstance를 상속시켜 재정의 해주세요."));
+		COS_SCREEN(TEXT("Game Instacne에서 UInterface_CardGameInstance를 상속시켜 재정의 해주세요."));
 		return;
 	}
 
@@ -75,7 +75,7 @@ void UUW_MainMenu::OnContinueButtonClicked()
 	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(this);
 	if (!GameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
 	{
-		COS_LOG_SCREEN(TEXT("Game Instance가 Interface_CardGameInstance 인터페이스를 상속받지 않았습니다."));
+		COS_SCREEN(TEXT("Game Instance가 Interface_CardGameInstance 인터페이스를 상속받지 않았습니다."));
 		return;
 	}
 
@@ -107,7 +107,7 @@ UGameInstance* UUW_MainMenu::ValidateAndResetGameInstance()
 	// 게임 인스턴스가 Interface_CardGameInstance를 상속받고 있는지 확인
 	if (!GameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
 	{
-		COS_LOG_SCREEN(TEXT("Game Instance가 Interface_CardGameInstance 인터페이스를 상속받지 않았습니다."));
+		COS_SCREEN(TEXT("Game Instance가 Interface_CardGameInstance 인터페이스를 상속받지 않았습니다."));
 		return nullptr;
 	}
 

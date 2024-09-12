@@ -5,7 +5,7 @@
 
 UUW_TargetingBezierPoint::UUW_TargetingBezierPoint(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer), PointImage(nullptr), Bounce(nullptr), Texture(nullptr)
 {
-	if (UTexture2D* T_TargetArrow = FAssetReferenceUtility::LoadAssetFromDataTable<UTexture2D>(AssetRefPath::TexturesPath, FName("T_TargetArrow")))
+	if (UTexture2D* T_TargetArrow = FAssetReferenceUtility::LoadAssetFromDataTable<UTexture2D>(AssetRefPath::TexturesPath, FName(TEXT("T_TargetArrow"))))
 	{
 		Texture = T_TargetArrow;
 	}

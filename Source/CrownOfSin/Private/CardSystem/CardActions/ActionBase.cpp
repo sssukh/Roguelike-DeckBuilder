@@ -26,7 +26,7 @@ void AActionBase::BeginPlay()
 	AActionManager* ActionManager = Cast<AActionManager>(UGameplayStatics::GetActorOfClass(this, AActionManager::StaticClass()));
 	if (!ActionManager)
 	{
-		COS_LOG_SCREEN(TEXT("World에 ActionManager가 존재하지 않습니다. "));
+		COS_SCREEN(TEXT("World에 ActionManager가 존재하지 않습니다. "));
 		return;
 	}
 

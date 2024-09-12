@@ -1,5 +1,7 @@
 ﻿#include "Libraries/DelayHelper.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Utilities/CosLog.h"
 
 
@@ -26,25 +28,16 @@ void UDelayHelper::DelayWhile(TFunction<bool()> Condition, TFunction<void(int32)
 
 	// 지연 루프를 처리하도록 람다 함수 설정
 	FTimerDelegate TimerDelegate;
-	TimerDelegate.BindLambda([this, Condition, OnComplete, OnLoop, World]()
+	TimerDelegate.BindLambda([this, Condition, OnLoop, OnComplete]()
 	{
-		if (Condition())
-		{
-			// 조건이 참이면 OnComplete 함수를 호출하고 지연 루프를 종료합니다.
-			OnComplete();
-
-			LoopIndex = 0;
-			World->GetTimerManager().ClearTimer(LoopTimerHandle); // 타이머 종료
-		}
-		else
-		{
-			// 조건이 거짓이면 OnLoop 함수를 호출하고 반복 횟수를 증가시킵니다.
-			OnLoop(LoopIndex);
-			LoopIndex++;
-		}
+		OnTick(Condition, OnLoop, OnComplete, LoopIndex);
 	});
 
-	// 타이머 설정: 주어진 지연 시간 동안 루프 실행
+	if (Delay <= 0.0f)
+	{
+		Delay=0.017f;
+	}
+
 	World->GetTimerManager().SetTimer(LoopTimerHandle, TimerDelegate, Delay, true);
 }
 
@@ -56,6 +49,21 @@ void UDelayHelper::Reset()
 	if (UWorld* World = GetWorldFromContextObject(this))
 	{
 		World->GetTimerManager().ClearTimer(LoopTimerHandle);
+	}
+}
+
+void UDelayHelper::OnTick(const TFunction<bool()>& Condition, const TFunction<void(int32 Index)>& LoopBody, const TFunction<void()>& Completed, int32& OutLoopIndex)
+{
+	if (Condition())
+	{
+		Completed();
+		OutLoopIndex = 0;
+		GetWorld()->GetTimerManager().ClearTimer(LoopTimerHandle);
+	}
+	else
+	{
+		LoopBody(OutLoopIndex);
+		OutLoopIndex++;
 	}
 }
 

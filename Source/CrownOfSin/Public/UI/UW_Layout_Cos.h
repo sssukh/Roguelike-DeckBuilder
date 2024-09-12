@@ -1,5 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
@@ -42,15 +41,21 @@ public:
 public:
 	UFUNCTION(BlueprintCallable, Category="UW Layout Event")
 	bool ShouldNodeMapBeBlocked();
-
-
+	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="UW Layout")
 	void DisplayScreenLogMessage(const FText& Message, const FColor& Color);
 
 	/*ToDo:구현해야합니다.*/
-	void UpdatePileWidgetAmount(FGameplayTag PileTag, int32 NewAmount)
-	{
-	}
+	void UpdatePileWidgetAmount(FGameplayTag PileTag, int32 NewAmount);
+
+
+	/*ToDo 구현해야합니다*/
+	UFUNCTION(BlueprintPure, Category="UW LayOut")
+	bool GetEndTurnButtonIsEnabled();
+	
+	/*ToDo 구현해야합니다*/
+	UFUNCTION(BlueprintPure, Category="UW LayOut")
+	ESlateVisibility GetCurrencyBoxVisibility();
 
 	/*========================================================================================
 	*	Iinterface_StoryEncounter

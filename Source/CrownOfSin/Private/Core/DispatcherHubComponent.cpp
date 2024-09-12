@@ -182,19 +182,14 @@ bool UDispatcherHubComponent::ResolveCallEvent(FGameplayTag EventTag, UObject* C
 
 void UDispatcherHubComponent::QueueEvent(FGameplayTag Event, UObject* CallingObject, UObject* CallSpecificObject, float EndDelay, UObject* PayLoad, FGameplayTagContainer CallTags)
 {
-	// 액터 클래스가 설정되지 않은 경우 로그 메시지를 출력하고 함수 종료.
-	if (!Action_DispatcherEventClass)
-	{
-		COS_LOG_SCREEN(TEXT("Action_DispatcherEventClass 클래스를 설정해주세요."));
-		return;
-	}
+	
 
 	// 액터가 생성될 위치 및 회전을 나타내는 기본 변환 값을 설정.
 	FTransform SpawnTransform = FTransform::Identity;
 
 	// 지연 생성 방식으로 AAction_DispatcherEvent 액터를 생성. 액터 생성이 성공한 경우에만 이후 로직을 실행.
 	AAction_DispatcherEvent* NewDispatcherEvent = GetWorld()->SpawnActorDeferred<AAction_DispatcherEvent>(
-		Action_DispatcherEventClass,
+		AAction_DispatcherEvent::StaticClass(),
 		SpawnTransform,
 		nullptr, nullptr,
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
@@ -219,19 +214,13 @@ void UDispatcherHubComponent::QueueEvent(FGameplayTag Event, UObject* CallingObj
 void UDispatcherHubComponent::QueueEventWithPayloadAndCallTags(FGameplayTag Event, UObject* CallingObject, UObject* CallSpecificObject, float EndDelay, UObject* PayLoad,
                                                                FGameplayTagContainer CallTags)
 {
-	// 이벤트 액터 클래스가 설정되지 않았을 경우, 경고 메시지를 출력하고 함수를 종료합니다.
-	if (!Action_DispatcherEventClass)
-	{
-		COS_LOG_SCREEN(TEXT("Action_DispatcherEventClass 클래스를 설정해주세요."));
-		return;
-	}
-
+	
 	// 액터가 생성될 위치와 회전을 나타내는 기본 변환 값을 설정합니다.
 	FTransform SpawnTransform = FTransform::Identity;
 
 	// AAction_DispatcherEvent 액터를 지연 생성. 액터가 성공적으로 생성된 경우에만 이후 로직을 실행합니다.
 	AAction_DispatcherEvent* NewDispatcherEvent = GetWorld()->SpawnActorDeferred<AAction_DispatcherEvent>(
-		Action_DispatcherEventClass, // 생성할 액터 클래스
+		AAction_DispatcherEvent::StaticClass(), // 생성할 액터 클래스
 		SpawnTransform, // 액터의 스폰 변환 정보
 		nullptr, // 소유자 (필요 시 설정)
 		nullptr, // 인스턴스화된 Pawn이나 캐릭터 (필요 시 설정)

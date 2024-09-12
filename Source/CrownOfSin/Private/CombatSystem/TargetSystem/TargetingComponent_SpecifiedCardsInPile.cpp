@@ -24,13 +24,13 @@ UTargetingComponent_SpecifiedCardsInPile::UTargetingComponent_SpecifiedCardsInPi
 }
 
 bool UTargetingComponent_SpecifiedCardsInPile::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
-	const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
+                                                                const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
 {
-	if(bPreview)
+	if (bPreview)
 		return false;
 
 	// 카드 이펙트의 타겟이 PileComponent의 자식 클래스가 아니면
-	if(!Cast<UPileComponent>(CardEffect.TargetComponent))
+	if (!CardEffect.TargetComponent->IsChildOf(UPileComponent::StaticClass()))
 	{
 		return false;
 	}
@@ -39,7 +39,7 @@ bool UTargetingComponent_SpecifiedCardsInPile::FindValidTargets(TArray<AActor*>&
 
 	UPileComponent* PileComponent = Cast<UPileComponent>(CardPlayer->GetComponentByClass(UPileComponent::StaticClass()));
 
-	if(PileComponent->Cards.IsEmpty())
+	if (PileComponent->Cards.IsEmpty())
 	{
 		return false;
 	}
@@ -48,10 +48,10 @@ bool UTargetingComponent_SpecifiedCardsInPile::FindValidTargets(TArray<AActor*>&
 
 	BindToCardConfirm(CardPlayer->PlayerUI->WBP_CardSelectorList);
 
-	FText Title = FText::FromString(FString(TEXT("Choose a Card"))); 
+	FText Title = FText::FromString(FString(TEXT("Choose a Card")));
 
 	// TODO 구현해야됨
-	CardPlayer->PlayerUI->WBP_CardSelectorList->UpdateCardList(PileComponent->Cards,Title);
+	CardPlayer->PlayerUI->WBP_CardSelectorList->UpdateCardList(PileComponent->Cards, Title);
 
 	return true;
 }
@@ -64,7 +64,7 @@ void UTargetingComponent_SpecifiedCardsInPile::BindToCardConfirm(UUW_CardSelecto
 
 void UTargetingComponent_SpecifiedCardsInPile::ValidateAndTransferSelectedCard(ACardBase* Card)
 {
-	CardSelectorList->OnReturnSelectedCardInSelectorList.RemoveDynamic(this,&UTargetingComponent_SpecifiedCardsInPile::ValidateAndTransferSelectedCard);
+	CardSelectorList->OnReturnSelectedCardInSelectorList.RemoveDynamic(this, &UTargetingComponent_SpecifiedCardsInPile::ValidateAndTransferSelectedCard);
 
 	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 
@@ -72,10 +72,6 @@ void UTargetingComponent_SpecifiedCardsInPile::ValidateAndTransferSelectedCard(A
 
 	TArray<AActor*> Cards;
 	Cards.Add(Card);
-	
+
 	OnInputTargetsReceived.Broadcast(Cards);
 }
-
-
-
-

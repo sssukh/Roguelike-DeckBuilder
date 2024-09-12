@@ -26,7 +26,7 @@ void UUW_StoryEncounter::SetupStoryEncounter(const FText& InDescription, UTextur
 
 	if (!StoryButtonClass)
 	{
-		COS_LOG_SCREEN(TEXT("StoryButtonClass 클래스를 설정해주세요!!!"));
+		COS_SCREEN(TEXT("StoryButtonClass 클래스를 설정해주세요!!!"));
 		return;
 	}
 	for (const FCard& Option : EncounterOptions)
@@ -73,7 +73,7 @@ void UUW_StoryEncounter::InitializeStoryEncounter_Implementation(FDataTableRowHa
 
 	if (EncounterData.IsNull())
 	{
-		COS_LOG_SCREEN(TEXT("EncounterData가 존재하지 않습니다. in %s"), *GetNameSafe(this));
+		COS_SCREEN(TEXT("EncounterData가 존재하지 않습니다. in %s"), *GetNameSafe(this));
 		return;
 	}
 
@@ -91,7 +91,7 @@ void UUW_StoryEncounter::RemoveOnEmptyButtonClicked(UUserWidget* CallingWidget)
 {
 	if (!GetGameInstance()->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
 	{
-		COS_LOG_SCREEN(TEXT("게임 인스턴스가 UInterface_CardGameInstance를 상속받지 않았습니다"));
+		COS_SCREEN(TEXT("게임 인스턴스가 UInterface_CardGameInstance를 상속받지 않았습니다"));
 		return;
 	}
 
@@ -103,6 +103,5 @@ void UUW_StoryEncounter::RemoveOnEmptyButtonClicked(UUserWidget* CallingWidget)
 void UUW_StoryEncounter::NativeDestruct()
 {
 	Super::NativeDestruct();
-
 	UFunctionLibrary_Event::UnBindEventFromGlobalDispatcherHub(this, CosGameTags::Event_PostModifyStatus);
 }

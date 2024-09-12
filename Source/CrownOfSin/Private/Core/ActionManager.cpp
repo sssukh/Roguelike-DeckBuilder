@@ -2,6 +2,7 @@
 
 #include "CardSystem/CardActions/ActionBase.h"
 #include "Interfaces/Interface_CardAction.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Libraries/DelayHelper.h"
 #include "Utilities/CosLog.h"
 
@@ -46,14 +47,14 @@ void AActionManager::AttemptToPlayNextAction()
 	auto ShouldStopActionLoop = [this]()
 	{
 		bool bIsQueueInvalid = IsValid(ActionQueue[GetNextQueueIndex(QueueCounter)]); // 다음 큐에 유효한 액션이 있는지 확인합니다.
-		bool bPerTickLimitReached = ActionsThisTick >= MaxActionsPerTick; // 현재 틱에서 최대 액션 수를 초과했는지 확인합니다.
-		return bIsQueueInvalid || bPerTickLimitReached; // 둘 중 하나라도 참이면 조건을 충족합니다.
+		bool bPerTickLimitReached = ActionsThisTick < MaxActionsPerTick; // 현재 틱에서 최대 액션 수를 초과했는지 확인합니다.
+		return bIsQueueInvalid && bPerTickLimitReached; // 둘 다 참이어야 합니다.
 	};
 
 	// 조건이 거짓일 때 반복 호출될 함수
 	auto OnLoop = [this](int32 Index)
 	{
-		COS_LOG_SCREEN(TEXT("이것은 경고가 아닙니다.AttemptToPlayNextAction 함수의 OnLoopBody가 실행되고 있는 지 확인할려고 합니다. 카운트 :  %d"), Index);
+		// COS_SCREEN(TEXT("이것은 경고가 아닙니다.AttemptToPlayNextAction 함수의 OnLoopBody가 실행되고 있는 지 확인할려고 합니다. 카운트 :  %d"), Index);
 	};
 
 	// 조건이 참일 때 호출될 함수
@@ -83,7 +84,7 @@ void AActionManager::QueueAction(UObject* Action)
 	else
 	{
 		// 큐에 빈 자리가 없으면 오류 메시지를 로그로 출력합니다.
-		COS_LOG_SCREEN(TEXT("ERROR: Action Overflow"));
+		COS_SCREEN(TEXT("ERROR: Action Overflow"));
 	}
 }
 
@@ -102,7 +103,7 @@ void AActionManager::QueueDelay(float InDelay)
 
 int32 AActionManager::GetNextQueueIndex(int32 InCurrentIndex)
 {
-	return ActionQueue.Num() % (InCurrentIndex + 1);
+	return UKismetMathLibrary::Percent_IntInt(ActionQueue.Num(), (InCurrentIndex + 1));
 }
 
 void AActionManager::ProceedFromOngoingAction_Implementation(UObject* OngoingAction)
@@ -114,6 +115,6 @@ void AActionManager::ProceedFromOngoingAction_Implementation(UObject* OngoingAct
 	}
 	else
 	{
-		COS_LOG_SCREEN(TEXT("OnGoingAction는 InterfaceClass를 상속받지 못했습니다."));
+		COS_SCREEN(TEXT("OnGoingAction는 InterfaceClass를 상속받지 못했습니다."));
 	}
 }

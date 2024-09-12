@@ -22,7 +22,7 @@ void UDispatcherHubLocalComponent::BeginPlay()
 	AGlobalDispatcherHub* GlobalDispatcherHub = Cast<AGlobalDispatcherHub>(UGameplayStatics::GetActorOfClass(this, AGlobalDispatcherHub::StaticClass()));
 	if (!GlobalDispatcherHub)
 	{
-		COS_LOG_SCREEN(TEXT("World에서 GlobalDispatcherHub 액터를 찾지 못했습니다. 월드에 스폰해주세요"));
+		COS_SCREEN(TEXT("World에서 GlobalDispatcherHub 액터를 찾지 못했습니다. 월드에 스폰해주세요"));
 		return;
 	}
 

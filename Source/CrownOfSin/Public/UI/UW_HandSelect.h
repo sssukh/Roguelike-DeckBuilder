@@ -33,7 +33,6 @@ public:
 	// UW_CardHand의 EnableSelectionMode에서 호출된다. 
 	UFUNCTION(BlueprintCallable, Category = "UW HandSelect")
 	void InitializeEvent(int32 CardCount, UUW_CardHand* InSourceHand, const FGameplayTagContainer& InValidCardTags);
-
 	
 	// CardListCard의 OnCardClicked에 바인드되며 클릭한 카드가 유효하면 반환한다.
 	UFUNCTION(BlueprintImplementableEvent, Category = "UW HandSelect")
@@ -67,7 +66,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW HandSelect", meta = (BindWidget))
 	TObjectPtr<UImage> Image_81;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW HandSelect", meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW HandSelect")
 	TObjectPtr<UUW_CardHand> SourceHand;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW HandSelect")

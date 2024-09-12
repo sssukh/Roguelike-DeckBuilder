@@ -478,12 +478,12 @@ TArray<FCard> UChanceManagerComponent::HandleNoFilteredCards(int32 InAmount)
 		}
 		else
 		{
-			COS_LOG_SCREEN(TEXT("오류: 유효한 카드 옵션이 충분하지 않으며 유효한 백업 옵션이 없습니다."));
+			COS_SCREEN(TEXT("오류: 유효한 카드 옵션이 충분하지 않으며 유효한 백업 옵션이 없습니다."));
 		}
 	}
 	else
 	{
-		COS_LOG_SCREEN(TEXT("DataTableRowHandle_CardsRewards을 반드시 설정해주세요!"));
+		COS_SCREEN(TEXT("DataTableRowHandle_CardsRewards을 반드시 설정해주세요!"));
 	}
 
 	return FallbackCards;

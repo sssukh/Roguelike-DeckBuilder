@@ -25,19 +25,19 @@ UTargetingComponent_Discover::UTargetingComponent_Discover()
 	// ...
 }
 
-bool UTargetingComponent_Discover::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
-	ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
+bool UTargetingComponent_Discover::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
 {
-	if(bPreview)
+	if (bPreview)
 		return false;
 
-	if(!Cast<UPileComponent>(CardEffect.TargetComponent))
+	if (!CardEffect.TargetComponent->IsChildOf(UPileComponent::StaticClass()))
 	{
 		return false;
 	}
 
+
 	TArray<FCard> CardOptions;
-	
+
 	CurrentCardOption.Reset();
 
 	if (IsValid(CardEffect.UsedData.DataTable))
@@ -61,8 +61,8 @@ bool UTargetingComponent_Discover::FindValidTargets(TArray<AActor*>& SpecifiedTa
 	for (FCard CardOption : CardOptions)
 	{
 		ACardBase* NewCard = GetWorld()->SpawnActorDeferred<ACardBase>(ACardBase::StaticClass(),
-			FTransform::Identity,Card->GetOwner(),nullptr,
-			ESpawnActorCollisionHandlingMethod::AlwaysSpawn,ESpawnActorScaleMethod::OverrideRootScale);
+		                                                               FTransform::Identity, Card->GetOwner(), nullptr,
+		                                                               ESpawnActorCollisionHandlingMethod::AlwaysSpawn, ESpawnActorScaleMethod::OverrideRootScale);
 
 		NewCard->CardDataDeck = CardOption;
 
@@ -84,22 +84,22 @@ void UTargetingComponent_Discover::BindToCardConfirm(UUW_CardRewardScreen* InCar
 {
 	CardRewardScreen = InCardRewardScreen;
 
-	InCardRewardScreen->OnReturnSelectedCardInRewardScreen.AddDynamic(this,&UTargetingComponent_Discover::ValidateAndTransferSelectedCard);
+	InCardRewardScreen->OnReturnSelectedCardInRewardScreen.AddDynamic(this, &UTargetingComponent_Discover::ValidateAndTransferSelectedCard);
 }
 
 void UTargetingComponent_Discover::ValidateAndTransferSelectedCard(bool bSkipped, ACardBase* Card)
 {
-	CardRewardScreen->OnReturnSelectedCardInRewardScreen.RemoveDynamic(this,&UTargetingComponent_Discover::ValidateAndTransferSelectedCard);
+	CardRewardScreen->OnReturnSelectedCardInRewardScreen.RemoveDynamic(this, &UTargetingComponent_Discover::ValidateAndTransferSelectedCard);
 
 	for (ACardBase* CardOption : CurrentCardOption)
 	{
-		if(Card!=CardOption && IsValid(CardOption))
+		if (Card != CardOption && IsValid(CardOption))
 		{
 			CardOption->Destroy();
 		}
 	}
 
-	if(IsValid(Card))
+	if (IsValid(Card))
 	{
 		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 
@@ -120,23 +120,23 @@ void UTargetingComponent_Discover::ValidateAndTransferSelectedCard(bool bSkipped
 TArray<FCard> UTargetingComponent_Discover::SetCardOptions(const FCardEffect& CardEffect)
 {
 	// 필터가능한지 확인
-	if(CardEffect.GameplayTags.HasTag(CosGameTags::Flag_FilterToAllowed))
+	if (CardEffect.GameplayTags.HasTag(CosGameTags::Flag_FilterToAllowed))
 	{
 		// 필터 가능하면 필터링 된 카드들 랜덤으로 가져옴
 		FGameplayTagContainer Tags = IInterface_CardGameInstance::Execute_GetAllowedCardRewardsFromInstance(UFunctionLibrary_Singletons::GetCardGameInstance(this));
 
-		ACardPlayer*  CardPlayer =UFunctionLibrary_Singletons::GetCardPlayer(this);
+		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 
 		FGameplayTagContainer RequiredTags;
 		RequiredTags.AddTag(CosGameTags::Rarity);
-		
-		return CardPlayer->ChanceManagerComponent->GetRandomFilteredCards(3,Tags,RequiredTags);
+
+		return CardPlayer->ChanceManagerComponent->GetRandomFilteredCards(3, Tags, RequiredTags);
 	}
 	else
 	{
 		// 필터 불가능하면 그냥 랜덤으로 카드들 가져옴
-		ACardPlayer*  CardPlayer =UFunctionLibrary_Singletons::GetCardPlayer(this);
-		
+		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
+
 		return CardPlayer->ChanceManagerComponent->GetTrueRandomCardsOfAnyRarity(3);
 	}
 }
@@ -144,9 +144,9 @@ TArray<FCard> UTargetingComponent_Discover::SetCardOptions(const FCardEffect& Ca
 TArray<FCard> UTargetingComponent_Discover::SetCardOptionsWithRarity(const FCardEffect& CardEffect)
 {
 	// 받아온 데이터에서 RarityWeights 꺼냄
-	FRarityWeights* RarityWeightsFound =CardEffect.UsedData.DataTable->FindRow<FRarityWeights>(CardEffect.UsedData.RowName,TEXT("FRarityWeights in TargetingComponent Discover"));
+	FRarityWeights* RarityWeightsFound = CardEffect.UsedData.DataTable->FindRow<FRarityWeights>(CardEffect.UsedData.RowName,TEXT("FRarityWeights in TargetingComponent Discover"));
 
-	if(RarityWeightsFound)
+	if (RarityWeightsFound)
 	{
 		TMap<FGameplayTag, float> RarityWeightsMap = RarityWeightsFound->RarityWeights;
 
@@ -154,22 +154,17 @@ TArray<FCard> UTargetingComponent_Discover::SetCardOptionsWithRarity(const FCard
 
 		// 필터링 허용되면 GetRandomCardsByTagWeights의 결과에 영향을 주는 PossibleTags를 추가한다.
 		// 확률에 따라 포함될 수 있는 태그를 포함한 카드가 나오게 된다.
-		if(CardEffect.GameplayTags.HasTag(CosGameTags::Flag_FilterToAllowed))
+		if (CardEffect.GameplayTags.HasTag(CosGameTags::Flag_FilterToAllowed))
 		{
 			AllowedCardRewards = IInterface_CardGameInstance::Execute_GetAllowedCardRewardsFromInstance(UFunctionLibrary_Singletons::GetCardGameInstance(this));
 		}
 
 		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 
-		return CardPlayer->ChanceManagerComponent->GetRandomCardsByTagWeights(RarityWeightsMap,AllowedCardRewards,FGameplayTagContainer(),true,3);
+		return CardPlayer->ChanceManagerComponent->GetRandomCardsByTagWeights(RarityWeightsMap, AllowedCardRewards, FGameplayTagContainer(), true, 3);
 	}
 	else
 	{
 		return SetCardOptions(CardEffect);
 	}
 }
-
-
-
-
-

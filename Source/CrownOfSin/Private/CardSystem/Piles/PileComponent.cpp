@@ -41,7 +41,7 @@ void UPileComponent::BeginPlay()
 
 void UPileComponent::ResolveAddNewCardBeyondMax()
 {
-	COS_LOG_SCREEN(TEXT("경고: MaxDeckSize를 초과하는 카드를 추가하려고 시도했습니다."));
+	COS_SCREEN(TEXT("경고: MaxDeckSize를 초과하는 카드를 추가하려고 시도했습니다."));
 }
 
 void UPileComponent::RemoveAllCardsOwnedByActor(AActor* InActor)

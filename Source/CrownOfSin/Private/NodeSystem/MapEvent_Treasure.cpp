@@ -41,7 +41,7 @@ void UMapEvent_Treasure::RunMapEvent(FDataTableRowHandle EventData)
 	ACardBase* Card = GetWorld()->SpawnActorDeferred<ACardBase>(ACardBase::StaticClass(),FTransform::Identity,nullptr,nullptr,ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	if(!Card)
 	{
-		COS_LOG_SCREEN(TEXT("MapEvent_Treasure : ACardBase 액터가 생성되지 않습니다."));
+		COS_SCREEN(TEXT("MapEvent_Treasure : ACardBase 액터가 생성되지 않습니다."));
 		return;
 	}
 	Card->CardDataDeck = UFunctionLibrary_Card::MakeCardStructFromCardData(RewardCardData);
@@ -56,7 +56,7 @@ void UMapEvent_Treasure::RunMapEvent(FDataTableRowHandle EventData)
 	UGameInstance* gameInstance = UGameplayStatics::GetGameInstance(this);
 	if(!gameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
 	{
-		COS_LOG_SCREEN(TEXT("게임 인스턴스가 UInterface_CardGameInstance를 상속받지 않았습니다"));
+		COS_SCREEN(TEXT("게임 인스턴스가 UInterface_CardGameInstance를 상속받지 않았습니다"));
 		return;
 	}
 	IInterface_CardGameInstance::Execute_AttemptSaveGame(gameInstance,"",true);
@@ -75,7 +75,7 @@ void UMapEvent_Treasure::RunEvent(FGameplayTag EventTag, UObject* CallingObject,
 	UGameInstance* gameInstance = UGameplayStatics::GetGameInstance(this);
 	if(!gameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
 	{
-		COS_LOG_SCREEN(TEXT("게임 인스턴스가 UInterface_CardGameInstance를 상속받지 않았습니다"));
+		COS_SCREEN(TEXT("게임 인스턴스가 UInterface_CardGameInstance를 상속받지 않았습니다"));
 		return;
 	}
 	IInterface_CardGameInstance::Execute_AttemptSaveGame(gameInstance,"",true);

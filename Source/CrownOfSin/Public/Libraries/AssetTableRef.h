@@ -20,8 +20,6 @@ namespace AssetRefPath
 	const FString TexturesPath = TEXT("DataTable'/Game/CrownOfSin/AssetRef/DT_Textures.DT_Textures'");
 	const FString DataTablePath = TEXT("DataTable'/Game/CrownOfSin/AssetRef/DT_DataTable.DT_DataTable'");
 
-	
-
 
 	// const FString WidgetPath = TEXT("DataTable'/Game/Game_/AssetRef/AssetRef_Widget.AssetRef_Widget'");
 	// const FString SoundPath = TEXT("DataTable'/Game/Game_/AssetRef/AssetRef_Sounds.AssetRef_Sounds'");
@@ -104,8 +102,7 @@ private:
 			return false;
 		}
 
-		const FAssetReferenceTableRow* Row = DataTable->FindRow<FAssetReferenceTableRow>(
-			RowName, TEXT("LookupAssetPath"));
+		const FAssetReferenceTableRow* Row = DataTable->FindRow<FAssetReferenceTableRow>(RowName, TEXT("LookupAssetPath"));
 		if (!Row)
 		{
 			COS_LOG_ERROR(TEXT("어설션 실패: DataTable '%s'에서 '%s' 행을 찾지 못했습니다."), *DataTablePath, *RowName.ToString());

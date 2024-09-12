@@ -29,13 +29,13 @@ public:
 	/*ToDo:구현해야합니다*/
 	bool GetBackMinion(int32& OutBackIndex,AActor*& OutBackTarget)
 	{
-		COS_LOG_SCREEN(TEXT("GetBackMinion() 함수를 구현해야합니다."));
+		COS_SCREEN(TEXT("GetBackMinion() 함수를 구현해야합니다."));
 		return false;
 	}
 
 	AMinionBase* AddMinionToTrack(int32 Index, const FMinion& MinionData, bool bSpawnedDuringGameplay)
 	{
-		COS_LOG_SCREEN(TEXT("AddMinionToTrack() 함수를 구현해야합니다."));
+		COS_SCREEN(TEXT("AddMinionToTrack() 함수를 구현해야합니다."));
 		return nullptr;
 	}
 

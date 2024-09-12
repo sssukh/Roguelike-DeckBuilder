@@ -16,16 +16,14 @@ class CROWNOFSIN_API AAction_DispatcherEvent : public AActionBase
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	AAction_DispatcherEvent();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void PlayAction_Implementation() override;
+	
 
 	/*========================================================================================
 	*	Field Members

@@ -23,8 +23,6 @@
 #include "CombatSystem/TargetSystem/TargetingComponent_Untargeted.h"
 
 
-
-
 ACardBase::ACardBase()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -110,13 +108,13 @@ bool ACardBase::HandleInvalidCardData(const FDataTableRowHandle& CardDataRowHand
 	// 1. Deck 카드 이름이 비어있으면 에러 로그를 출력합니다.
 	if (GetCardName(ECardDataType::Deck).IsEmpty())
 	{
-		COS_LOG_SCREEN(TEXT("오류: 데이터 테이블(%s)에서 이름(%s)의 잘못된 카드를 초기화하려고 시도했습니다."),
-		               *CardDataRowHandle.DataTable->GetName(), *CardDataRowHandle.RowName.ToString());
+		COS_SCREEN(TEXT("오류: 데이터 테이블(%s)에서 이름(%s)의 잘못된 카드를 초기화하려고 시도했습니다."),
+		           *CardDataRowHandle.DataTable->GetName(), *CardDataRowHandle.RowName.ToString());
 		return false; // 유효하지 않은 데이터로 초기화 실패
 	}
 
 	// 2. Deck 카드 이름이 유효하면 기본 카드 데이터를 설정합니다.
-	CardDataDeck = CardDataBase;
+	CardDataBase = CardDataDeck;
 	return true;
 }
 
@@ -454,7 +452,7 @@ void ACardBase::ExecuteEffectAction()
 	// 소스 퍼펫을 가져오고, 타겟 액터에 카드 효과 적용
 	if (!GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
 	{
-		COS_LOG_SCREEN(TEXT("소유자는 UInterface_CardTarget을 구현하지 않습니다."));
+		COS_SCREEN(TEXT("소유자는 UInterface_CardTarget을 구현하지 않습니다."));
 		return;
 	}
 
@@ -465,7 +463,7 @@ void ACardBase::ExecuteEffectAction()
 	// 유효한 타겟이 없으면 로그를 출력하고 함수 종료.
 	if (!TargetActor)
 	{
-		COS_LOG_SCREEN(TEXT("대상이 UInterface_CardTarget을 구현하지 않습니다."));
+		COS_SCREEN(TEXT("대상이 UInterface_CardTarget을 구현하지 않습니다."));
 		return;
 	}
 
@@ -530,7 +528,7 @@ UTargetingComponent* ACardBase::AccessTargetingClassLazy(AActor* TargetingHolder
 	if (IsValid(TargetingClass))
 	{
 		// 새로운 타겟팅 컴포넌트를 생성하고 등록합니다.
-		UTargetingComponent* NewTargetingComponent = NewObject<UTargetingComponent>(TargetingHolderActor);
+		UTargetingComponent* NewTargetingComponent = NewObject<UTargetingComponent>(TargetingHolderActor,TargetingClass);
 		NewTargetingComponent->RegisterComponent();
 
 		return NewTargetingComponent;
@@ -753,7 +751,7 @@ void ACardBase::QueueCardEffectAction(AActor* TargetActor, AActor* SourcePuppet,
 	// 3. 카드 효과가 유효한지 다시 확인 (생성 실패시 로그 출력).
 	if (!CardEffect)
 	{
-		COS_LOG_SCREEN(TEXT("ACardBase : ActionEffect가 생성되지 않습니다."));
+		COS_SCREEN(TEXT("ACardBase : ActionEffect가 생성되지 않습니다."));
 		return;
 	}
 

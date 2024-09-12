@@ -58,7 +58,7 @@ void ANodeBase::BeginPlay()
 
 	if (!MapEventClass)
 	{
-		COS_LOG_SCREEN(TEXT("MapEventClass를 설정해주세요!"));
+		COS_SCREEN(TEXT("MapEventClass를 설정해주세요!"));
 		return;
 	}
 	MapEventRef = NewObject<UMapEventComponent>(this, MapEventClass);
@@ -75,13 +75,15 @@ void ANodeBase::OnConstruction(const FTransform& Transform)
 
 	if (MapEvent.IsNull())
 	{
-		COS_LOG_SCREEN(TEXT("%s 의 MapEvent가 설정되지 않았습니다. MapEvent를 설정해주세요."), *GetNameSafe(this));
+		COS_SCREEN(TEXT("%s 의 MapEvent가 설정되지 않았습니다. MapEvent를 설정해주세요."), *GetNameSafe(this));
 		return;
 	}
 	if (FMapEvent* MapEventData = MapEvent.DataTable->FindRow<FMapEvent>(MapEvent.RowName,TEXT("")))
 	{
 		NodeMaterial->SetTextureParameterValue(FName(TEXT("Texture")), MapEventData->Icon);
 	}
+
+	
 }
 
 void ANodeBase::Tick(float DeltaSeconds)
@@ -189,7 +191,7 @@ void ANodeBase::HoverOverNode_Implementation()
 		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 		if (!CardPlayer)
 		{
-			COS_LOG_SCREEN(TEXT("레벨에 ACardPlayer가 존재하지 않습니다."));
+			COS_SCREEN(TEXT("레벨에 ACardPlayer가 존재하지 않습니다."));
 			return;
 		}
 
@@ -222,7 +224,7 @@ void ANodeBase::ClickNode_Implementation()
 		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 		if (!CardPlayer)
 		{
-			COS_LOG_SCREEN(TEXT("레벨에 ACardPlayer가 존재하지 않습니다."));
+			COS_SCREEN(TEXT("레벨에 ACardPlayer가 존재하지 않습니다."));
 			return;
 		}
 

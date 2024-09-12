@@ -31,7 +31,7 @@ void UMapEvent_Story::RunMapEvent(FDataTableRowHandle EventData)
 	ACardPlayer* CardPlayer = Cast<ACardPlayer>(UGameplayStatics::GetActorOfClass(this, ACardPlayer::StaticClass()));
 	if(!CardPlayer->GetClass()->ImplementsInterface(UInterface_StoryEncounter::StaticClass()))
 	{
-		COS_LOG_SCREEN(TEXT("카드 플레이어가 UInterface_StoryEncounter를 상속받지 않았습니다"));
+		COS_SCREEN(TEXT("카드 플레이어가 UInterface_StoryEncounter를 상속받지 않았습니다"));
 		return;
 	}
 
@@ -46,7 +46,7 @@ void UMapEvent_Story::RunMapEvent(FDataTableRowHandle EventData)
 	UGameInstance* gameInstance = UGameplayStatics::GetGameInstance(this);
 	if(!gameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
 	{
-		COS_LOG_SCREEN(TEXT("게임 인스턴스가 UInterface_CardGameInstance를 상속받지 않았습니다"));
+		COS_SCREEN(TEXT("게임 인스턴스가 UInterface_CardGameInstance를 상속받지 않았습니다"));
 		return;
 	}
 

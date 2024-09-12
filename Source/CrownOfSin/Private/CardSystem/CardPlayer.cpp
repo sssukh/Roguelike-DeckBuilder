@@ -55,13 +55,13 @@ void ACardPlayer::BeginPlay()
 
 	if (!DefaultIMC)
 	{
-		COS_LOG_SCREEN(TEXT("Card Player의 Default IMC를 설정해주세요!!"));
+		COS_SCREEN(TEXT("Card Player의 Default IMC를 설정해주세요!!"));
 		return;
 	}
 
 	if (!WBP_LayoutClass)
 	{
-		COS_LOG_SCREEN(TEXT("WBP Layout CLass를 설정해주세요!!!!!"));
+		COS_SCREEN(TEXT("WBP Layout CLass를 설정해주세요!!!!!"));
 		return;
 	}
 

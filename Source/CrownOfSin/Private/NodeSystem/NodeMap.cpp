@@ -84,7 +84,7 @@ ANodeBase* ANodeMap::FindAndStoreOrigin()
 	// Origin 노드를 찾지 못한 경우 경고 메시지를 출력합니다.
 	if (!IsValid(OriginNode))
 	{
-		COS_LOG_SCREEN(TEXT("경고: Origin 노드를 찾을 수 없습니다."));
+		COS_SCREEN(TEXT("경고: Origin 노드를 찾을 수 없습니다."));
 	}
 
 	// Origin 노드를 반환합니다. 유효하지 않으면 nullptr을 반환합니다.
@@ -178,7 +178,7 @@ void ANodeMap::UpdateNodeMap()
 	if (!CurrentGameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
 	{
 		// 구현하지 않은 경우 경고 메시지를 출력하고 함수를 종료합니다.
-		COS_LOG_SCREEN(TEXT("GameInstance가 UInterface_CardGameInstance를 상속받지 않았습니다."));
+		COS_SCREEN(TEXT("GameInstance가 UInterface_CardGameInstance를 상속받지 않았습니다."));
 		return;
 	}
 
