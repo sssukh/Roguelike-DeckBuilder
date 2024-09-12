@@ -1,7 +1,10 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/CardEffects/Story/CardEffect_Story_CardPlayersTrade.h"
 
-
-#include "CardSystem/CardEffects/Story/CardEffect_Story_CardPlayersTrade.h"
+#include "CardSystem/CardBase.h"
+#include "CardSystem/CardPlayer.h"
+#include "Libraries/AssetTableRef.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
+#include "Utilities/CosGameplayTags.h"
 
 
 // Sets default values for this component's properties
@@ -12,24 +15,54 @@ UCardEffect_Story_CardPlayersTrade::UCardEffect_Story_CardPlayersTrade()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+
+	if (UDataTable* DT_StoryEncounters = FAssetReferenceUtility::LoadAssetFromDataTable<UDataTable>(AssetRefPath::DataTablePath, FName("DT_StoryEncounters")))
+	{
+		CommonEncounter.DataTable = DT_StoryEncounters;
+		CommonEncounter.RowName = FName(*FString(TEXT("CardPlayers_a1")));
+
+		EpicEncounter.DataTable = DT_StoryEncounters;
+		EpicEncounter.RowName = FName(*FString(TEXT("CardPlayers_a2")));
+
+		TrashEncounter.DataTable = DT_StoryEncounters;
+		TrashEncounter.RowName = FName(*FString(TEXT("CardPlayers_a3")));
+	}
 }
 
 
-// Called when the game starts
 void UCardEffect_Story_CardPlayersTrade::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_Story_CardPlayersTrade::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_Story_CardPlayersTrade::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	ACardBase* TargetCard = Cast<ACardBase>(TargetActor);
+	if (!TargetCard)
+	{
+		return false;
+	}
 
-	// ...
+	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
+	if (!CardPlayer)
+	{
+		return false;
+	}
+
+	if (TargetCard->Rarity == CosGameTags::Rarity_Common || TargetCard->Rarity == CosGameTags::Rarity_Rare)
+	{
+		IInterface_StoryEncounter::Execute_InitializeStoryEncounter(CardPlayer, CommonEncounter, false);
+	}
+	else if (TargetCard->Rarity == CosGameTags::Rarity_Epic || TargetCard->Rarity == CosGameTags::Rarity_Legendary)
+	{
+		IInterface_StoryEncounter::Execute_InitializeStoryEncounter(CardPlayer, EpicEncounter, false);
+	}
+	else
+	{
+		IInterface_StoryEncounter::Execute_InitializeStoryEncounter(CardPlayer, TrashEncounter, false);
+	}
+
+	return true;
 }
-

@@ -31,7 +31,8 @@ public:
 
 	virtual bool CallEvent(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject = nullptr, ECallGlobal AlsoCallGlobal = ECallGlobal::CallAfter) override;
 
-	virtual bool CallEventWithCallTags(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, FGameplayTagContainer CallTags) override;
+	virtual bool CallEventWithCallTags(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject = nullptr, ECallGlobal AlsoCallGlobal = ECallGlobal::CallAfter,
+	                                   FGameplayTagContainer CallTags = FGameplayTagContainer()) override;
 
 	virtual bool CallEventWithPayload(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, UObject* PayLoad) override;
 

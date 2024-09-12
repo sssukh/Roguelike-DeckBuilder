@@ -3,6 +3,8 @@
 
 #include "CardSystem/CardEffects/CardEffect_UseCard.h"
 
+#include "CardSystem/CardBase.h"
+
 
 // Sets default values for this component's properties
 UCardEffect_UseCard::UCardEffect_UseCard()
@@ -14,22 +16,19 @@ UCardEffect_UseCard::UCardEffect_UseCard()
 	// ...
 }
 
-
-// Called when the game starts
 void UCardEffect_UseCard::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UCardEffect_UseCard::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UCardEffect_UseCard::ResolveCardEffect(AActor* TargetActor)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	ACardBase* TargetCard = Cast<ACardBase>(TargetActor);
+	if (!TargetCard)
+		return false;
 
-	// ...
+	TArray<AActor*> EmptyArray;
+	return TargetCard->AttemptUseCard(EmptyArray, true, true, false);
 }
-

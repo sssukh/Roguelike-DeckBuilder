@@ -67,3 +67,18 @@ bool UFunctionLibrary_Event::CallMultipleEventsInGlobalDispatcherHub(FGameplayTa
 
 	return GlobalDispatcherHub->DispatcherHubComponent->CallMultipleBoundEvents(EventTags.GetGameplayTagArray(), CallingObject, CallSpecificObject, ECallGlobal::CallAfter);
 }
+
+void UFunctionLibrary_Event::BindMultipleEventsToGlobalDispatcherHub(UObject* EventHolder, FGameplayTagContainer EventTags)
+{
+	AGlobalDispatcherHub* GlobalDispatcherHub = Cast<AGlobalDispatcherHub>(UGameplayStatics::GetActorOfClass(EventHolder, AGlobalDispatcherHub::StaticClass()));
+	if (!GlobalDispatcherHub)
+	{
+		COS_LOG_SCREEN(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
+		return;
+	}
+
+	for (const FGameplayTag& EventTag : EventTags.GetGameplayTagArray())
+	{
+		GlobalDispatcherHub->DispatcherHubComponent->BindEventToHub(EventHolder, EventTag);
+	}
+}

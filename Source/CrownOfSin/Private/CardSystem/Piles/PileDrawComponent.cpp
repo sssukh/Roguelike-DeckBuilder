@@ -1,10 +1,10 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CardSystem/Piles/PileDrawComponent.h"
+
+#include "CardSystem/Piles/PileDiscardComponent.h"
+#include "Libraries/FunctionLibrary_Event.h"
+#include "Utilities/CosGameplayTags.h"
 
 
-#include "CardSystem/Piles/PileDrawComponent.h"
-
-
-// Sets default values for this component's properties
 UPileDrawComponent::UPileDrawComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -12,24 +12,28 @@ UPileDrawComponent::UPileDrawComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	FriendlyName = FText::FromString(FString(TEXT("Draw Pile")));
+	PileTag = CosGameTags::Pile_Draw;
+	Tooltip.RowName = FName(TEXT("DrawPile"));
 }
 
-
-// Called when the game starts
 void UPileDrawComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UPileDrawComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UPileDrawComponent::ReshuffleDiscardIntoDraw()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	UPileDiscardComponent* PileDiscardComponent = Cast<UPileDiscardComponent>(GetOwner()->GetComponentByClass(UPileDiscardComponent::StaticClass()));
+	if (!PileDiscardComponent) return;
 
-	// ...
+	if (PileDiscardComponent->Cards.Num() <= 0) return;
+
+	UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_Reshuffle, this);
+
+	IInterface_Pile::Execute_AssignExistingCards(this, PileDiscardComponent->Cards);
+
+	PileDiscardComponent->Cards.Empty();
 }
-

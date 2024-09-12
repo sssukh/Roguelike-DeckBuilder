@@ -32,8 +32,9 @@ public:
 	// 초기화 및 카드 생성
 	// UW_CardHand의 EnableSelectionMode에서 호출된다. 
 	UFUNCTION(BlueprintCallable, Category = "UW HandSelect")
-	void Initialize(int32 CardCount, UUW_CardHand* InSourceHand, const FGameplayTagContainer& InValidCardTags);
+	void InitializeEvent(int32 CardCount, UUW_CardHand* InSourceHand, const FGameplayTagContainer& InValidCardTags);
 
+	
 	// CardListCard의 OnCardClicked에 바인드되며 클릭한 카드가 유효하면 반환한다.
 	UFUNCTION(BlueprintImplementableEvent, Category = "UW HandSelect")
 	void ReturnCardIfValid(UUW_CardListCard* CardListCard, ACardBase* CardActor);

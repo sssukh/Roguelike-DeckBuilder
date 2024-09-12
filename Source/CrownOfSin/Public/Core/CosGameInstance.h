@@ -150,6 +150,8 @@ public:
 
 	virtual void ChangeNodeMapInInstance_Implementation(const FString& NewNodeMap) override;
 
+	virtual bool GetDeckFromInstance_Implementation(TArray<FCard>& OutDeck) override;
+
 	
 	/*========================================================================================
 	*	Field Members

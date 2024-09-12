@@ -16,7 +16,7 @@ CROWNOFSIN_API DECLARE_LOG_CATEGORY_EXTERN(COS_LOG, Log, All); //추가
 #define COS_LOG_WARNING(Format, ...) UE_LOG(COS_LOG, Warning, TEXT("%s %s"), *LOG_CALLINFO, *FString::Printf(Format, ##__VA_ARGS__))
 #define COS_LOG_ERROR(Format, ...) UE_LOG(COS_LOG, Error, TEXT("%s %s"), *LOG_CALLINFO, *FString::Printf(Format, ##__VA_ARGS__))
 
-#define	COS_LOG_SCREEN(Format, ...) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(Format, ##__VA_ARGS__))
+#define	COS_LOG_SCREEN(Format, ...) GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(Format, ##__VA_ARGS__))
 #define	COS_LOG_SCREEN_T(Time, Format, ...) GEngine->AddOnScreenDebugMessage(-1, Time, FColor::Red, FString::Printf(TEXT(Format), ##__VA_ARGS__))
 
 #define COS_LOG_SCREEN_ERROR(Format, ...) \

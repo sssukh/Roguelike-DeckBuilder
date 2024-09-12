@@ -1,6 +1,7 @@
 ﻿#include "CardSystem/CardEffects/CardEffectComponent.h"
 
 #include "CombatSystem/TargetSystem/TargetingComponent.h"
+#include "CombatSystem/TargetSystem/TargetingComponent_AllValidCardsInHand.h"
 
 UCardEffectComponent::UCardEffectComponent()
 {
@@ -10,9 +11,7 @@ UCardEffectComponent::UCardEffectComponent()
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 
 	// ...
-
-	//ToDo:
-	// DefaultTargetingClass = 설정해줘야함
+	DefaultTargetingClass = UTargetingComponent_AllValidCardsInHand::StaticClass();
 }
 
 void UCardEffectComponent::BeginPlay()

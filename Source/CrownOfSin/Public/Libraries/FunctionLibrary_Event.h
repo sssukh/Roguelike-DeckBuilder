@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "CardSystem/Piles/PileHandComponent.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "FunctionLibrary_Event.generated.h"
 
@@ -29,4 +30,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="COS|Function Library|Event")
 	static bool CallMultipleEventsInGlobalDispatcherHub(FGameplayTagContainer EventTags, UObject* CallingObject, UObject* CallSpecificObject);
+
+	UFUNCTION(BlueprintCallable, Category="COS|Function Library|Event")
+	static void BindMultipleEventsToGlobalDispatcherHub(UObject* EventHolder, FGameplayTagContainer EventTags);
 };

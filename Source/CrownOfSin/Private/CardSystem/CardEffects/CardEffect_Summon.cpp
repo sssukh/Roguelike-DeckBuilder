@@ -1,10 +1,9 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "CardSystem/CardEffects/CardEffect_Summon.h"
+﻿#include "CardSystem/CardEffects/CardEffect_Summon.h"
 
 #include "CardSystem/CardBase.h"
 #include "Core/MinionBase.h"
+#include "Core/MinionTrack.h"
+#include "Utilities/CosGameplayTags.h"
 
 
 // Sets default values for this component's properties
@@ -43,6 +42,12 @@ bool UCardEffect_Summon::ResolveCardEffect(AActor* TargetActor)
 	int32 LastIndex = FMath::Max(0, EffectValue);
 	for (int i = 0; i < LastIndex; ++i)
 	{
+		int32 BackIndex;
+		AActor* BackTarget;
+		MinionBase->MinionTrack->GetBackMinion(BackIndex, BackTarget);
+
+		int32 Index = GameplayTags.HasTagExact(CosGameTags::Position_Back) ? BackIndex + 1 : 0;
+		MinionBase->MinionTrack->AddMinionToTrack(Index, *FoundMinion, true);
 	}
 
 	return true;

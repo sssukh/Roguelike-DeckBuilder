@@ -1,6 +1,4 @@
-﻿
-
-#include "Libraries/FunctionLibrary_Utility.h"
+﻿#include "Libraries/FunctionLibrary_Utility.h"
 
 #include "CardSystem/CardPlayer.h"
 #include "Kismet/GameplayStatics.h"
@@ -20,7 +18,6 @@ void UFunctionLibrary_Utility::DisplayWarningIfMultipleSingletons(const UObject*
 
 void UFunctionLibrary_Utility::SendScreenLogMessage(FText Message, FColor Color)
 {
-	ACardPlayer* CardPlayer = Cast<ACardPlayer>(UGameplayStatics::GetActorOfClass(GEngine->GameViewport->GetWorld(),ACardPlayer::StaticClass()));
-
-	CardPlayer->DisplayScreenLogMessage(Message,Color);
+	if (ACardPlayer* CardPlayer = Cast<ACardPlayer>(UGameplayStatics::GetActorOfClass(GEngine->GameViewport->GetWorld(), ACardPlayer::StaticClass())))
+		CardPlayer->DisplayScreenLogMessage(Message, Color);
 }

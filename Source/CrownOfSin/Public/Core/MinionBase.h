@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "MinionBase.generated.h"
 
+class AMinionTrack;
+
 UCLASS()
 class CROWNOFSIN_API AMinionBase : public AActor
 {
@@ -30,4 +32,7 @@ public:
 	=========================================================================================*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion", meta=(ExposeOnSpawn="true"))
 	FMinion MinionData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion", meta=(ExposeOnSpawn="true"))
+	TObjectPtr<AMinionTrack> MinionTrack;
 };

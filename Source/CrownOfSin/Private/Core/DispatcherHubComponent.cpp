@@ -6,11 +6,12 @@
 #include "Interfaces/Interface_EventHolder.h"
 #include "Kismet/GameplayStatics.h"
 #include "Libraries/FunctionLibrary_Event.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
 #include "Utilities/CosGameplayTags.h"
 #include "Utilities/CosLog.h"
 
 
-UDispatcherHubComponent::UDispatcherHubComponent(): bInterrupt(false), bGlobal(false)
+UDispatcherHubComponent::UDispatcherHubComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -25,63 +26,44 @@ void UDispatcherHubComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UDispatcherHubComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-
 void UDispatcherHubComponent::BindEventToHub(UObject* EventHolder, FGameplayTag EventTag)
 {
-	if (!IsValid(EventHolder))
-	{
-		return;
-	}
+	if (!IsValid(EventHolder)) return;
 
-	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(this);
-	if (!IsValidGameInstance(GameInstance))
-	{
-		COS_LOG_SCREEN(TEXT("Game Instance가 UInterface_CardInstance를 상속받지 못했습니다."));
-		return;
-	}
+	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetCardGameInstance(this);
+	if (!CardGameInstance) return;
 
 	// 디버그 모드가 활성화되어 있는지 확인합니다.
-	if (IInterface_CardGameInstance::Execute_IsDebugMode(GameInstance))
+	if (IInterface_CardGameInstance::Execute_IsDebugMode(CardGameInstance))
 	{
-		UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_Debug_DispatcherHubUpdate, this, nullptr);
+		UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_Debug_DispatcherHubUpdate, this);
 	}
 
 	// EventTag가 존재하지 않으면 새로 생성하고, EventHolder를 추가합니다.
 	if (!EventLists.Contains(EventTag))
 	{
-		AddNewEventHolder(EventTag, EventHolder); // 새로운 EventTag와 EventHolder를 추가합니다.
+		AddNewEventHolder(EventTag, EventHolder);
 		return;
 	}
 
-	// EventHolder가 이미 등록되어 있는지 확인합니다.
-	if (EventLists[EventTag].Objects.Contains(EventHolder))
-	{
-		return; // 이미 등록된 경우 함수를 종료합니다.
-	}
+	// EventHolder가 이미 등록되어 있는지 확인합니다.  이미 등록된 경우 함수를 종료합니다.	
+	if (EventLists[EventTag].Objects.Contains(EventHolder)) return;
 
-	// EventHolder가 UInterface_EventHolder 인터페이스를 구현하는지 확인합니다.
-	if (!ImplementsEventHolderInterface(EventHolder))
-	{
-		return; // 구현하지 않으면 함수를 종료합니다.
-	}
+	// EventHolder가 UInterface_EventHolder 인터페이스를 구현하는지 확인합니다. 구현하지 않으면 함수를 종료합니다.
+	if (!EventHolder->Implements<UInterface_EventHolder>()) return;
 
 	// 우선순위에 따라 EventHolder를 삽입합니다.
 	InsertEventHolderWithPriority(EventTag, EventHolder);
 }
 
-
 void UDispatcherHubComponent::BindMultipleEventsToHub(UObject* EventHolder, FGameplayTagContainer EventTags)
 {
+	// EventTags의 모든 태그를 배열로 변환합니다.
 	TArray<FGameplayTag> EventTagList;
 	EventTags.GetGameplayTagArray(EventTagList);
 
-	for (FGameplayTag EventTag : EventTagList)
+	// 변환된 배열의 각 태그에 대해 BindEventToHub 함수를 호출하여 바인딩을 처리합니다.
+	for (const FGameplayTag& EventTag : EventTagList)
 	{
 		BindEventToHub(EventHolder, EventTag);
 	}
@@ -89,179 +71,188 @@ void UDispatcherHubComponent::BindMultipleEventsToHub(UObject* EventHolder, FGam
 
 void UDispatcherHubComponent::UnbindEventFromHub(UObject* EventHolder, FGameplayTag EventTag)
 {
-	// EventLists에 EventTag가 존재하는지 확인합니다.
-	if (!EventLists.Contains(EventTag))
-	{
-		return; // EventTag가 없으면 함수를 종료합니다.
-	}
+	// 1. 이벤트 리스트에 해당 EventTag가 존재하는지 확인. EventTag가 없으면 함수 종료.
+	if (!EventLists.Contains(EventTag)) return;
 
-	// EventTag에 연결된 이벤트 홀더 목록을 가져옵니다.
-	TArray<UObject*>& EventHoldersArray = EventLists[EventTag].Objects;
+	// 2. 해당 EventTag에 바인딩된 이벤트 홀더 목록을 가져옴.
+	TArray<UObject*>& BoundEventHolders = EventLists[EventTag].Objects;
 
-	// EventHolder를 목록에서 제거하고, 제거된 수를 기록합니다.
-	int32 RemovedCount = EventHoldersArray.Remove(EventHolder);
+	// 3. 이벤트 홀더 목록에서 주어진 EventHolder를 제거. 제거된 수를 반환.
+	int32 RemovedCount = BoundEventHolders.Remove(EventHolder);
 
-	// 제거된 객체가 없으면 함수를 종료합니다.
-	if (RemovedCount <= 0)
-	{
-		return;
-	}
+	// 4. 제거된 이벤트 홀더가 없으면 함수 종료.
+	if (RemovedCount == 0) return;
 
-	// 업데이트된 이벤트 홀더 배열을 EventLists에 다시 추가합니다.
-	EventLists.Add(EventTag, FObjectArray(EventHoldersArray));
+	// 5. 이벤트 홀더 목록을 업데이트하여 EventLists에 다시 추가.
+	EventLists[EventTag] = BoundEventHolders;
 
-	// 디버그 모드를 위한 이벤트 호출을 트리거합니다.
-	UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_Debug_DispatcherHubUpdate, this, nullptr);
+	// 6. 디버그 모드가 활성화된 경우, 디버그 업데이트 이벤트를 호출하여 상태를 업데이트.
+	UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_Debug_DispatcherHubUpdate, this);
 }
 
 void UDispatcherHubComponent::UnbindMultipleEventsFromHub(UObject* EventHolder, FGameplayTagContainer EventTags)
 {
+	// 1. EventTags에서 개별 이벤트 태그들을 가져와 배열로 변환.
 	TArray<FGameplayTag> EventTagList;
 	EventTags.GetGameplayTagArray(EventTagList);
 
-	for (FGameplayTag EventTag : EventTagList)
+	// 2. 각 이벤트 태그에 대해 UnbindEventFromHub를 호출하여 이벤트 홀더 해제.
+	for (const FGameplayTag& EventTag : EventTagList)
 	{
 		UnbindEventFromHub(EventHolder, EventTag);
 	}
 }
 
+bool UDispatcherHubComponent::CallEvent(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal)
+{
+	return ResolveCallEvent(EventTag, CallingObject, CallSpecificObject, AlsoCallGlobal);
+}
+
 bool UDispatcherHubComponent::CallMultipleBoundEvents(const TArray<FGameplayTag>& EventTagsGameplayTags, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal)
 {
-	for (FGameplayTag EventTagsGameplayTag : EventTagsGameplayTags)
+	for (const FGameplayTag& EventTag : EventTagsGameplayTags)
 	{
-		ResolveCallEvent(EventTagsGameplayTag, CallingObject, CallSpecificObject, AlsoCallGlobal);
+		ResolveCallEvent(EventTag, CallingObject, CallSpecificObject, AlsoCallGlobal);
 	}
 	return true;
 }
 
-bool UDispatcherHubComponent::CallEvent(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal)
+bool UDispatcherHubComponent::ResolveCallEvent(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, UObject* PayLoad, FGameplayTagContainer CallTags)
 {
-	return ResolveCallEvent(EventTag, CallingObject, CallSpecificObject, AlsoCallGlobal, nullptr, FGameplayTagContainer());
+	// 1. EventTag에 해당하는 이벤트가 없으면 바로 종료.
+	if (!EventLists.Contains(EventTag)) return true;
+
+	// 2. 특정 객체에 대해 이벤트를 호출하는 경우.
+	if (IsValid(CallSpecificObject))
+	{
+		// CallSpecificObject가 UInterface_EventHolder 인터페이스를 구현하는지 확인.
+		if (CallSpecificObject->Implements<UInterface_EventHolder>())
+		{
+			// 해당 객체에서 이벤트를 실행.
+			IInterface_EventHolder::Execute_RunEvent(CallSpecificObject, EventTag, CallingObject, bGlobal, PayLoad, CallTags);
+		}
+		return true; // 특정 객체에 대해서만 이벤트를 호출했으므로 종료.
+	}
+
+	// 3. EventTag에 바인딩된 모든 이벤트 홀더를 가져옴.
+	const TArray<UObject*>& EventHolderList = EventLists[EventTag].Objects;
+
+	// 유효하지 않은 이벤트 홀더를 저장할 배열.
+	TArray<UObject*> InvalidEventHolders;
+
+	// 4. 바인딩된 모든 이벤트 홀더에 대해 반복 처리.
+	for (UObject* CurrentEventHolder : EventHolderList)
+	{
+		// 이벤트 홀더가 유효하지 않은 경우, 추적 리스트에 추가.
+		if (!IsValid(CurrentEventHolder))
+		{
+			InvalidEventHolders.Add(CurrentEventHolder);
+			continue;
+		}
+
+		// 이벤트 홀더가 UInterface_EventHolder 인터페이스를 구현하지 않으면 건너뜀.
+		if (!CurrentEventHolder->Implements<UInterface_EventHolder>()) continue;
+
+		// 5. 이벤트를 실행.
+		IInterface_EventHolder::Execute_RunEvent(CurrentEventHolder, EventTag, CallingObject, bGlobal, PayLoad, CallTags);
+
+		// 6. 인터럽트가 발생한 경우, 처리 후 종료.
+		if (bInterrupt)
+		{
+			bInterrupt = false; // 인터럽트 상태 초기화.
+			return true; // 인터럽트 발생 시 종료.
+		}
+	}
+
+	// 7. 유효하지 않은 이벤트 홀더가 없으면 바로 종료.
+	if (InvalidEventHolders.Num() <= 0) return true;
+
+	// 8. 유효하지 않은 객체들을 제거하여 이벤트 홀더 리스트를 정리.
+	TArray<UObject*>& ValidEventHolderList = EventLists[EventTag].Objects;
+	for (UObject* InvalidEventHolder : InvalidEventHolders)
+	{
+		ValidEventHolderList.Remove(InvalidEventHolder); // 유효하지 않은 객체 제거.
+	}
+
+	// 9. 정리된 리스트를 EventLists에 다시 추가.
+	EventLists[EventTag] = ValidEventHolderList;
+
+	return true; // 모든 작업 완료 후 true 반환.
 }
 
 void UDispatcherHubComponent::QueueEvent(FGameplayTag Event, UObject* CallingObject, UObject* CallSpecificObject, float EndDelay, UObject* PayLoad, FGameplayTagContainer CallTags)
 {
+	// 액터 클래스가 설정되지 않은 경우 로그 메시지를 출력하고 함수 종료.
 	if (!Action_DispatcherEventClass)
 	{
 		COS_LOG_SCREEN(TEXT("Action_DispatcherEventClass 클래스를 설정해주세요."));
 		return;
 	}
-	
+
+	// 액터가 생성될 위치 및 회전을 나타내는 기본 변환 값을 설정.
 	FTransform SpawnTransform = FTransform::Identity;
 
-	if (AAction_DispatcherEvent* NewDispatcherEvent = GetWorld()->SpawnActorDeferred<AAction_DispatcherEvent>(Action_DispatcherEventClass, SpawnTransform,
-	                                                                                                          nullptr, nullptr,
-	                                                                                                          ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
+	// 지연 생성 방식으로 AAction_DispatcherEvent 액터를 생성. 액터 생성이 성공한 경우에만 이후 로직을 실행.
+	AAction_DispatcherEvent* NewDispatcherEvent = GetWorld()->SpawnActorDeferred<AAction_DispatcherEvent>(
+		Action_DispatcherEventClass,
+		SpawnTransform,
+		nullptr, nullptr,
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+	);
+
+	if (NewDispatcherEvent)
 	{
+		// 생성된 액터에 이벤트와 관련된 속성들을 설정.
 		NewDispatcherEvent->Event = Event;
 		NewDispatcherEvent->CallingObject = CallingObject;
 		NewDispatcherEvent->DispatcherHub = this;
-		NewDispatcherEvent->AlsoCallGlobal = ECallGlobal::CallAfter;
+		NewDispatcherEvent->AlsoCallGlobal = ECallGlobal::CallAfter; // 전역 이벤트 호출 여부 설정.
 		NewDispatcherEvent->PayLoad = PayLoad;
 		NewDispatcherEvent->CallTags = CallTags;
 		NewDispatcherEvent->EndDelay = EndDelay;
+
+		// 액터의 생성이 완료됨을 알림.
 		NewDispatcherEvent->FinishSpawning(SpawnTransform);
 	}
-		
 }
 
 void UDispatcherHubComponent::QueueEventWithPayloadAndCallTags(FGameplayTag Event, UObject* CallingObject, UObject* CallSpecificObject, float EndDelay, UObject* PayLoad,
                                                                FGameplayTagContainer CallTags)
 {
+	// 이벤트 액터 클래스가 설정되지 않았을 경우, 경고 메시지를 출력하고 함수를 종료합니다.
 	if (!Action_DispatcherEventClass)
 	{
 		COS_LOG_SCREEN(TEXT("Action_DispatcherEventClass 클래스를 설정해주세요."));
 		return;
 	}
 
-
+	// 액터가 생성될 위치와 회전을 나타내는 기본 변환 값을 설정합니다.
 	FTransform SpawnTransform = FTransform::Identity;
 
-	if (AAction_DispatcherEvent* NewDispatcherEvent = GetWorld()->SpawnActorDeferred<AAction_DispatcherEvent>(Action_DispatcherEventClass, SpawnTransform,
-	                                                                                                          nullptr, nullptr,
-	                                                                                                          ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
+	// AAction_DispatcherEvent 액터를 지연 생성. 액터가 성공적으로 생성된 경우에만 이후 로직을 실행합니다.
+	AAction_DispatcherEvent* NewDispatcherEvent = GetWorld()->SpawnActorDeferred<AAction_DispatcherEvent>(
+		Action_DispatcherEventClass, // 생성할 액터 클래스
+		SpawnTransform, // 액터의 스폰 변환 정보
+		nullptr, // 소유자 (필요 시 설정)
+		nullptr, // 인스턴스화된 Pawn이나 캐릭터 (필요 시 설정)
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn // 충돌 핸들링 방법
+	);
+
+	// 액터가 성공적으로 생성되었다면 필요한 속성들을 설정합니다.
+	if (NewDispatcherEvent)
 	{
 		NewDispatcherEvent->Event = Event;
 		NewDispatcherEvent->CallingObject = CallingObject;
+		NewDispatcherEvent->CallSpecificObject = CallSpecificObject;
 		NewDispatcherEvent->DispatcherHub = this;
-		NewDispatcherEvent->AlsoCallGlobal = ECallGlobal::CallAfter;
+		NewDispatcherEvent->AlsoCallGlobal = ECallGlobal::CallAfter; // 전역 이벤트 호출 여부 설정
 		NewDispatcherEvent->PayLoad = PayLoad;
 		NewDispatcherEvent->CallTags = CallTags;
 		NewDispatcherEvent->EndDelay = EndDelay;
+
+		// 액터 생성이 완료됨을 알립니다.
 		NewDispatcherEvent->FinishSpawning(SpawnTransform);
 	}
-}
-
-bool UDispatcherHubComponent::ResolveCallEvent(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, UObject* PayLoad, FGameplayTagContainer CallTags)
-{
-	// EventLists에 EventTag가 존재하지 않으면, true 반환 후 종료
-	if (!EventLists.Contains(EventTag))
-	{
-		return true;
-	}
-
-	// 특정 객체에 대해 이벤트를 호출하는 경우
-	if (IsValid(CallSpecificObject))
-	{
-		// CallSpecificObject가 UInterface_EventHolder 인터페이스를 구현하는지 확인
-		if (ImplementsEventHolderInterface(CallSpecificObject))
-		{
-			// CallSpecificObject에서 이벤트 실행
-			IInterface_EventHolder::Execute_RunEvent(CallSpecificObject, EventTag, CallingObject, bGlobal, PayLoad, CallTags);
-		}
-		return true; // CallSpecificObject가 유효하지만 인터페이스를 구현하지 않는 경우
-	}
-
-	// EventTag에 해당하는 모든 이벤트 홀더를 가져옴
-	const TArray<UObject*>& EventHolderList = EventLists[EventTag].Objects;
-
-	// 유효하지 않은 객체를 추적하기 위한 배열
-	TArray<UObject*> InvalidEventHolders;
-
-	// 모든 이벤트 홀더에 대해 반복 처리
-	for (UObject* CurrentEventHolder : EventHolderList)
-	{
-		// 현재 이벤트 홀더가 유효하지 않은 경우
-		if (!IsValid(CurrentEventHolder))
-		{
-			InvalidEventHolders.Add(CurrentEventHolder); // 유효하지 않은 객체를 추적
-			continue;
-		}
-
-		// 현재 이벤트 홀더가 UInterface_EventHolder 인터페이스를 구현하지 않는 경우
-		if (!ImplementsEventHolderInterface(CurrentEventHolder))
-		{
-			continue; // 다음 이벤트 홀더로 넘어감
-		}
-
-		// 이벤트 실행
-		IInterface_EventHolder::Execute_RunEvent(CurrentEventHolder, EventTag, CallingObject, bGlobal, PayLoad, CallTags);
-
-		// 이벤트가 인터럽트된 경우 처리
-		if (bInterrupt)
-		{
-			bInterrupt = false; // 인터럽트 상태 초기화
-			return true; // 인터럽트가 발생했으므로 종료
-		}
-	}
-
-	// 유효하지 않은 객체가 없으면 종료
-	if (InvalidEventHolders.Num() == 0)
-	{
-		return true;
-	}
-
-	// EventTag에 해당하는 로컬 객체 배열을 업데이트하여 유효하지 않은 객체 제거
-	TArray<UObject*>& ValidEventHolderList = EventLists[EventTag].Objects;
-	for (UObject* InvalidEventHolder : InvalidEventHolders)
-	{
-		ValidEventHolderList.Remove(InvalidEventHolder); // 유효하지 않은 객체 제거
-	}
-
-	// 업데이트된 객체 배열을 EventLists에 다시 추가
-	EventLists.Add(EventTag, FObjectArray(ValidEventHolderList));
-
-	return true; // 모든 작업이 완료되었으므로 true 반환
 }
 
 bool UDispatcherHubComponent::CallEventWithPayload(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, UObject* PayLoad)
@@ -280,21 +271,11 @@ bool UDispatcherHubComponent::CallEventWithPayloadAndCallTags(FGameplayTag Event
 	return ResolveCallEvent(EventTag, CallingObject, CallSpecificObject, AlsoCallGlobal, PayLoad, CallTags);
 }
 
-bool UDispatcherHubComponent::IsValidGameInstance(UGameInstance* GameInstance)
-{
-	return GameInstance && GameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass());
-}
-
 void UDispatcherHubComponent::AddNewEventHolder(FGameplayTag EventTag, UObject* EventHolder)
 {
 	FObjectArray NewObjectArray;
 	NewObjectArray.Objects = {EventHolder};
 	EventLists.Add(EventTag, NewObjectArray);
-}
-
-bool UDispatcherHubComponent::ImplementsEventHolderInterface(UObject* EventHolder)
-{
-	return EventHolder->GetClass()->ImplementsInterface(UInterface_EventHolder::StaticClass());
 }
 
 void UDispatcherHubComponent::InsertEventHolderWithPriority(FGameplayTag EventTag, UObject* EventHolder)
@@ -304,6 +285,7 @@ void UDispatcherHubComponent::InsertEventHolderWithPriority(FGameplayTag EventTa
 
 	// EventTag와 연관된 객체 목록을 가져옵니다.
 	TArray<UObject*>& EventObjects = EventLists[EventTag].Objects;
+
 	TArray<UObject*> InvalidObjects; // 무효한 객체들을 저장할 배열입니다.
 	bool bInserted = false; // EventHolder가 삽입되었는지 여부를 추적합니다.
 
@@ -320,10 +302,7 @@ void UDispatcherHubComponent::InsertEventHolderWithPriority(FGameplayTag EventTa
 		}
 
 		// 현재 객체가 UInterface_EventHolder 인터페이스를 구현하는지 확인합니다.
-		if (!ImplementsEventHolderInterface(CurrentObject))
-		{
-			continue;
-		}
+		if (!CurrentObject->Implements<UInterface_EventHolder>()) continue;
 
 		// 현재 객체의 우선순위를 가져옵니다.
 		float CurrentObjectPriority = IInterface_EventHolder::Execute_GetPriority(CurrentObject);
@@ -349,17 +328,11 @@ void UDispatcherHubComponent::InsertEventHolderWithPriority(FGameplayTag EventTa
 void UDispatcherHubComponent::RemoveInvalidObjects(FGameplayTag EventTag, const TArray<UObject*>& InvalidObjects)
 {
 	// 무효한 객체가 없으면 종료합니다.
-	if (InvalidObjects.Num() <= 0)
-	{
-		return;
-	}
+	if (InvalidObjects.Num() <= 0) return;
 
 	// EventTag에 해당하는 객체 배열을 찾습니다.
 	FObjectArray* LocalObjects = EventLists.Find(EventTag);
-	if (!LocalObjects)
-	{
-		return; // 배열을 찾을 수 없으면 함수를 종료합니다.
-	}
+	if (!LocalObjects) return; // 배열을 찾을 수 없으면 함수를 종료합니다.
 
 	// 무효한 객체들을 제거합니다.
 	for (UObject* InvalidObject : InvalidObjects)

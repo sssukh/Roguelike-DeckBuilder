@@ -4,9 +4,15 @@
 #include "Blueprint/UserWidget.h"
 #include "CardSystem/ChanceManagerComponent.h"
 #include "CardSystem/Piles/PileComponent.h"
+#include "CardSystem/Piles/PileDeckComponent.h"
 #include "CardSystem/Piles/PileDestroyComponent.h"
+#include "CardSystem/Piles/PileDiscardComponent.h"
 #include "CardSystem/Piles/PileDrawComponent.h"
+#include "CardSystem/Piles/PileExhaustComponent.h"
+#include "CardSystem/Piles/PileShopComponent.h"
+#include "CardSystem/Piles/PileVoidComponent.h"
 #include "Core/DispatcherHubLocalComponent.h"
+#include "Core/GameplayTagComponent.h"
 #include "Core/PayloadHolderComponent.h"
 #include "Interfaces/Interface_CardGameInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -26,10 +32,21 @@ ACardPlayer::ACardPlayer(): ChanceManagerComponent(nullptr)
 
 
 	DispatcherHubLocalComponent = CreateDefaultSubobject<UDispatcherHubLocalComponent>(TEXT("DispatcherHubLocalComponent"));
+
 	ChanceManagerComponent = CreateDefaultSubobject<UChanceManagerComponent>(TEXT("ChanceManagerComponent"));
+
 	PileDestroyComponent = CreateDefaultSubobject<UPileDestroyComponent>(TEXT("PileDestroyComponent"));
-	PayloadHolderComponent = CreateDefaultSubobject<UPayloadHolderComponent>(TEXT("PayloadHolderComponent"));
+	PileShopComponent = CreateDefaultSubobject<UPileShopComponent>(TEXT("PileShopComponent"));
 	PileDrawComponent = CreateDefaultSubobject<UPileDrawComponent>(TEXT("PileDrawComponent"));
+	PileDeckComponent = CreateDefaultSubobject<UPileDeckComponent>(TEXT("PileDeckComponent"));
+	PileDiscardComponent = CreateDefaultSubobject<UPileDiscardComponent>(TEXT("PileDiscardComponent"));
+	PileExhaustComponent = CreateDefaultSubobject<UPileExhaustComponent>(TEXT("PileExhaustComponent"));
+	PileHandComponent = CreateDefaultSubobject<UPileHandComponent>(TEXT("PileHandComponent"));
+	PileVoidComponent = CreateDefaultSubobject<UPileVoidComponent>(TEXT("PileVoidComponent"));
+
+	PayloadHolderComponent = CreateDefaultSubobject<UPayloadHolderComponent>(TEXT("PayloadHolderComponent"));
+
+	GameplayTagComponent = CreateDefaultSubobject<UGameplayTagComponent>(TEXT("GameplayTagComponent"));
 }
 
 void ACardPlayer::BeginPlay()
@@ -95,6 +112,18 @@ void ACardPlayer::GeneratePileTagLookup()
 
 		PileTagLookup.Add(PileComponent->PileTag, PileComponent);
 	}
+}
+
+bool ACardPlayer::GetPileWithPileTag(FGameplayTag PileTag, UPileComponent*& OutPileComponent)
+{
+	if (PileTagLookup.Contains(PileTag))
+	{
+		OutPileComponent = PileTagLookup[PileTag];
+		return true;
+	}
+
+	OutPileComponent = nullptr;
+	return false;
 }
 
 bool ACardPlayer::IsValidStatusClass(TSubclassOf<UStatusComponent> InStatusClass)

@@ -491,6 +491,12 @@ void UCosGameInstance::ChangeNodeMapInInstance_Implementation(const FString& New
 	VisitedNodes = {0};
 }
 
+bool UCosGameInstance::GetDeckFromInstance_Implementation(TArray<FCard>& OutDeck)
+{
+	OutDeck = Deck;
+	return true;
+}
+
 TArray<FStatusData> UCosGameInstance::GetArtifactsFromInstance_Implementation()
 {
 	return Artifacts;

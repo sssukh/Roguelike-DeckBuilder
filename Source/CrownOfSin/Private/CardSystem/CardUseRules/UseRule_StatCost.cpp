@@ -1,13 +1,11 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "CombatSystem/CardUseRules/UseRuleComponent.h"
-
-#include "Core/CosEnumStruct.h"
+#include "CardSystem/CardUseRules/UseRule_StatCost.h"
 
 
 // Sets default values for this component's properties
-UUseRuleComponent::UUseRuleComponent()
+UUseRule_StatCost::UUseRule_StatCost()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -18,7 +16,7 @@ UUseRuleComponent::UUseRuleComponent()
 
 
 // Called when the game starts
-void UUseRuleComponent::BeginPlay()
+void UUseRule_StatCost::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -28,20 +26,10 @@ void UUseRuleComponent::BeginPlay()
 
 
 // Called every frame
-void UUseRuleComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UUseRule_StatCost::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
-}
-
-bool UUseRuleComponent::CheckIfUseAllowed(FUseRule UseRuleData, FString& FailMessage)
-{
-	return true;
-}
-
-bool UUseRuleComponent::ResolveUseConsequence(FUseRule UseRuleData)
-{
-	return true;
 }
 

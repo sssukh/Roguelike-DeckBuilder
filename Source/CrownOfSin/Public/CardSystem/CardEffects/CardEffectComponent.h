@@ -60,7 +60,6 @@ public:
 	TSubclassOf<UTargetingComponent> DefaultTargetingClass;
 
 public:
-	//파티클 빼고는 다 들어가 있음 굳이 멤버변수로 따로 만들어야하나 ? FCard로 하면안되나 ?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
 	int32 EffectValue;
 
@@ -92,6 +91,7 @@ public:
 	/*========================================================================================
 	*	Delegate
 	=========================================================================================*/
+public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category="Card Effect | Delegate")
 	FOnCardResolved OnCardResolved;
 };

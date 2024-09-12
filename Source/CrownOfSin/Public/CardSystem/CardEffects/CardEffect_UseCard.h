@@ -1,13 +1,12 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
 #include "CardEffectComponent.h"
 #include "CardEffect_UseCard.generated.h"
 
-
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+/*대상 없이 대상 카드를 사용하려고 시도합니다.*/
+UCLASS(ClassGroup=("COS|Card"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UCardEffect_UseCard : public UCardEffectComponent
 {
 	GENERATED_BODY()
@@ -21,6 +20,5 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual bool ResolveCardEffect(AActor* TargetActor) override;
 };

@@ -270,8 +270,6 @@ struct FStatusData : public FTableRowBase
 };
 
 
-
-
 USTRUCT(BlueprintType)
 struct FStatusAppearance
 {
@@ -452,19 +450,14 @@ struct FUseRule : public FTableRowBase
 	int32 Cost;
 
 	// 기본 생성자
-	FUseRule()
-		: Rule(nullptr)
-		  , Status(nullptr)
-		  , Cost(0) // 기본 비용을 0으로 설정
+	FUseRule() : Rule(nullptr), Status(nullptr), Cost(0) // 기본 비용을 0으로 설정
 	{
 		// 추가적으로 초기화가 필요할 경우 여기에 작성
 	}
 
 	// 매개 변수가 있는 생성자
 	FUseRule(TSubclassOf<UUseRuleComponent> InRule, TSubclassOf<UStatusComponent> InStatus, int32 InCost)
-		: Rule(InRule)
-		  , Status(InStatus)
-		  , Cost(InCost)
+		: Rule(InRule), Status(InStatus), Cost(InCost)
 	{
 		// 초기화와 동시에 값을 설정합니다.
 	}
