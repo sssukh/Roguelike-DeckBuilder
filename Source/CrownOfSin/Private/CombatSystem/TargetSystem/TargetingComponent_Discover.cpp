@@ -31,10 +31,11 @@ bool UTargetingComponent_Discover::FindValidTargets(TArray<AActor*>& SpecifiedTa
 	if(bPreview)
 		return false;
 
-	if(!Cast<UPileComponent>(CardEffect.TargetComponent))
+	if(!CardEffect.TargetComponent->IsChildOf(UPileComponent::StaticClass()))
 	{
 		return false;
 	}
+	
 
 	TArray<FCard> CardOptions;
 	

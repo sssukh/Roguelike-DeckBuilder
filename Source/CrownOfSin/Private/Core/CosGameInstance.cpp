@@ -497,6 +497,11 @@ bool UCosGameInstance::GetDeckFromInstance_Implementation(TArray<FCard>& OutDeck
 	return true;
 }
 
+FGameplayTagContainer UCosGameInstance::GetAllowedCardRewardsFromInstance_Implementation()
+{
+	return FGameplayTagContainer();
+}
+
 TArray<FStatusData> UCosGameInstance::GetArtifactsFromInstance_Implementation()
 {
 	// TODO

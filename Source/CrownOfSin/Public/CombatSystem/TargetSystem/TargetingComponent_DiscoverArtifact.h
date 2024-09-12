@@ -40,4 +40,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Targeting Discover Artifact")
 	UUW_ArtifactRewardScreen* CardRewardScreen;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Targeting Discover Artifact")
+	TObjectPtr<UDataTable> RarityWeightsTable;
 };

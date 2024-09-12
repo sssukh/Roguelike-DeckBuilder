@@ -29,8 +29,7 @@ bool UTargetingComponent_SpecifiedCardsInPile::FindValidTargets(TArray<AActor*>&
 	if(bPreview)
 		return false;
 
-	// 카드 이펙트의 타겟이 PileComponent의 자식 클래스가 아니면
-	if(!Cast<UPileComponent>(CardEffect.TargetComponent))
+	if(!CardEffect.TargetComponent->IsChildOf(UPileComponent::StaticClass()))
 	{
 		return false;
 	}

@@ -152,6 +152,7 @@ public:
 
 	virtual bool GetDeckFromInstance_Implementation(TArray<FCard>& OutDeck) override;
 
+	virtual FGameplayTagContainer GetAllowedCardRewardsFromInstance_Implementation() override;
 	
 	/*========================================================================================
 	*	Field Members

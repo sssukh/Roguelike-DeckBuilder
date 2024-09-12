@@ -43,7 +43,7 @@ void UDelayHelper::DelayWhile(TFunction<bool()> Condition, TFunction<void(int32)
 			LoopIndex++;
 		}
 	});
-
+	
 	// 타이머 설정: 주어진 지연 시간 동안 루프 실행
 	World->GetTimerManager().SetTimer(LoopTimerHandle, TimerDelegate, Delay, true);
 }

@@ -94,4 +94,7 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	bool GetDeckFromInstance(TArray<FCard>& OutDeck);
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
+	FGameplayTagContainer GetAllowedCardRewardsFromInstance();
 };

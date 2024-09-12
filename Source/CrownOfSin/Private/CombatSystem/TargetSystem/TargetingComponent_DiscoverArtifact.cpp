@@ -22,6 +22,9 @@ UTargetingComponent_DiscoverArtifact::UTargetingComponent_DiscoverArtifact()
 	PickedArtifact.Value = 1;
 
 	CardRewardScreen = nullptr;
+
+	RarityWeightsTable = FAssetReferenceUtility::LoadAssetFromDataTable<UDataTable>(AssetRefPath::DataTablePath, FName("DT_RarityWeights"));
+	
 }
 
 bool UTargetingComponent_DiscoverArtifact::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
@@ -37,8 +40,6 @@ bool UTargetingComponent_DiscoverArtifact::FindValidTargets(TArray<AActor*>& Spe
 	// 받아온 데이터가 유효하지 않으면
 	if(CardEffectUsedData.IsNull()||!RarityWeightsFound)
 	{
-		UDataTable* RarityWeightsTable = FAssetReferenceUtility::LoadAssetFromDataTable<UDataTable>(AssetRefPath::DataTablePath, FName("DT_RarityWeights"));
-
 		RarityWeightsFound = RarityWeightsTable->FindRow<FRarityWeights>(TEXT("Normal"),TEXT("FRarityWeights in TargetingComponent_DiscoverArtifact"));
 		if(!RarityWeightsFound)
 			return false;
