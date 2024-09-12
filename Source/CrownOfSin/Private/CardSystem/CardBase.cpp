@@ -671,6 +671,16 @@ bool ACardBase::GetCardEffectValue(FGameplayTagContainer PossibleTags, FGameplay
 	return false;
 }
 
+TArray<FDataTableRowHandle> ACardBase::GetCardTooltips(ECardDataType Type)
+{
+	return GetCardByCardDataType(Type).Tooltips;
+}
+
+TSubclassOf<UUserWidget> ACardBase::GetCardVisualWidget(ECardDataType Type)
+{
+	return GetCardByCardDataType(Type).CardVisualWidget;
+}
+
 bool ACardBase::GetStatusCostValueFromUseRules(ECardDataType InPile, const TSubclassOf<UStatusComponent>& StatusClass, int32& OutStatusCost, int32& OutUseRuleIndex)
 {
 	// 주어진 카드 타입에 대한 사용 규칙을 가져옴.

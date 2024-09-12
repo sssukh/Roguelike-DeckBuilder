@@ -34,6 +34,7 @@ bool UTargetingComponent_Discover::FindValidTargets(TArray<AActor*>& SpecifiedTa
 	{
 		return false;
 	}
+	
 
 
 	TArray<FCard> CardOptions;
