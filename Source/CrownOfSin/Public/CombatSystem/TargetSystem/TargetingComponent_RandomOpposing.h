@@ -6,7 +6,9 @@
 #include "TargetingComponent.h"
 #include "TargetingComponent_RandomOpposing.generated.h"
 
-
+/*
+ *	카드 소유자의 미니언 트랙의 반대 트랙에 있는 미니언들 중에서 랜덤으로 대상을 선정합니다.
+ */
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UTargetingComponent_RandomOpposing : public UTargetingComponent
 {

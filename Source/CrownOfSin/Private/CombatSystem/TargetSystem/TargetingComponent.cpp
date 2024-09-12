@@ -21,28 +21,12 @@ UTargetingComponent::UTargetingComponent()
 }
 
 
-// Called when the game starts
-void UTargetingComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	
-}
-
-
-// Called every frame
-void UTargetingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
 
 bool UTargetingComponent::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card,
                                            bool bPreview, TArray<AActor*>& ValidTargets)
 {
-	ValidTargets = TArray<AActor*>();
+	ValidTargets.Reset();
+	
 	return true;
 }
 
@@ -96,6 +80,17 @@ bool UTargetingComponent::GetAllMinionsOnOpposingTrack(ACardBase* Card, TArray<A
 	}
 	
 	return false;
+}
+
+bool UTargetingComponent::CheckTargetHasGameplayTag(AActor* Target, const FCardEffect& CardEffect)
+{
+	UGameplayTagComponent* GameplayTagComponent = Cast<UGameplayTagComponent>(Target->GetComponentByClass(UGameplayTagComponent::StaticClass()));
+	if (!GameplayTagComponent)
+	{
+		return false;	
+	}
+
+	return CardEffect.GameplayTags.HasAnyExact(GameplayTagComponent->GameplayTags);
 }
 
 

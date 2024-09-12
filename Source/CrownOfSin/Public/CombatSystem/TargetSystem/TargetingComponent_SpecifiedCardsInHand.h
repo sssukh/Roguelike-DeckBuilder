@@ -9,6 +9,10 @@
 
 class UUW_CardHand;
 
+/*
+ *	손에 있는 카드들 중 지정된 GameplayTag를 가진 카드들을 대상으로 합니다.
+ *	태그가 지정되있지 않으면 손에 있는 모든 카드를 대상으로 합니다.
+ */
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UTargetingComponent_SpecifiedCardsInHand : public UTargetingComponent
 {

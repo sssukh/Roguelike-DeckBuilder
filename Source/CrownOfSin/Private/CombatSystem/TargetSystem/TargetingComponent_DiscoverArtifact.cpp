@@ -3,34 +3,115 @@
 
 #include "CombatSystem/TargetSystem/TargetingComponent_DiscoverArtifact.h"
 
+#include "CardSystem/CardPlayer.h"
+#include "CardSystem/ChanceManagerComponent.h"
+#include "Interfaces/Interface_CardGameInstance.h"
+#include "Kismet/GameplayStatics.h"
+#include "Libraries/AssetTableRef.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
+#include "Rendering/StaticLightingSystemInterface.h"
+#include "StatusSystem/StatusComponent.h"
+#include "UI/UW_ArtifactRewardScreen.h"
+#include "UI/UW_Layout_Cos.h"
+#include "Utilities/CosGameplayTags.h"
+
 
 // Sets default values for this component's properties
 UTargetingComponent_DiscoverArtifact::UTargetingComponent_DiscoverArtifact()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PickedArtifact.Value = 1;
 
-	// ...
+	CardRewardScreen = nullptr;
 }
 
-
-// Called when the game starts
-void UTargetingComponent_DiscoverArtifact::BeginPlay()
+bool UTargetingComponent_DiscoverArtifact::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
+	const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
 {
-	Super::BeginPlay();
+	if(bPreview)
+		return false;
 
-	// ...
+	FDataTableRowHandle CardEffectUsedData = CardEffect.UsedData;
+
+	FRarityWeights* RarityWeightsFound = CardEffectUsedData.DataTable->FindRow<FRarityWeights>(CardEffectUsedData.RowName,TEXT("FRarityWeights in TargetingComponent_DiscoverArtifact"));
+
+	// 받아온 데이터가 유효하지 않으면
+	if(CardEffectUsedData.IsNull()||!RarityWeightsFound)
+	{
+		UDataTable* RarityWeightsTable = FAssetReferenceUtility::LoadAssetFromDataTable<UDataTable>(AssetRefPath::DataTablePath, FName("DT_RarityWeights"));
+
+		RarityWeightsFound = RarityWeightsTable->FindRow<FRarityWeights>(TEXT("Normal"),TEXT("FRarityWeights in TargetingComponent_DiscoverArtifact"));
+		if(!RarityWeightsFound)
+			return false;
+		
+	}
+	
+	TMap<FGameplayTag, float> RarityWeights = RarityWeightsFound->RarityWeights;
+	
+
+	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
+
+	TArray<FStatusData> PickedArtifacts;
+	
+	if(!CardPlayer->ChanceManagerComponent->GetRandomArtifactsByCustomTagWeights(RarityWeights,1,true,PickedArtifacts))
+	{
+		return false;
+	}
+
+	PickedArtifact = PickedArtifacts[0];
+
+	TempArtifactHolder = GetWorld()->SpawnActor(AActor::StaticClass());
+
+	UStatusComponent* StatusComponent = NewObject<UStatusComponent>(this);
+
+	if(StatusComponent)
+	{
+		StatusComponent->StatusValue = PickedArtifact.Value;
+		StatusComponent->GameplayTags = PickedArtifact.GameplayTags;
+		StatusComponent->bShowImmediately = true;
+
+		StatusComponent->RegisterComponent();
+	}
+
+	// TODO : ActionArtifactRewardScreen 을 생성해서 Artifact에 값 넣어주기
+	// GetWorld()->SpawnActorDeferred<ActionArti>()
+
+
+
+	BindToArtifactConfirm(CardPlayer->PlayerUI->WBP_ArtifactReward);
+
+	return true;
 	
 }
 
-
-// Called every frame
-void UTargetingComponent_DiscoverArtifact::TickComponent(float DeltaTime, ELevelTick TickType,
-                                                         FActorComponentTickFunction* ThisTickFunction)
+void UTargetingComponent_DiscoverArtifact::BindToArtifactConfirm(UUW_ArtifactRewardScreen* InCardRewardScreen)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	CardRewardScreen = InCardRewardScreen;
+	InCardRewardScreen->OnReturnSelectionArtifact.AddDynamic(this,&UTargetingComponent_DiscoverArtifact::ValidateAndTransferArtifact);
 }
+
+void UTargetingComponent_DiscoverArtifact::ValidateAndTransferArtifact(bool bSkipped, UStatusComponent* Artifact)
+{
+	CardRewardScreen->OnReturnSelectionArtifact.RemoveDynamic(this,&UTargetingComponent_DiscoverArtifact::ValidateAndTransferArtifact);
+
+	if(!bSkipped)
+	{
+		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
+
+		CardPlayer->AddToStatus(Artifact->GetClass(),Artifact->StatusValue,true,nullptr);
+	}
+
+	TempArtifactHolder->Destroy();
+
+	TArray<AActor*> Targets;
+
+	OnInputTargetsReceived.Broadcast(Targets);
+
+	if(UGameplayStatics::GetGameInstance(this)->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
+	{
+		IInterface_CardGameInstance::Execute_AttemptSaveGame(UGameplayStatics::GetGameInstance(this),TEXT(""),false);
+	}
+}
+
+
+
 

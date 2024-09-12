@@ -6,7 +6,9 @@
 #include "TargetingComponent.h"
 #include "TargetingComponent_RewardHolder.generated.h"
 
-
+/*
+ *	전투 종료 후 주어지는 보상을 갖고있는 RewardHolder를 대상으로 삼습니다.
+ */
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UTargetingComponent_RewardHolder : public UTargetingComponent
 {

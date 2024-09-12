@@ -31,4 +31,10 @@ public:
 	{
 		
 	}
+
+	// TODO : 구현 필요
+	bool AccessPayload(FString Identifier, bool bDestroyAfterAccess, UObject*& Payload)
+	{
+		return true;	
+	}
 };

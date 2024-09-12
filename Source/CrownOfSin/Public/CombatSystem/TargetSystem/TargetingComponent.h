@@ -9,9 +9,11 @@
 #include "TargetingComponent.generated.h"
 
 class AMinionTrack;
+class ACardBase;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInputTargetsReceived, TArray<AActor*>, Targets);
 
-class ACardBase;
+
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UTargetingComponent : public UActorComponent
@@ -21,14 +23,6 @@ class CROWNOFSIN_API UTargetingComponent : public UActorComponent
 public:
 	// Sets default values for this component's properties
 	UTargetingComponent();
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
 	// 입력한 매개변수에 기반해 유효한 Target 배열을 찾고 가져옵니다.
@@ -48,6 +42,8 @@ public:
 	// 카드 소유자의 반대 트랙에 있는 모든 미니언들이 담긴 배열을 반환합니다.
 	UFUNCTION(BlueprintCallable, Category="Targeting Component")
 	bool GetAllMinionsOnOpposingTrack(ACardBase* Card, TArray<AMinionBase*>& Minions);
+
+	bool CheckTargetHasGameplayTag(AActor* Target, const FCardEffect& CardEffect);
 	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/

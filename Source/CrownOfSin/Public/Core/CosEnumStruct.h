@@ -664,3 +664,12 @@ struct FDeck : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Deck", meta = (RowType="/Script/CrownOfSin.Card"))
 	TArray<FDataTableRowHandle> Cards;
 };
+
+USTRUCT(BlueprintType)
+struct FRarityWeights : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Rarity Weights")
+	TMap<FGameplayTag,float> RarityWeights;
+};

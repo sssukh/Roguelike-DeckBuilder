@@ -6,7 +6,7 @@
 #include "TargetingComponent.h"
 #include "TargetingComponent_Untargeted.generated.h"
 
-
+// 타겟이 필요하지 않은 카드 이펙트에 사용됩니다.
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UTargetingComponent_Untargeted : public UTargetingComponent
 {
@@ -16,12 +16,5 @@ public:
 	// Sets default values for this component's properties
 	UTargetingComponent_Untargeted();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
+	virtual bool FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets) override;
 };

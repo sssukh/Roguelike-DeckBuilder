@@ -499,5 +499,6 @@ bool UCosGameInstance::GetDeckFromInstance_Implementation(TArray<FCard>& OutDeck
 
 TArray<FStatusData> UCosGameInstance::GetArtifactsFromInstance_Implementation()
 {
+	// TODO
 	return Artifacts;
 }

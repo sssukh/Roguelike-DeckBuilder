@@ -6,7 +6,7 @@
 #include "TargetingComponent.h"
 #include "TargetingComponent_Self.generated.h"
 
-
+// 카드의 소유자를 대상으로 삼습니다.
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UTargetingComponent_Self : public UTargetingComponent
 {

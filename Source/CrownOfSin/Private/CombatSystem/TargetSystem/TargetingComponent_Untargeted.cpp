@@ -14,23 +14,14 @@ UTargetingComponent_Untargeted::UTargetingComponent_Untargeted()
 	// ...
 }
 
-
-// Called when the game starts
-void UTargetingComponent_Untargeted::BeginPlay()
+bool UTargetingComponent_Untargeted::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
+	ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
 {
-	Super::BeginPlay();
-
-	// ...
+	ValidTargets.Reset();
 	
+	return true;
 }
 
 
-// Called every frame
-void UTargetingComponent_Untargeted::TickComponent(float DeltaTime, ELevelTick TickType,
-                                                   FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
-}
 

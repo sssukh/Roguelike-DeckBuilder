@@ -53,6 +53,8 @@ void UUW_HandSelect::InitializeEvent(int32 CardCount, UUW_CardHand* InSourceHand
 }
 
 
+
+
 bool UUW_HandSelect::EnableConfirmIfFull()
 {
 	TArray<ACardBase*> ContainedCards;

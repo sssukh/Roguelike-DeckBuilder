@@ -14,23 +14,22 @@ UTargetingComponent_SpecifiedTarget::UTargetingComponent_SpecifiedTarget()
 	// ...
 }
 
-
-// Called when the game starts
-void UTargetingComponent_SpecifiedTarget::BeginPlay()
+bool UTargetingComponent_SpecifiedTarget::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
+	const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
 {
-	Super::BeginPlay();
-
-	// ...
+	ValidTargets.Reset();
 	
+	for (AActor* Target : SpecifiedTargets)
+	{
+		if(IsValid(Target) && CheckTargetHasGameplayTag(Target,CardEffect))
+		{
+			ValidTargets.Add(Target);
+		}
+	}
+
+	return false;
 }
 
 
-// Called every frame
-void UTargetingComponent_SpecifiedTarget::TickComponent(float DeltaTime, ELevelTick TickType,
-                                                        FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
-}
 

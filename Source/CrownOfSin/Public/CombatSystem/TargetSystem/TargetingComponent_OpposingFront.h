@@ -6,7 +6,7 @@
 #include "TargetingComponent.h"
 #include "TargetingComponent_OpposingFront.generated.h"
 
-
+// 카드 소유자의 미니언 트랙에서 반대편 트랙의 맨 앞 미니언을 대상으로 합니다.
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UTargetingComponent_OpposingFront : public UTargetingComponent
 {

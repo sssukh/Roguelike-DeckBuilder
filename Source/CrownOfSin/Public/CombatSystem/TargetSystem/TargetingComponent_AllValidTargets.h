@@ -16,7 +16,8 @@ public:
 	// Sets default values for this component's properties
 	UTargetingComponent_AllValidTargets();
 
-
+	// 지정된 태그를 하나라도 가지고있는 미니언을 대상으로 합니다.
+	// 태그가 지정되지 않은 경우 모든 미니언을 대상으로 합니다.
 	virtual bool FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets) override;
 
 };

@@ -8,6 +8,9 @@
 #include "Interfaces/Interface_StoryEncounter.h"
 #include "UW_Layout_Cos.generated.h"
 
+class UUW_CardRewardScreen;
+class UUW_CardSelectorList;
+class UUW_ArtifactRewardScreen;
 class UUW_CardHand;
 class UUW_Shop;
 class UButton;
@@ -79,4 +82,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Layout Cos", meta=(BindWidget))
 	TObjectPtr<UUW_CardHand> WBP_Hand;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Layout Cos", meta=(BindWidget))
+	TObjectPtr<UUW_ArtifactRewardScreen> WBP_ArtifactReward;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Layout Cos", meta=(BindWidget))
+	TObjectPtr<UUW_CardSelectorList> WBP_CardSelectorList;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Layout Cos", meta=(BindWidget))
+	TObjectPtr<UUW_CardRewardScreen> WBP_CardRewardScreen;
 };
