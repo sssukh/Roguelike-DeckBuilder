@@ -10,12 +10,13 @@
 #include "StatusComponent.generated.h"
 
 
+
 class UDispatcherHubComponent;
 
 class URetriggerAbleDelay;
 
-/*체력, 중독, 유물 보유 등과 같은 상태 효과, 속성 등을 나타내기 위해 미니언 또는 CardPlayer에 추가됩니다.*/
-UCLASS(Blueprintable, BlueprintType, ClassGroup=("COS|Card"), meta=(BlueprintSpawnableComponent))
+/* 체력, 중독, 유물 보유 등과 같은 상태 효과, 속성 등을 나타내기 위해 미니언 또는 CardPlayer에 추가됩니다. */
+UCLASS(Blueprintable, BlueprintType, ClassGroup=("Cos"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UStatusComponent : public UActorComponent, public IInterface_Utility, public IInterface_Interrupt, public IInterface_EventHolder
 {
 	GENERATED_BODY()
@@ -33,8 +34,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Status Component Event")
 	bool CheckLoopGuard();
 
+	// status의 statusValue를 업데이트하는 함수이다.
+	// 음수가 들어오면 status에서 그만큼 빼주고 만약 0에 도달하면 status를 제거한다.
+	// 다만 bCanBeZero가 true이면 status를 제거하지 않는다.
 	UFUNCTION(BlueprintCallable, Category="Status Component Event")
-	virtual int32 AddStatusValue(int32 InAmount, bool bShowSplashNumber, bool bShowSplashIcon, bool bRefreshAppearance, UObject* InPayload);
+	int32 AddStatusValue(int32 InAmount, bool bShowSplashNumber, bool bShowSplashIcon, bool bRefreshAppearance, UObject* InPayload);
 
 	UFUNCTION(BlueprintCallable, Category="Status Component Event")
 	int32 SubtractStatusValue(int32 InAmount, bool bShowSplashNumber, bool bShowSplashIcon, UObject* Payload);
@@ -145,6 +149,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category="Status Component", meta=(ExposeOnSpawn="true"))
 	UObject* StatusIndicator;
 
+
+	// RetriggerAbleDelay 인스턴스
 private:
 	UPROPERTY()
 	URetriggerAbleDelay* RetriggerDelay_LoopGuard;
