@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Blueprint/UserWidget.h"
 #include "UObject/Interface.h"
 #include "Interface_CardWidget.generated.h"
 
@@ -25,5 +26,31 @@ class CROWNOFSIN_API IInterface_CardWidget
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
 	void UpdateCardWidget(ACardBase* CardActor);
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
+	void RequestDesiredTransformUpdate(FWidgetTransform DesiredTransform, bool bEnableMovement);
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
+	void ToggleCardGlow(bool bEnable, FColor Color);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
+	void SetCardState(ECardState CardState);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
+	void AnimateAutoPlay();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
+	void AnimateCardNotify();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
+	void AnimateCardExhaust(EUMGSequencePlayMode::Type PlayMode);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
+	void AnimateCardAppear(EUMGSequencePlayMode::Type PlayMode);
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
+	void SuggestCardZOrder(int32 ZOrder);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
+	void ForceCardZOrder(int32 ZOrder);
 };

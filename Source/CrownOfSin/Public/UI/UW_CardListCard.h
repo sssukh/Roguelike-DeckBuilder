@@ -17,7 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCardClicked, UUW_CardListCard*, 
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class CROWNOFSIN_API UUW_CardListCard : public UUserWidget, public IInterface_Utility, public IInterface_CardWidget
 {
 	GENERATED_BODY()
@@ -62,8 +62,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardListCard | Config")
 	TSubclassOf<UUserWidget> CardVisualClass;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardListCard",Transient, meta = (BindWidgetAnim))
+	TObjectPtr<UWidgetAnimation> Select;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardListCard",Transient, meta = (BindWidgetAnim))
+	TObjectPtr<UWidgetAnimation> FadeOut;
 	// Delegate
 public:
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "CardListCard")
 	FOnCardClicked OnCardClicked;
 };

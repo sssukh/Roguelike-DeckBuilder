@@ -5,6 +5,7 @@
 #include "CardSystem/CardBase.h"
 #include "Components/SizeBox.h"
 #include "Interfaces/Widget/Interface_CardWidget.h"
+#include "UI/UW_CardVisual.h"
 #include "UI/UW_ToolTipList.h"
 
 UUW_CardListCard::UUW_CardListCard(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -21,24 +22,30 @@ void UUW_CardListCard::NativePreConstruct()
 void UUW_CardListCard::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	IInterface_Utility::Execute_Initialize(this,FGameplayTagContainer());
+	
+	if(this->GetClass()->ImplementsInterface(UInterface_Utility::StaticClass()))
+	{
+		IInterface_Utility::Execute_Initialize(this,FGameplayTagContainer());
+	}
 }
 
 UUserWidget* UUW_CardListCard::SetCardVisualWidget(ACardBase* InCardActor)
 {
 	CardActor = InCardActor;
 
+	// CardVisual 이미 있으면 제거
 	if(IsValid(CardVisual))
 	{
 		CardVisual->RemoveFromParent();
 	}
 
+	// CardActor 유효하면 CardVisualClass 지정
 	if(IsValid(CardActor))
 	{
-		CardVisualClass = CardVisualClass = CardActor->GetCardVisualWidget(ECardDataType::Deck);
+		CardVisualClass = CardActor->GetCardVisualWidget(ECardDataType::Deck);
 	}
-	
+
+	// CardVisual 새로 생성 및 설정
 	CardVisual = CreateWidget(GetWorld(),CardVisualClass);
 
 	CardVisualBox->AddChild(CardVisual);
@@ -67,5 +74,7 @@ void UUW_CardListCard::Initialize_Implementation(const FGameplayTagContainer& Ta
 
 void UUW_CardListCard::UpdateCardWidget_Implementation(ACardBase* InCardActor)
 {
-	SetCardVisualWidget(InCardActor);
+	UUW_CardVisual* CardVisualCasted = Cast<UUW_CardVisual>(SetCardVisualWidget(InCardActor));
+
+	CardVisualCasted->UpdateCardWidget_Implementation(CardActor);
 }

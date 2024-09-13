@@ -38,7 +38,8 @@ void UUW_CardSelectorList::UpdateCardList(TArray<ACardBase*>& Cards, const FText
 
 	for (int index=0; index<Cards.Num(); index++)
 	{
-		UUW_CardListCard* CardList = Cast<UUW_CardListCard>(this);
+		UUW_CardListCard* CardList = Cast<UUW_CardListCard>(CreateWidget(GetWorld(),UUW_CardListCard::StaticClass()));
+		
 		CardList->CardActor = Cards[index];
 
 		CardPanel->AddChildToUniformGrid(CardList,index/RowLength,index%RowLength);

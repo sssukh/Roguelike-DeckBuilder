@@ -52,6 +52,19 @@ enum class EStatusTextAlignment : uint8
 	BottomLeft
 };
 
+
+UENUM(BlueprintType)
+enum class ECardState : uint8
+{
+	Passive,
+	InHand,
+	MouseOver,
+	FollowMouse,
+	Targeting,
+	Activating,
+	FollowBelzier,
+};
+
 USTRUCT(BlueprintType)
 struct FObjectArray
 {

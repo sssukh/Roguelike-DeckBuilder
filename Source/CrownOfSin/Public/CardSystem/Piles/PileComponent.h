@@ -17,7 +17,7 @@ class ACardBase;
  * 또한, 더미의 최대 크기 제한을 관리하며, 태그나 무작위 방식으로 카드를 검색할 수 있는 기능도 포함하고 있습니다.
  * 이 컴포넌트는 게임 내에서 여러 카드 관련 기능을 수행하는 데 사용되며, 다른 더미 컴포넌트와 상호작용할 수 있습니다.
  */
-UCLASS(ClassGroup=("COS|Card"), meta=(BlueprintSpawnableComponent))
+UCLASS(Blueprintable,BlueprintType,ClassGroup=("COS|Card"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UPileComponent : public UActorComponent, public IInterface_Pile,public IInterface_EventHolder
 {
 	GENERATED_BODY()
