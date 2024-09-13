@@ -519,16 +519,20 @@ UTargetingComponent* ACardBase::AccessTargetingClassLazy(AActor* TargetingHolder
 	}
 
 	// 2. TargetingHolderActor에 해당 클래스의 타겟팅 컴포넌트가 있는지 확인하고, 있으면 반환합니다.
-	if (UTargetingComponent* FoundTargetingComponent = Cast<UTargetingComponent>(TargetingHolderActor->GetComponentByClass(TargetingClass)))
+	if (UActorComponent* FoundTargetingComponent = TargetingHolderActor->GetComponentByClass(TargetingClass))
 	{
-		return FoundTargetingComponent;
+		if (UTargetingComponent* TargetingComponent = Cast<UTargetingComponent>(FoundTargetingComponent))
+		{
+			return TargetingComponent;
+		}
 	}
+
 
 	// 3. 타겟팅 컴포넌트가 없고, 주어진 TargetingClass가 유효하면 새로운 타겟팅 컴포넌트를 생성하여 추가합니다.
 	if (IsValid(TargetingClass))
 	{
 		// 새로운 타겟팅 컴포넌트를 생성하고 등록합니다.
-		UTargetingComponent* NewTargetingComponent = NewObject<UTargetingComponent>(TargetingHolderActor,TargetingClass);
+		UTargetingComponent* NewTargetingComponent = NewObject<UTargetingComponent>(TargetingHolderActor, TargetingClass);
 		NewTargetingComponent->RegisterComponent();
 
 		return NewTargetingComponent;
@@ -540,23 +544,11 @@ UTargetingComponent* ACardBase::AccessTargetingClassLazy(AActor* TargetingHolder
 
 FCard ACardBase::GetCardByCardDataType(ECardDataType InCardType)
 {
-	// 1. ECardDataType에 따라 FCard 데이터를 매핑하는 맵을 생성합니다.
-	TMap<ECardDataType, FCard> CardDataMap =
-	{
-		{ECardDataType::Base, CardDataBase},
-		{ECardDataType::Deck, CardDataDeck},
-		{ECardDataType::Hand, CardDataHand},
-		{ECardDataType::Pile, CardDataPile}
-	};
+	if (InCardType == ECardDataType::Base) return CardDataBase;
+	if (InCardType == ECardDataType::Deck) return CardDataDeck;
+	if (InCardType == ECardDataType::Hand) return CardDataHand;
+	if (InCardType == ECardDataType::Pile) return CardDataPile;
 
-	// 2. 주어진 카드 타입에 해당하는 카드 데이터가 존재하는지 확인합니다.
-	if (CardDataMap.Contains(InCardType))
-	{
-		// 3. 존재하면 해당 타입의 카드 데이터를 반환합니다.
-		return CardDataMap[InCardType];
-	}
-
-	// 4. 카드 타입이 유효하지 않으면 기본 FCard 객체를 반환합니다.
 	return FCard(); // 기본 FCard 객체를 반환 (에러 처리가 필요한 경우 추가 가능)
 }
 
@@ -584,14 +576,31 @@ FCard& ACardBase::GetCardByCardDataTypeRef(ECardDataType InCardType)
 	return DefaultCard;
 }
 
-FDataTableRowHandle ACardBase::GetCardDataRowHandle(ECardDataType Type)
+FDataTableRowHandle ACardBase::GetCardDataRowHandle(ECardDataType InCardType)
 {
-	return GetCardByCardDataType(Type).DataRow;
+	return GetCardByCardDataType(InCardType).DataRow;
 }
 
-FText ACardBase::GetCardName(ECardDataType Type)
+FText ACardBase::GetCardName(ECardDataType InCardType)
 {
-	return GetCardByCardDataType(Type).CardName;
+	return GetCardByCardDataType(InCardType).CardName;
+}
+
+FSlateColor ACardBase::GetCardFrameTint(ECardDataType InCardType)
+
+{
+	return GetCardByCardDataType(InCardType).FrameTint;
+}
+
+UTexture2D* ACardBase::
+GetCardFrame(ECardDataType InCardType)
+{
+	return GetCardByCardDataType(InCardType).Frame;
+}
+
+UTexture2D* ACardBase::GetCardPortrait(ECardDataType InCardType)
+{
+	return GetCardByCardDataType(InCardType).Portrait;
 }
 
 FGameplayTagContainer ACardBase::GetCardTags(ECardDataType Type)
@@ -599,19 +608,19 @@ FGameplayTagContainer ACardBase::GetCardTags(ECardDataType Type)
 	return GetCardByCardDataType(Type).CardTags;
 }
 
-TArray<FStatusData> ACardBase::GetCardStartingStatuses(ECardDataType Type)
+TArray<FStatusData> ACardBase::GetCardStartingStatuses(ECardDataType InCardType)
 {
-	return GetCardByCardDataType(Type).StartingStatuses;
+	return GetCardByCardDataType(InCardType).StartingStatuses;
 }
 
-FGameplayTag ACardBase::GetPostUseEvent(ECardDataType Type)
+FGameplayTag ACardBase::GetPostUseEvent(ECardDataType InCardType)
 {
-	return GetCardByCardDataType(Type).PostUseEvent;
+	return GetCardByCardDataType(InCardType).PostUseEvent;
 }
 
-TArray<FCardEffect> ACardBase::GetCardEffects(ECardDataType Type)
+TArray<FCardEffect> ACardBase::GetCardEffects(ECardDataType InCardType)
 {
-	return GetCardByCardDataType(Type).CardEffects;
+	return GetCardByCardDataType(InCardType).CardEffects;
 }
 
 int32 ACardBase::GetCardRepetitions(ECardDataType Type)

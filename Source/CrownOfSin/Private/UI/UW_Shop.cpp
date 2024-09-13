@@ -10,6 +10,8 @@
 
 UUW_Shop::UUW_Shop(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), CardPanel(nullptr), OutsideButton(nullptr), ExitButton(nullptr)
 {
+	//설정해야합니다
+	// WBP_ShopCardClass
 }
 
 void UUW_Shop::NativePreConstruct()

@@ -18,7 +18,6 @@ UCardEffect_AddRandomCardsToPile::UCardEffect_AddRandomCardsToPile()
 
 	// ...
 	bTargeted = false;
-	
 }
 
 
@@ -37,8 +36,7 @@ bool UCardEffect_AddRandomCardsToPile::ResolveCardEffect(AActor* TargetActor)
 
 	// CardPlayer 인스턴스 가져오기
 	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
-	if (!CardPlayer)
-		return false;
+	if (!CardPlayer) return false;
 
 	// 랜덤 카드를 생성하여 Pile에 추가
 	return AddRandomCardsToPile(CardPlayer, TargetPileClass);
@@ -48,7 +46,6 @@ TSubclassOf<UPileComponent> UCardEffect_AddRandomCardsToPile::GetTargetPileClass
 {
 	return InTargetComponent->IsChildOf(UPileComponent::StaticClass()) ? InTargetComponent : UPileHandComponent::StaticClass();
 }
-
 
 bool UCardEffect_AddRandomCardsToPile::AddRandomCardsToPile(ACardPlayer* CardPlayer, TSubclassOf<UPileComponent> TargetPileClass)
 {
@@ -60,8 +57,7 @@ bool UCardEffect_AddRandomCardsToPile::AddRandomCardsToPile(ACardPlayer* CardPla
 	for (const FCard& RandomCard : RandomCards)
 	{
 		ACardBase* NewCard = SpawnNewCard(RandomCard);
-		if (!NewCard)
-			continue;
+		if (!NewCard) continue;
 
 		LocalCards.Add(NewCard);
 
@@ -90,8 +86,7 @@ ACardBase* UCardEffect_AddRandomCardsToPile::SpawnNewCard(const FCard& RandomCar
 		SpawnTransform,
 		ParentCard->GetOwner(),
 		nullptr,
-		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
-	);
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
 	if (NewCard)
 	{

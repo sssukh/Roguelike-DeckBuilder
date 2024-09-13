@@ -1,13 +1,14 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Core/CosEnumStruct.h"
 #include "UObject/Interface.h"
 #include "Interface_CardWidget.generated.h"
 
 class ACardBase;
+
 // This class does not need to be modified.
 UINTERFACE()
 class UInterface_CardWidget : public UInterface
@@ -34,7 +35,7 @@ public:
 	void ToggleCardGlow(bool bEnable, FColor Color);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
-	void SetCardState(ECardState CardState);
+	void SetCardState(ECardState InCardState);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
 	void AnimateAutoPlay();

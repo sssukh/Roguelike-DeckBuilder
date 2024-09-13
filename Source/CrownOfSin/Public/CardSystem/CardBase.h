@@ -123,6 +123,7 @@ public:
 	/*카드 사용 시, 타겟 입력이 필요한 경우 유효한 타겟들을 받아 저장하고, 이후 카드의 다음 타겟을 처리하는 함수.*/
 	UFUNCTION(BlueprintCallable, Category = "Card|Usage")
 	void ProceedOnInputTargetsReceived(TArray<AActor*> Targets);
+	
 
 
 	/*========================================================================================
@@ -163,11 +164,21 @@ public:
 
 	/*카드 데이터 테이블 행 핸들을 반환합니다.*/
 	UFUNCTION(BlueprintPure, Category = "Card|Data")
-	FDataTableRowHandle GetCardDataRowHandle(ECardDataType Type);
+	FDataTableRowHandle GetCardDataRowHandle(ECardDataType InCardType);
 
 	/*카드 이름을 반환합니다.*/
 	UFUNCTION(BlueprintPure, Category = "Card|Data")
-	FText GetCardName(ECardDataType Type);
+	FText GetCardName(ECardDataType InCardType);
+
+	UFUNCTION(BlueprintPure, Category = "Card|Data")
+	FSlateColor GetCardFrameTint(ECardDataType InCardType);
+
+	UFUNCTION(BlueprintPure, Category = "Card|Data")
+	UTexture2D* GetCardFrame(ECardDataType InCardType);
+	
+	UFUNCTION(BlueprintPure, Category = "Card|Data")
+	UTexture2D* GetCardPortrait(ECardDataType InCardType);
+	
 
 	/*카드의 게임플레이 태그 컨테이너를 반환합니다.*/
 	UFUNCTION(BlueprintPure, Category = "Card|Data")
@@ -175,15 +186,15 @@ public:
 
 	/*카드의 시작 상태 데이터를 반환합니다.*/
 	UFUNCTION(BlueprintPure, Category = "Card|Data")
-	TArray<FStatusData> GetCardStartingStatuses(ECardDataType Type);
+	TArray<FStatusData> GetCardStartingStatuses(ECardDataType InCardType);
 
 	/*카드의 PostUse 이벤트 태그를 반환합니다.*/
 	UFUNCTION(BlueprintCallable, Category = "Card|Data")
-	FGameplayTag GetPostUseEvent(ECardDataType Type);
+	FGameplayTag GetPostUseEvent(ECardDataType InCardType);
 
 	/*카드의 효과 리스트를 반환합니다.*/
 	UFUNCTION(BlueprintCallable, Category = "Card|Data")
-	TArray<FCardEffect> GetCardEffects(ECardDataType Type);
+	TArray<FCardEffect> GetCardEffects(ECardDataType InCardType);
 
 	/*카드의 반복 횟수를 반환합니다.*/
 	UFUNCTION(BlueprintPure, Category = "Card|Data")
