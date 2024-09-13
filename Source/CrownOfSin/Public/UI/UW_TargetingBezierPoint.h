@@ -29,6 +29,7 @@ public:
 	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Targeting Bezier Point|Desinger", meta=(BindWidget))
 	UImage* PointImage;
 

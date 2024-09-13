@@ -8,6 +8,7 @@
 #include "MinionBase.generated.h"
 
 class AMinionTrack;
+class UGameplayTagComponent;
 
 UCLASS()
 class CROWNOFSIN_API AMinionBase : public AActor
@@ -22,14 +23,22 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+
+
+
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION(BlueprintPure,Category="Minion")
+	FGameplayTagContainer GetGameplayTags();
 
 
 	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Minion|Component")
+	UGameplayTagComponent* GameplayTagComponent;
+	
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion", meta=(ExposeOnSpawn="true"))
 	FMinion MinionData;
 

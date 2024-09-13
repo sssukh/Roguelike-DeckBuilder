@@ -153,6 +153,8 @@ public:
 	virtual bool GetDeckFromInstance_Implementation(TArray<FCard>& OutDeck) override;
 
 	virtual FGameplayTagContainer GetAllowedCardRewardsFromInstance_Implementation() override;
+
+	virtual bool CheckIfInstanceHasArtifact_Implementation(TSubclassOf<UStatus_Artifact> InArtifact) override;
 	
 	/*========================================================================================
 	*	Field Members

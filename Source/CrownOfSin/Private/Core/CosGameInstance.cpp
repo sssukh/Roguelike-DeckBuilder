@@ -502,6 +502,19 @@ FGameplayTagContainer UCosGameInstance::GetAllowedCardRewardsFromInstance_Implem
 	return AllowedCardRewardTags;
 }
 
+bool UCosGameInstance::CheckIfInstanceHasArtifact_Implementation(TSubclassOf<UStatus_Artifact> InArtifact)
+{
+	for (const FStatusData& Artifact : Artifacts)
+	{
+		if (Artifact.StatusClass == InArtifact->StaticClass())
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 TArray<FStatusData> UCosGameInstance::GetArtifactsFromInstance_Implementation()
 {
 	// TODO

@@ -8,6 +8,7 @@
 #include "UObject/Interface.h"
 #include "Interface_CardGameInstance.generated.h"
 
+class UStatus_Artifact;
 class ACardBase;
 
 // This class does not need to be modified.
@@ -97,4 +98,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	FGameplayTagContainer GetAllowedCardRewardsFromInstance();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
+	bool CheckIfInstanceHasArtifact(TSubclassOf<UStatus_Artifact> InArtifact);
 };

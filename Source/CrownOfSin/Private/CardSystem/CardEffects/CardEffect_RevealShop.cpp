@@ -26,8 +26,7 @@ void UCardEffect_RevealShop::BeginPlay()
 bool UCardEffect_RevealShop::ResolveCardEffect(AActor* TargetActor)
 {
 	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
-	if (!CardPlayer)
-		return false;
+	if (!CardPlayer) return false;
 
 	CardPlayer->PlayerUI->WBP_Shop->UpdateShopCards();
 	CardPlayer->PlayerUI->WBP_Shop->SetVisibility(ESlateVisibility::Visible);

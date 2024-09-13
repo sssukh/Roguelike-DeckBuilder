@@ -3,24 +3,26 @@
 
 #include "Core/MinionBase.h"
 
+#include "Core/GameplayTagComponent.h"
+
 
 // Sets default values
 AMinionBase::AMinionBase()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = false;
+
+	GameplayTagComponent = CreateDefaultSubobject<UGameplayTagComponent>(TEXT("GameplayTagComponent"));
 }
 
 // Called when the game starts or when spawned
 void AMinionBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
-// Called every frame
-void AMinionBase::Tick(float DeltaTime)
+FGameplayTagContainer AMinionBase::GetGameplayTags()
 {
-	Super::Tick(DeltaTime);
+	return GameplayTagComponent->GameplayTags;
 }
-
