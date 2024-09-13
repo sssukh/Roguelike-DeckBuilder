@@ -22,7 +22,6 @@ UUW_TargetingBezier::UUW_TargetingBezier(const FObjectInitializer& ObjectInitial
 	{
 		WBP_TargetingBezierPointClass = WBP_TargetingBezierPoint;
 	}
-	
 	if (UTexture2D* T_TargetArrow = FAssetReferenceUtility::LoadAssetFromDataTable<UTexture2D>(AssetRefPath::TexturesPath, FName("T_TargetArrow")))
 	{
 		BezierPointTexture = T_TargetArrow;

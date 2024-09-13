@@ -9,6 +9,17 @@
 #include "AssetTableRef.generated.h"
 
 
+// 예를 들어, 어떤 자산을 로드하려면 다음과 같이 합니다.
+/*
+UTexture2D* MyTexture = FAssetReferenceUtility::LoadAssetFromDataTable(
+	AssetRefPath::TexturesPath, FName("MyTextureRowName"));
+
+// 클래스를 찾으려면 다음과 같이 합니다.
+TSubclassOf<AActor> MyActorClass = FAssetReferenceUtility::FindClassFromDataTable<AActor>(
+	AssetRefPath::BluePrintPath, FName("MyActorRowName"));
+*/
+
+
 /**
  * Asset Paths Constants
  */
@@ -20,11 +31,11 @@ namespace AssetRefPath
 	const FString TexturesPath = TEXT("DataTable'/Game/CrownOfSin/AssetRef/DT_Textures.DT_Textures'");
 	const FString DataTablePath = TEXT("DataTable'/Game/CrownOfSin/AssetRef/DT_DataTable.DT_DataTable'");
 
-
+	
 	// const FString WidgetPath = TEXT("DataTable'/Game/Game_/AssetRef/AssetRef_Widget.AssetRef_Widget'");
 	// const FString SoundPath = TEXT("DataTable'/Game/Game_/AssetRef/AssetRef_Sounds.AssetRef_Sounds'");
-
 	// const FString MaterialPath = TEXT("DataTable'/Game/Game_/AssetRef/DT_Materials.DT_Materials'");
+	
 }
 
 USTRUCT(BlueprintType)
@@ -96,21 +107,38 @@ private:
 	static bool TryGetAssetPathFromDataTable(const FString& DataTablePath, const FName& RowName, FString& OutAssetPath)
 	{
 		const UDataTable* DataTable = LoadObject<UDataTable>(nullptr, *DataTablePath);
-		if (!DataTable)
+		if (!DataTable || DataTable->GetRowStruct() == nullptr)  // 로드 상태와 구조체 유효성 확인
 		{
-			COS_LOG_ERROR(TEXT("어설션 실패: DataTable '%s'을(를) 로드하지 못했습니다."), *DataTablePath);
+			COS_LOG_ERROR(TEXT("DataTable '%s'을(를) 로드하지 못했거나 유효하지 않습니다."), *DataTablePath);
 			return false;
 		}
 
 		const FAssetReferenceTableRow* Row = DataTable->FindRow<FAssetReferenceTableRow>(RowName, TEXT("LookupAssetPath"));
 		if (!Row)
 		{
-			COS_LOG_ERROR(TEXT("어설션 실패: DataTable '%s'에서 '%s' 행을 찾지 못했습니다."), *DataTablePath, *RowName.ToString());
+			COS_LOG_ERROR(TEXT("DataTable '%s'에서 '%s' 행을 찾지 못했습니다."), *DataTablePath, *RowName.ToString());
 			return false;
 		}
 
 		OutAssetPath = Row->AssetReference.ToString();
 		return true;
+		
+		// const UDataTable* DataTable = LoadObject<UDataTable>(nullptr, *DataTablePath);
+		// if (!DataTable)
+		// {
+		// 	COS_LOG_ERROR(TEXT("DataTable '%s'을(를) 로드하지 못했습니다."), *DataTablePath);
+		// 	return false;
+		// }
+		//
+		// const FAssetReferenceTableRow* Row = DataTable->FindRow<FAssetReferenceTableRow>(RowName, TEXT("LookupAssetPath"));
+		// if (!Row)
+		// {
+		// 	COS_LOG_ERROR(TEXT("DataTable '%s'에서 '%s' 행을 찾지 못했습니다."), *DataTablePath, *RowName.ToString());
+		// 	return false;
+		// }
+		//
+		// OutAssetPath = Row->AssetReference.ToString();
+		// return true;
 	}
 
 	// 지정된 자산 경로에서 T 유형의 자산을 로드합니다.
@@ -135,18 +163,9 @@ private:
 			COS_LOG_ERROR(TEXT("'%s' 경로에서 '%s' 유형의 클래스를 찾지 못했습니다."), *AssetPath, *T::StaticClass()->GetName());
 			return nullptr;
 		}
-
+		
 		return ClassFinder.Class;
 	}
 };
 
 
-// 예를 들어, 어떤 자산을 로드하려면 다음과 같이 합니다.
-/*
-UTexture2D* MyTexture = FAssetReferenceUtility::LoadAssetFromDataTable(
-	AssetRefPath::TexturesPath, FName("MyTextureRowName"));
-
-// 클래스를 찾으려면 다음과 같이 합니다.
-TSubclassOf<AActor> MyActorClass = FAssetReferenceUtility::FindClassFromDataTable<AActor>(
-	AssetRefPath::BluePrintPath, FName("MyActorRowName"));
-*/

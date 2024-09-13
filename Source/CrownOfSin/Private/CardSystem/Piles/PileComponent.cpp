@@ -203,9 +203,9 @@ bool UPileComponent::SpawnAndAddNewCard_Implementation(const FDataTableRowHandle
 		// 카드를 지연 생성합니다.
 		if (ACardBase* NewCard = GetWorld()->SpawnActorDeferred<ACardBase>(
 			ACardBase::StaticClass(), // 생성할 카드의 클래스입니다.
-			SpawnTransform,           // 생성할 위치와 회전 정보입니다.
-			nullptr,                  // 소유자는 없으므로 nullptr 설정
-			nullptr,                  // 인스턴스의 템플릿은 nullptr로 설정
+			SpawnTransform, // 생성할 위치와 회전 정보입니다.
+			nullptr, // 소유자는 없으므로 nullptr 설정
+			nullptr, // 인스턴스의 템플릿은 nullptr로 설정
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn)) // 충돌 처리 방식 설정
 		{
 			// 데이터 테이블에서 해당 행의 카드 데이터를 찾습니다.

@@ -8,6 +8,7 @@
 #include "Components/TextBlock.h"
 #include "Components/UniformGridPanel.h"
 #include "UI/UW_CardListCard.h"
+#include "Utilities/CosLog.h"
 
 UUW_CardSelectorList::UUW_CardSelectorList(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -36,17 +37,19 @@ void UUW_CardSelectorList::UpdateCardList(TArray<ACardBase*>& Cards, const FText
 
 	CardPanel->ClearChildren();
 
-	for (int index=0; index<Cards.Num(); index++)
-	{
-		UUW_CardListCard* CardList = Cast<UUW_CardListCard>(this);
-		CardList->CardActor = Cards[index];
-
-		CardPanel->AddChildToUniformGrid(CardList,index/RowLength,index%RowLength);
-
-		CardList->OnCardClicked.AddDynamic(this,&UUW_CardSelectorList::ReturnCardWhenClicked);
-
-		SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	}
+	//수정해야합니다.
+	COS_LOG_SCREEN_ERROR(TEXT(" UUW_CardSelectorList::UpdateCardList ()  함수를 구현해야합니다."));
+	// for (int index=0; index<Cards.Num(); index++)
+	// {
+	// 	UUW_CardListCard* CardList = Cast<UUW_CardListCard>(this);
+	// 	CardList->CardActor = Cards[index];
+	//
+	// 	CardPanel->AddChildToUniformGrid(CardList,index/RowLength,index%RowLength);
+	//
+	// 	CardList->OnCardClicked.AddDynamic(this,&UUW_CardSelectorList::ReturnCardWhenClicked);
+	//
+	// 	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	// }
 }
 
 void UUW_CardSelectorList::ReturnCardWhenClicked(UUW_CardListCard* CardListCard, ACardBase* CardActor)
