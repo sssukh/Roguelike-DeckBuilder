@@ -54,7 +54,7 @@ void UUW_Shop::UpdateShopCards()
 
 	// 상점 카드 리스트를 가져옴
 	const TArray<ACardBase*>& ShopCards = CardPlayer->PileShopComponent->Cards;
-
+	
 	// 상점 카드 생성 및 그리드에 배치
 	for (int32 CardIndex = 0; CardIndex < ShopCards.Num(); ++CardIndex)
 	{

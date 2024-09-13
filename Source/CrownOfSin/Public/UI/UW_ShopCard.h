@@ -24,12 +24,13 @@ public:
 	virtual void NativeConstruct() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Shop Card")
-	void AttemptPurchase(UUW_CardListCard* CardListCard, ACardBase* CardActor);
+	void AttemptPurchase(UUW_CardListCard* CardListCard, ACardBase* InCardActor);
 
 	UFUNCTION(BlueprintCallable, Category = "Shop Card")
 	void UpdateFromCoinAmount(int32 CoinCount);
 
-	virtual void UpdateCardWidget_Implementation(ACardBase* CardActor) override;
+	virtual void UpdateCardWidget_Implementation(ACardBase* InCardActor) override;
+	
 	//Member Variables
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop Card", meta = (BindWidget))

@@ -38,7 +38,7 @@ public:
 	// 음수가 들어오면 status에서 그만큼 빼주고 만약 0에 도달하면 status를 제거한다.
 	// 다만 bCanBeZero가 true이면 status를 제거하지 않는다.
 	UFUNCTION(BlueprintCallable, Category="Status Component Event")
-	int32 AddStatusValue(int32 InAmount, bool bShowSplashNumber, bool bShowSplashIcon, bool bRefreshAppearance, UObject* InPayload);
+	virtual int32 AddStatusValue(int32 InAmount, bool bShowSplashNumber, bool bShowSplashIcon, bool bRefreshAppearance, UObject* InPayload);
 
 	UFUNCTION(BlueprintCallable, Category="Status Component Event")
 	int32 SubtractStatusValue(int32 InAmount, bool bShowSplashNumber, bool bShowSplashIcon, UObject* Payload);
