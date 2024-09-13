@@ -50,4 +50,45 @@ void UUW_CardRewardScreen::UpdateRewardScreen(TArray<ACardBase*>& Cards, const F
 
 void UUW_CardRewardScreen::ReturnReward(UUW_CardListCard* CardListCard, ACardBase* CardActor)
 {
+	for (UWidget* Widget : RewardBox->GetAllChildren())
+	{
+		UUW_CardListCard* CardListCardCasted = Cast<UUW_CardListCard>(Widget);
+
+		CardListCardCasted->SetVisibility(ESlateVisibility::HitTestInvisible);
+
+		CardListCardCasted->bBlockHoverAnim = true;
+
+		if(CardListCard!=CardListCardCasted)
+		{
+			CardListCard->PlayAnimation(CardListCard->Select);
+		}
+		else
+		{
+			CardListCard->PlayAnimation(CardListCard->FadeOut);
+		}
+	}
+
+	FTimerHandle DelayHandle;
+	// Delay 0.4f
+
+	GetWorld()->GetTimerManager().SetTimer(DelayHandle,FTimerDelegate::CreateLambda([&]()
+	{
+		GetWorld()->GetTimerManager().ClearTimer(DelayHandle);
+	}), 4.0f,false);
+	
+
+	PlayAnimationReverse(FadeIn);
+
+	// Delay 0.1f
+	GetWorld()->GetTimerManager().SetTimer(DelayHandle,FTimerDelegate::CreateLambda([&]()
+		{
+			GetWorld()->GetTimerManager().ClearTimer(DelayHandle);
+		}), 1.0f,false);
+	
+	
+	
+
+	SetVisibility(ESlateVisibility::Collapsed);
+
+	OnReturnSelectedCardInRewardScreen.Broadcast(false,CardActor);
 }

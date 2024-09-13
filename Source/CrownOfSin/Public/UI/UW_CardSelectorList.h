@@ -17,25 +17,23 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReturnSelectedCardInSelectorList,
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType,Blueprintable)
 class CROWNOFSIN_API UUW_CardSelectorList : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	// OnClicked(VisibilityButton) 노드는 남겨둘 것.
 	
 	UUW_CardSelectorList(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativePreConstruct() override;
 	
+	UFUNCTION(BlueprintCallable, Category = "CardSelector")
 	void UpdateCardList(TArray<ACardBase*>& Cards, const FText& Title);
 
 	UFUNCTION(BlueprintCallable, Category = "CardSelector")
 	void ReturnCardWhenClicked(UUW_CardListCard* CardListCard, ACardBase* CardActor);
 
-	// 애니메이션이랑 visibility 건드리는 부분밖에 없다.
-	// UFUNCTION(BlueprintImplementableEvent, Category = "CardSelector")
-	// void VisibilityButtonClicked();
+	
 	
 	// Member Variables
 public:
@@ -54,15 +52,16 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector", meta = (BindWidget))
 	TObjectPtr<UTextBlock> VisibilityButtonText;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector", meta = (BindWidget))
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector")
 	int32 RowLength = 4;
 	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector", meta = (BindWidget))
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector")
 	bool bDebugMode;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector | Config")
 	TSubclassOf<UUW_CardListCard> CardListClass;
 	// Delegate
 public:
+	UPROPERTY(BlueprintAssignable,BlueprintCallable, Category = "CardSelector")
 	FOnReturnSelectedCardInSelectorList OnReturnSelectedCardInSelectorList;
 };

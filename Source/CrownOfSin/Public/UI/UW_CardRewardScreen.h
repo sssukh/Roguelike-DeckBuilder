@@ -16,18 +16,23 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnReturnSelectedCardInRewardScreen
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable,BlueprintType)
 class CROWNOFSIN_API UUW_CardRewardScreen : public UUserWidget
 {
 	GENERATED_BODY()
 public:
 	UUW_CardRewardScreen(const FObjectInitializer& ObjectInitializer);
 
+	// OnClicked(SkipButton) 블루프린트 구현 필요
+	
 	UFUNCTION(BlueprintCallable, Category = "Card Reward Scene")
 	void UpdateRewardScreen(TArray<ACardBase*>& Cards, const FText& InTitle, bool bAllowSkip);
 
 	UFUNCTION(BlueprintCallable, Category = "Card Reward Scene")
 	void ReturnReward(UUW_CardListCard* CardListCard, ACardBase* CardActor);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Card Reward Scene")
+	void ShowCardOptions();
 	// Member Variables
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene", meta = (BindWidget))
@@ -54,8 +59,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene", meta = (BindWidget))
 	int32 RewardOptionCount = 3;
 
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene", Transient, meta = (BindWidgetAnim))
+	TObjectPtr<UWidgetAnimation> FadeIn;
 public:
 	// Delegate
+	UPROPERTY(BlueprintAssignable,BlueprintCallable, Category = "CardRewardScene", meta = (BindWidget))
 	FOnReturnSelectedCardInRewardScreen OnReturnSelectedCardInRewardScreen;
 };
