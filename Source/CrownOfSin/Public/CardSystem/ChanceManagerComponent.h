@@ -18,6 +18,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	TArray<FCard> GenerateAllCardsArray();
+
+	TArray<FStatusData> GenerateAllArtifactsArray();
+
 public:
 	/**
 	 * @brief 가중치에 따라 무작위로 태그를 선택하여 반환합니다.
@@ -242,6 +246,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category="Chance Manager")
 	TMap<FGameplayTag, float> DefaultArtifactRarityWeights;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Chance Manager", meta=(ExposeOnSpawn="true", RequiredAssetDataTags = "RowStructure=/Script/CrownOfSin.StatusData"))
+	TArray<UDataTable*> ArtifactTables;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Chance Manager|Config|Setup")

@@ -155,6 +155,8 @@ public:
 	virtual FGameplayTagContainer GetAllowedCardRewardsFromInstance_Implementation() override;
 
 	virtual bool CheckIfInstanceHasArtifact_Implementation(TSubclassOf<UStatus_Artifact> InArtifact) override;
+
+	virtual TArray<UDataTable*> GetRewardTables_Implementation() override;
 	
 	/*========================================================================================
 	*	Field Members

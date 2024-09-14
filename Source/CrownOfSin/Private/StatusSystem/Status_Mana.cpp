@@ -3,6 +3,10 @@
 
 #include "StatusSystem/Status_Mana.h"
 
+#include "Libraries/FunctionLibrary_Event.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
+#include "Utilities/CosGameplayTags.h"
+
 
 // Sets default values for this component's properties
 UStatus_Mana::UStatus_Mana()
@@ -14,22 +18,14 @@ UStatus_Mana::UStatus_Mana()
 	// ...
 }
 
-
-// Called when the game starts
-void UStatus_Mana::BeginPlay()
+int32 UStatus_Mana::AddStatusValue(int32 InAmount, bool bShowSplashNumber, bool bShowSplashIcon,
+	bool bRefreshAppearance, UObject* InPayload)
 {
-	Super::BeginPlay();
-
-	// ...
+	UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(CosGameTags::Event_Action_ResourceChange,this);
 	
+	return Super::AddStatusValue(InAmount, bShowSplashNumber, bShowSplashIcon, bRefreshAppearance, InPayload);
 }
 
 
-// Called every frame
-void UStatus_Mana::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
-}
 
