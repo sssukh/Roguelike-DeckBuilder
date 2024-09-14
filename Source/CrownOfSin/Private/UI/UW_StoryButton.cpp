@@ -12,19 +12,17 @@ void UUW_StoryButton::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	StoryButton->OnClicked.AddDynamic(this, &UUW_StoryButton::OnClicked_StoryButton);
+
 	if (!WBPToolTipClass)
 	{
 		COS_SCREEN(TEXT("WBPToolTipClass 클래스를 설정해주세요!!"));
 		return;
 	}
 
-	if (EncounterCard.CardEffects.IsEmpty())
-	{
-		return;
-	}
-
+	if (EncounterCard.CardEffects.IsEmpty()) return;
+	
 	FTransform SpawnTransform = FTransform::Identity;
-
 	if (ACardBase* NewCard = GetWorld()->SpawnActorDeferred<ACardBase>(ACardBase::StaticClass(), SpawnTransform,
 	                                                                   nullptr, nullptr,
 	                                                                   ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
@@ -42,8 +40,6 @@ void UUW_StoryButton::NativeConstruct()
 
 		RefreshPlayability();
 	}
-
-	StoryButton->OnClicked.AddDynamic(this, &UUW_StoryButton::OnClicked_StoryButton);
 }
 
 void UUW_StoryButton::OnClicked_StoryButton()

@@ -351,13 +351,17 @@ struct FCardEffect : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
 	TSubclassOf<AAction_Effect> EffectAction;
 
-	// 사용할 파티클 시스템
+	// 히어로 애니메이션을 나타내는 태그
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
-	UNiagaraSystem* Particle;
+	FGameplayTag HeroAnim;
 
 	// 관련된 게임플레이 태그
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
 	FGameplayTagContainer GameplayTags;
+
+	// 사용할 파티클 시스템
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
+	UNiagaraSystem* Particle;
 
 	// 타겟 컴포넌트를 나타내는 클래스 타입
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
@@ -370,10 +374,6 @@ struct FCardEffect : public FTableRowBase
 	// 사용된 데이터 테이블 행 핸들
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
 	FDataTableRowHandle UsedData;
-
-	// 히어로 애니메이션을 나타내는 태그
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
-	FGameplayTag HeroAnim;
 
 	// 고유 식별자
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
@@ -394,13 +394,13 @@ struct FCardEffect : public FTableRowBase
 
 	// 매개 변수가 있는 생성자
 	FCardEffect(
-		TSubclassOf<UCardEffectComponent> InEffectClass,
+		const TSubclassOf<UCardEffectComponent>& InEffectClass,
 		int32 InEffectValue,
-		TSubclassOf<AAction_Effect> InEffectAction,
+		const TSubclassOf<AAction_Effect>& InEffectAction,
 		UNiagaraSystem* InParticle,
 		const FGameplayTagContainer& InGameplayTags,
-		TSubclassOf<UActorComponent> InTargetComponent,
-		TSubclassOf<UTargetingComponent> InTargeting,
+		const TSubclassOf<UActorComponent>& InTargetComponent,
+		const TSubclassOf<UTargetingComponent>& InTargeting,
 		const FDataTableRowHandle& InUsedData,
 		const FGameplayTag& InHeroAnim,
 		const FString& InIdentifier
@@ -408,12 +408,12 @@ struct FCardEffect : public FTableRowBase
 		: EffectClass(InEffectClass)
 		  , EffectValue(InEffectValue)
 		  , EffectAction(InEffectAction)
-		  , Particle(InParticle)
+		  , HeroAnim(InHeroAnim)
 		  , GameplayTags(InGameplayTags)
+		  , Particle(InParticle)
 		  , TargetComponent(InTargetComponent)
 		  , Targeting(InTargeting)
 		  , UsedData(InUsedData)
-		  , HeroAnim(InHeroAnim)
 		  , Identifier(InIdentifier)
 	{
 		// 초기화와 동시에 멤버 변수들을 설정합니다.
@@ -498,6 +498,7 @@ USTRUCT(BlueprintType)
 struct FCard : public FTableRowBase
 {
 	GENERATED_BODY()
+	
 	// 카드 소유자 ID
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
 	FString OwnerID;
@@ -510,29 +511,21 @@ struct FCard : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
 	FText Description;
 
-	// 카드 초상화 이미지
+	// 카드가 타겟을 지정하는지 여부
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
-	UTexture2D* Portrait;
+	bool bTargeted;
+
+	// 카드 반복 횟수
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
+	int32 Repetitions;
 
 	// 카드 태그 (GameplayTags)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
 	FGameplayTagContainer CardTags;
 
 	// 카드의 툴팁 데이터
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card", meta = (RowType="/Script/CrownOfSin.ToolTip"))
 	TArray<FDataTableRowHandle> Tooltips;
-
-	// 카드 효과
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
-	TArray<FCardEffect> CardEffects;
-
-	// 카드가 타겟을 지정하는지 여부
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
-	bool bTargeted;
-
-	// 카드의 사용 규칙
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
-	TArray<FUseRule> UseRules;
 
 	// 카드 사용 후 발생하는 이벤트
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
@@ -542,13 +535,9 @@ struct FCard : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
 	FGameplayTag EndTurnEvent;
 
-	// 카드 시작 상태
+	// 카드 초상화 이미지
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
-	TArray<FStatusData> StartingStatuses;
-
-	// 카드 반복 횟수
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
-	int32 Repetitions;
+	UTexture2D* Portrait;
 
 	// 카드의 테두리 이미지
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
@@ -562,6 +551,18 @@ struct FCard : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
 	TSubclassOf<UUserWidget> CardVisualWidget;
 
+	// 카드 시작 상태
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
+	TArray<FStatusData> StartingStatuses;
+
+	// 카드 효과
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
+	TArray<FCardEffect> CardEffects;
+
+	// 카드의 사용 규칙
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
+	TArray<FUseRule> UseRules;
+
 	// 카드 데이터 테이블 행 핸들
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
 	FDataTableRowHandle DataRow;
@@ -571,13 +572,13 @@ struct FCard : public FTableRowBase
 		: OwnerID(TEXT(""))
 		  , CardName(FText::FromString(TEXT("")))
 		  , Description(FText::FromString(TEXT("")))
-		  , Portrait(nullptr)
 		  , bTargeted(false)
 		  , Repetitions(0)
+		  , Portrait(nullptr)
 		  , Frame(nullptr)
-		  , FrameTint(FSlateColor::UseForeground())
+		  , FrameTint(FLinearColor(1, 1, 1, 1))
 	{
-		// 추가적으로 초기화가 필요할 경우 여기에 작성
+		
 	}
 
 	// 복사 생성자
@@ -684,5 +685,5 @@ struct FRarityWeights : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Rarity Weights")
-	TMap<FGameplayTag,float> RarityWeights;
+	TMap<FGameplayTag, float> RarityWeights;
 };

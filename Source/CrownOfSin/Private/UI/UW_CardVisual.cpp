@@ -11,9 +11,11 @@
 #include "StatusSystem/Status_Mana.h"
 #include "Utilities/CosGameplayTags.h"
 
-UUW_CardVisual::UUW_CardVisual(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), GlowBorder(nullptr),
-                                                                              TypeBanner(nullptr), ManaCrystalFrame(nullptr), FrameImage(nullptr),
-                                                                              CardImage(nullptr), CardName(nullptr), CardActor(nullptr)
+UUW_CardVisual::UUW_CardVisual(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), ManaCrystalOverlay(nullptr), GlowBorder(nullptr),
+                                                                              TypeBanner(nullptr), RarityGem(nullptr), ManaCrystalFrame(nullptr), GemShadow(nullptr), FrameImage(nullptr),
+                                                                              CardImage(nullptr), CardName(nullptr), ManaCost(nullptr), TypeText(nullptr), RichDescription(nullptr),
+                                                                              DefaultRarityGemTexture(nullptr),
+                                                                              CardActor(nullptr)
 {
 	TypeNames.Add(CosGameTags::Effect_Attack, FText::FromString(FString(TEXT("Attack"))));
 	TypeNames.Add(CosGameTags::Effect_Skill, FText::FromString(FString(TEXT("Skill"))));
@@ -150,7 +152,7 @@ void UUW_CardVisual::UpdateCardWidget_Implementation(ACardBase* InCardActor)
 		TypeText->SetText(TypeNames[CardActor->CardType]);
 	}
 
-	if (RarityGems.Contains(CardActor->CardType))
+	if (RarityGems.Contains(CardActor->Rarity))
 	{
 		RarityGem->SetBrushFromTexture(RarityGems[CardActor->Rarity]);
 	}

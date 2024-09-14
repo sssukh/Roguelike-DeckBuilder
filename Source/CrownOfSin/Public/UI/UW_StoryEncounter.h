@@ -23,7 +23,7 @@ public:
 	UUW_StoryEncounter(const FObjectInitializer& ObjectInitializer);
 
 	UFUNCTION(BlueprintCallable)
-	void SetupStoryEncounter(const FText& InDescription, UTexture2D* Image, TArray<FCard> EncounterOptions, bool bIsFirstScreen);
+	void SetupStoryEncounter(const FText& InDescription, UTexture2D* Image, const TArray<FCard>& EncounterOptions, bool bIsFirstScreen);
 
 	UFUNCTION(BlueprintCallable)
 	void BindRemovalToEmptyButton(UUW_StoryButton* StoryButton);

@@ -14,8 +14,7 @@ UUW_StoryEncounter::UUW_StoryEncounter(const FObjectInitializer& ObjectInitializ
 {
 }
 
-void UUW_StoryEncounter::SetupStoryEncounter(const FText& InDescription, UTexture2D* Image, TArray<FCard> EncounterOptions,
-                                             bool bIsFirstScreen)
+void UUW_StoryEncounter::SetupStoryEncounter(const FText& InDescription, UTexture2D* Image, const TArray<FCard>& EncounterOptions, bool bIsFirstScreen)
 {
 	Description->SetText(InDescription);
 
