@@ -515,6 +515,11 @@ bool UCosGameInstance::CheckIfInstanceHasArtifact_Implementation(TSubclassOf<USt
 	return false;
 }
 
+TArray<UDataTable*> UCosGameInstance::GetRewardTables_Implementation()
+{
+	return RewardTables;
+}
+
 TArray<FStatusData> UCosGameInstance::GetArtifactsFromInstance_Implementation()
 {
 	// TODO

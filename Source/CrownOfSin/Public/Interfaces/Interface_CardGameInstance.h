@@ -101,4 +101,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	bool CheckIfInstanceHasArtifact(TSubclassOf<UStatus_Artifact> InArtifact);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
+	TArray<UDataTable*> GetRewardTables();
 };

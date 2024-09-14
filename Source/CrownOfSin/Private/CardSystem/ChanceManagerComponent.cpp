@@ -26,6 +26,12 @@ UChanceManagerComponent::UChanceManagerComponent()
 		CardRewardDataRowHandle.RowName = FName(TEXT("ConsolationPrize"));
 	}
 
+	if (UDataTable* DT_Artifacts = FAssetReferenceUtility::LoadAssetFromDataTable<UDataTable>(AssetRefPath::DataTablePath, FName("DT_Artifacts")))
+	{
+		ArtifactTables.Add(DT_Artifacts);
+	}
+
+
 	DefaultArtifactRarityWeights.Add(CosGameTags::Rarity_Common, 1.0f);
 	DefaultArtifactRarityWeights.Add(CosGameTags::Rarity_Rare, 0.0f);
 	DefaultArtifactRarityWeights.Add(CosGameTags::Rarity_Epic, 0.0f);
@@ -37,6 +43,50 @@ void UChanceManagerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	GenerateAllCardsArray();
+
+	GenerateAllArtifactsArray();
+}
+
+TArray<FCard> UChanceManagerComponent::GenerateAllCardsArray()
+{
+	AllCards.Empty();
+	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetCardGameInstance(this);
+	if (!CardGameInstance) return AllCards;
+
+	const TArray<UDataTable*>& RewardTables = IInterface_CardGameInstance::Execute_GetRewardTables(CardGameInstance);
+	for (UDataTable* RewardTable : RewardTables)
+	{
+		const TArray<FName>& RewardNames = RewardTable->GetRowNames();
+		for (const FName& RewardName : RewardNames)
+		{
+			if (FCard* FoundRewardCard = RewardTable->FindRow<FCard>(RewardName,TEXT("")))
+			{
+				FCard NewCard = *FoundRewardCard;
+				NewCard.DataRow.DataTable = RewardTable;
+				NewCard.DataRow.RowName = RewardName;
+				AllCards.Add(NewCard);
+			}
+		}
+	}
+	return AllCards;
+}
+
+TArray<FStatusData> UChanceManagerComponent::GenerateAllArtifactsArray()
+{
+	for (UDataTable* ArtifactTable : ArtifactTables)
+	{
+		const TArray<FName>& ArtifactRowNames = ArtifactTable->GetRowNames();
+		for (const FName& ArtifactRowName : ArtifactRowNames)
+		{
+			if (FStatusData* FoundArtifact = ArtifactTable->FindRow<FStatusData>(ArtifactRowName,TEXT("")))
+			{
+				AllArtifacts.Add(*FoundArtifact);
+			}
+		}
+	}
+
+	return AllArtifacts;
 }
 
 TArray<FGameplayTag> UChanceManagerComponent::GetRandomTagsByWeights(const TMap<FGameplayTag, float>& WeightedTags, int InAmount)
