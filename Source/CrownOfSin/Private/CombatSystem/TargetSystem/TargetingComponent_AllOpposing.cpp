@@ -17,9 +17,9 @@ UTargetingComponent_AllOpposing::UTargetingComponent_AllOpposing()
 
 
 bool UTargetingComponent_AllOpposing::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
-                                                       ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
+                                                       ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
-	ValidTargets.Reset();
+	OutValidTargets.Reset();
 	
 	TArray<AMinionBase*> Minions;
 	
@@ -27,7 +27,7 @@ bool UTargetingComponent_AllOpposing::FindValidTargets(TArray<AActor*>& Specifie
 	{
 		for (AActor* Minion : Minions)
 		{
-			ValidTargets.Add(Minion);
+			OutValidTargets.Add(Minion);
 		}
 		return true;
 	}

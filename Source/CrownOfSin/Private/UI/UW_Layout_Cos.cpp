@@ -75,7 +75,7 @@ ESlateVisibility UUW_Layout_Cos::GetCurrencyBoxVisibility()
 void UUW_Layout_Cos::InitializeStoryEncounter_Implementation(FDataTableRowHandle EncounterData, bool bIsFirstScreen)
 {
 	StoryEncounterBox->ClearChildren();
-	
+
 	UGameInstance* gameInstance = UGameplayStatics::GetGameInstance(this);
 	if (!gameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
 	{
@@ -83,7 +83,6 @@ void UUW_Layout_Cos::InitializeStoryEncounter_Implementation(FDataTableRowHandle
 		return;
 	}
 
-	// 받아온 EcounterData의 DataTable이 유효하지 않으면 저장하고 끝
 	if (!IsValid(EncounterData.DataTable))
 	{
 		IInterface_CardGameInstance::Execute_AttemptSaveGame(gameInstance,TEXT(""), true);
@@ -91,27 +90,20 @@ void UUW_Layout_Cos::InitializeStoryEncounter_Implementation(FDataTableRowHandle
 	}
 
 	FStoryEncounter* StoryEncounter = EncounterData.DataTable->FindRow<FStoryEncounter>(EncounterData.RowName,TEXT("FStoryEncounter in UW_Layout_Cos"));
-
-	// 받아온 EncounterData로 데이터를 받아올 수 없으면 저장하고 끝
 	if (!StoryEncounter)
 	{
 		IInterface_CardGameInstance::Execute_AttemptSaveGame(gameInstance,TEXT(""), true);
 		return;
 	}
 
-	// 받아온 EncounterData로 데이터를 정상적으로 받아오면 스토리 위젯생성
-	// 아마 WBP_StoryEncounter인듯하다.
-	UUserWidget* StoryWidget = CreateWidget<UUserWidget>(StoryEncounterBox, StoryEncounter->EncounterWidget);
-
-	// 받아온 정보로 만든 스토리 위젯을 스토리 인카운터 박스에 자식으로 추가
-	StoryEncounterBox->AddChild(StoryWidget);
+	UUserWidget* NewStoryEncounterWidget = CreateWidget<UUserWidget>(StoryEncounterBox, StoryEncounter->EncounterWidget);
+	StoryEncounterBox->AddChild(NewStoryEncounterWidget);
 
 	// 생성된 위젯의 Interface상속 확인
-	if (!StoryWidget->GetClass()->ImplementsInterface(UInterface_StoryEncounter::StaticClass()))
+	if (!NewStoryEncounterWidget->GetClass()->ImplementsInterface(UInterface_StoryEncounter::StaticClass()))
 	{
 		COS_SCREEN(TEXT("StoryWidget이 UInterface_StoryEncounter를 상속받지 않았습니다"));
 		return;
 	}
-
-	IInterface_StoryEncounter::Execute_InitializeStoryEncounter(StoryWidget, EncounterData, bIsFirstScreen);
+	Execute_InitializeStoryEncounter(NewStoryEncounterWidget, EncounterData, bIsFirstScreen);
 }

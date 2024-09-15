@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "TargetingComponent.h"
@@ -13,16 +11,15 @@ class UUW_CardSelectorList;
  *	손에 있는 카드들 중 지정된 타겟 컴포넌트 더미에서 지정된 GameplayTags가 있는 카드들을 대상으로 삼습니다.
  *	만약 태그가 지정되지 않으면 해당 더미의 모든 카드들을 대상으로 삼습니다.
  */
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=("COS|Card"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UTargetingComponent_SpecifiedCardsInPile : public UTargetingComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UTargetingComponent_SpecifiedCardsInPile();
-	
-	virtual bool FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets) override;
+
+	virtual bool FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets) override;
 
 	UFUNCTION(BlueprintCallable, Category="TargetingSystem SpecifiedCardsInPile")
 	void BindToCardConfirm(UUW_CardSelectorList* CardList);
@@ -31,6 +28,7 @@ public:
 	void ValidateAndTransferSelectedCard(ACardBase* Card);
 
 	// Member Variable
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="TargetingSystem SpecifiedCardsInPile")
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="TargetingSystem SpecifiedCardsInPile")
 	UUW_CardSelectorList* CardSelectorList;
 };

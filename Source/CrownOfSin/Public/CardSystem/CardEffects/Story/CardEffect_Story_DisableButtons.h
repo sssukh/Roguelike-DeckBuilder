@@ -12,11 +12,9 @@ class CROWNOFSIN_API UCardEffect_Story_DisableButtons : public UCardEffectCompon
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UCardEffect_Story_DisableButtons();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:

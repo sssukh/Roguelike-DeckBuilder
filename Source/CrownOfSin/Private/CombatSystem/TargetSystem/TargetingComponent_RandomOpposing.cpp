@@ -14,9 +14,9 @@ UTargetingComponent_RandomOpposing::UTargetingComponent_RandomOpposing()
 }
 
 bool UTargetingComponent_RandomOpposing::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
-                                                          const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
+                                                          const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
-	ValidTargets.Reset();
+	OutValidTargets.Reset();
 	
 	TArray<AMinionBase*> Minions;
 	if(!GetAllMinionsOnOpposingTrack(Card,Minions))
@@ -28,14 +28,14 @@ bool UTargetingComponent_RandomOpposing::FindValidTargets(TArray<AActor*>& Speci
 	{
 		for (AMinionBase* Minion : Minions)
 		{
-			ValidTargets.Add(Minion);
+			OutValidTargets.Add(Minion);
 		}
 	}
 	else
 	{
 		int32 index = 0;
 		UFunctionLibrary_ArrayUtils::GetRandomElementFromArray(Minions,index);
-		ValidTargets.Add(Minions[index]);
+		OutValidTargets.Add(Minions[index]);
 	}
 
 	return true;

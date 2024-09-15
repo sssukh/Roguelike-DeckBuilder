@@ -5,8 +5,10 @@
 
 UMapEvent_Multi::UMapEvent_Multi()
 {
-	UTexture2D* MapEventIcon = FAssetReferenceUtility::LoadAssetFromDataTable<UTexture2D>(AssetRefPath::TexturesPath, FName("T_RandomDice"));
-	CurrentMapEventStruct.Icon = MapEventIcon;
+	if(UTexture2D* MapEventIcon = FAssetReferenceUtility::LoadAssetFromDataTable<UTexture2D>(AssetRefPath::TexturesPath, FName("T_RandomDice")))
+	{
+		CurrentMapEventStruct.Icon = MapEventIcon;	
+	}
 }
 
 void UMapEvent_Multi::RunMapEvent(FDataTableRowHandle EventData)

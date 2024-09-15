@@ -26,7 +26,7 @@ public:
 	// Sets default values for this component's properties
 	UTargetingComponent_Discover();
 
-	virtual bool FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets) override;
+	virtual bool FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets) override;
 
 	UFUNCTION(BlueprintCallable, Category = "TargetingComponent Discover")
 	void BindToCardConfirm(UUW_CardRewardScreen* InCardRewardScreen);

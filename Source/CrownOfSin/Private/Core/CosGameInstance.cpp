@@ -216,11 +216,7 @@ bool UCosGameInstance::AttemptSaveGame_Implementation(const FString& InLevelName
 		}
 	}
 
-
-	if (!UKismetStringLibrary::NotEqual_StrStr(SaveId, FString(TEXT("Test"))))
-	{
-		return false;
-	}
+	if (!UKismetStringLibrary::NotEqual_StrStr(SaveId, FString(TEXT("Test")))) return false;
 
 	UCosSaveGame* SaveGame = GetSavedGameOrMakeIfInvalid(SaveId);
 
@@ -520,8 +516,12 @@ TArray<UDataTable*> UCosGameInstance::GetRewardTables_Implementation()
 	return RewardTables;
 }
 
+FEncounterData UCosGameInstance::GetCurrentEncounterFromInstance_Implementation()
+{
+	return CurrentEncounter;
+}
+
 TArray<FStatusData> UCosGameInstance::GetArtifactsFromInstance_Implementation()
 {
-	// TODO
 	return Artifacts;
 }

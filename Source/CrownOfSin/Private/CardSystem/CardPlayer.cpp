@@ -18,6 +18,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Libraries/FunctionLibrary_Event.h"
 #include "StatusSystem/StatusComponent.h"
+#include "StatusSystem/Status_Draw.h"
+#include "StatusSystem/Status_Initiative.h"
+#include "StatusSystem/Status_Mana.h"
+#include "StatusSystem/Status_ManaGain.h"
 #include "Utilities/CosGameplayTags.h"
 #include "Utilities/CosLog.h"
 
@@ -35,14 +39,32 @@ ACardPlayer::ACardPlayer(): ChanceManagerComponent(nullptr)
 
 	ChanceManagerComponent = CreateDefaultSubobject<UChanceManagerComponent>(TEXT("ChanceManagerComponent"));
 
-	PileDestroyComponent = CreateDefaultSubobject<UPileDestroyComponent>(TEXT("PileDestroyComponent"));
-	PileShopComponent = CreateDefaultSubobject<UPileShopComponent>(TEXT("PileShopComponent"));
-	PileDrawComponent = CreateDefaultSubobject<UPileDrawComponent>(TEXT("PileDrawComponent"));
-	PileDeckComponent = CreateDefaultSubobject<UPileDeckComponent>(TEXT("PileDeckComponent"));
-	PileDiscardComponent = CreateDefaultSubobject<UPileDiscardComponent>(TEXT("PileDiscardComponent"));
-	PileExhaustComponent = CreateDefaultSubobject<UPileExhaustComponent>(TEXT("PileExhaustComponent"));
-	PileHandComponent = CreateDefaultSubobject<UPileHandComponent>(TEXT("PileHandComponent"));
-	PileVoidComponent = CreateDefaultSubobject<UPileVoidComponent>(TEXT("PileVoidComponent"));
+	//Status Component 생성
+	{
+		Status_Initiative = CreateDefaultSubobject<UStatus_Initiative>(TEXT("Status_Initiative"));
+		Status_Initiative->StatusValue = 10000;
+
+		Status_ManaGain = CreateDefaultSubobject<UStatus_ManaGain>(TEXT("Status_ManaGain"));
+		Status_ManaGain->StatusValue = 3;
+
+		Status_Draw = CreateDefaultSubobject<UStatus_Draw>(TEXT("Status_Draw"));
+		Status_Draw->StatusValue = 5;
+
+		Status_Mana = CreateDefaultSubobject<UStatus_Mana>(TEXT("Status_Mana"));
+	}
+
+	//Pile Component 생성
+	{
+		PileDestroyComponent = CreateDefaultSubobject<UPileDestroyComponent>(TEXT("PileDestroyComponent"));
+		PileShopComponent = CreateDefaultSubobject<UPileShopComponent>(TEXT("PileShopComponent"));
+		PileDrawComponent = CreateDefaultSubobject<UPileDrawComponent>(TEXT("PileDrawComponent"));
+		PileDeckComponent = CreateDefaultSubobject<UPileDeckComponent>(TEXT("PileDeckComponent"));
+		PileDiscardComponent = CreateDefaultSubobject<UPileDiscardComponent>(TEXT("PileDiscardComponent"));
+		PileExhaustComponent = CreateDefaultSubobject<UPileExhaustComponent>(TEXT("PileExhaustComponent"));
+		PileHandComponent = CreateDefaultSubobject<UPileHandComponent>(TEXT("PileHandComponent"));
+		PileVoidComponent = CreateDefaultSubobject<UPileVoidComponent>(TEXT("PileVoidComponent"));
+	}
+
 
 	PayloadHolderComponent = CreateDefaultSubobject<UPayloadHolderComponent>(TEXT("PayloadHolderComponent"));
 
@@ -65,18 +87,14 @@ void ACardPlayer::BeginPlay()
 		return;
 	}
 
-
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	UEnhancedInputLocalPlayerSubsystem* InputSubsystem = PlayerController->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 	InputSubsystem->AddMappingContext(DefaultIMC, 0);
 
-	// PileComponent와 관련된 태그를 맵핑하는 함수 호출 (GeneratePileTagLookup)
 	GeneratePileTagLookup();
 
-	// DispatcherHubLocalComponent에 이벤트 바인딩: 턴 시작 이벤트와 바인딩
 	DispatcherHubLocalComponent->BindEventToHub(this, CosGameTags::Event_TurnStart);
 
-	// 글로벌 이벤트 허브에 사망 이벤트 바인딩
 	UFunctionLibrary_Event::BindEventToGlobalDispatcherHub(this, CosGameTags::Event_Death);
 
 	PlayerUI = CreateWidget<UUW_Layout_Cos>(PlayerController, WBP_LayoutClass);
@@ -84,18 +102,12 @@ void ACardPlayer::BeginPlay()
 
 	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(this);
 	const TArray<FStatusData>& Artifacts = IInterface_CardGameInstance::Execute_GetArtifactsFromInstance(GameInstance);
-
 	for (const FStatusData& Artifact : Artifacts)
 	{
 		Execute_AddToStatus(this, Artifact.StatusClass, Artifact.Value, false, this);
 	}
 
 	PlayerController->bShowMouseCursor = true;
-}
-
-void ACardPlayer::DisplayScreenLogMessage(FText Message, FColor Color)
-{
-	PlayerUI->DisplayScreenLogMessage(Message, Color);
 }
 
 void ACardPlayer::GeneratePileTagLookup()
@@ -138,11 +150,11 @@ bool ACardPlayer::IsValidStatusClass(TSubclassOf<UStatusComponent> InStatusClass
 
 UStatusComponent* ACardPlayer::CreateNewStatusComponent(TSubclassOf<UStatusComponent> InStatusClass)
 {
+	// 고유한 이름을 생성하여 새로운 상태 컴포넌트 생성
 	FString ClassName = InStatusClass->GetName();
 	FString BaseName = FString::Printf(TEXT("%s_Component"), *ClassName);
-
-	// 고유한 이름을 생성하여 새로운 상태 컴포넌트 생성
 	FName UniqueName = MakeUniqueObjectName(this, InStatusClass, FName(*BaseName));
+
 	UStatusComponent* NewStatusComponent = NewObject<UStatusComponent>(this, InStatusClass, UniqueName);
 	NewStatusComponent->RegisterComponent();
 
@@ -154,13 +166,15 @@ UStatusComponent* ACardPlayer::CreateNewStatusComponent(TSubclassOf<UStatusCompo
 	return NewStatusComponent;
 }
 
+void ACardPlayer::DisplayScreenLogMessage(FText Message, FColor Color)
+{
+	PlayerUI->DisplayScreenLogMessage(Message, Color);
+}
+
 int32 ACardPlayer::AddToStatus_Implementation(TSubclassOf<UStatusComponent> InStatusClass, int32 InAmount, bool bIsShowSplash, UObject* InPayLoad)
 {
 	// 상태 클래스의 유효성 검사
-	if (!IsValidStatusClass(InStatusClass))
-	{
-		return 0;
-	}
+	if (!IsValidStatusClass(InStatusClass)) return 0;
 
 	// 상태 컴포넌트를 찾거나 새로 생성한 후 상태 값을 추가
 	UStatusComponent* StatusComponent = Cast<UStatusComponent>(FindComponentByClass(InStatusClass));
@@ -184,5 +198,5 @@ int32 ACardPlayer::AddToStatus_Implementation(TSubclassOf<UStatusComponent> InSt
 
 void ACardPlayer::InitializeStoryEncounter_Implementation(FDataTableRowHandle EncounterData, bool bIsFirstScreen)
 {
-	IInterface_StoryEncounter::Execute_InitializeStoryEncounter(PlayerUI, EncounterData, bIsFirstScreen);
+	Execute_InitializeStoryEncounter(PlayerUI, EncounterData, bIsFirstScreen);
 }

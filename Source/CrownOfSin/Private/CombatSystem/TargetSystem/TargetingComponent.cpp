@@ -22,11 +22,11 @@ UTargetingComponent::UTargetingComponent()
 
 
 bool UTargetingComponent::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card,
-                                           bool bPreview, TArray<AActor*>& ValidTargets)
+                                           bool bPreview, TArray<AActor*>& OutValidTargets)
 {
 	TArray<AActor*> NewTargets;
 	NewTargets.Add(nullptr);
-	ValidTargets = NewTargets;
+	OutValidTargets = NewTargets;
 	return true;
 }
 

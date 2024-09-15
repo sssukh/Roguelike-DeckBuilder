@@ -104,4 +104,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	TArray<UDataTable*> GetRewardTables();
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
+	FEncounterData GetCurrentEncounterFromInstance();
 };

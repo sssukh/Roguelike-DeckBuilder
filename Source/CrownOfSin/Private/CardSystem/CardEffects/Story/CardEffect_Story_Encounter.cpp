@@ -4,7 +4,6 @@
 #include "Libraries/FunctionLibrary_Singletons.h"
 
 
-// Sets default values for this component's properties
 UCardEffect_Story_Encounter::UCardEffect_Story_Encounter()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -15,8 +14,6 @@ UCardEffect_Story_Encounter::UCardEffect_Story_Encounter()
 	// ...
 }
 
-
-// Called when the game starts
 void UCardEffect_Story_Encounter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -26,7 +23,6 @@ void UCardEffect_Story_Encounter::BeginPlay()
 
 bool UCardEffect_Story_Encounter::ResolveCardEffect(AActor* TargetActor)
 {
-	
 	if (ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this))
 	{
 		IInterface_StoryEncounter::Execute_InitializeStoryEncounter(CardPlayer, UsedData, false);

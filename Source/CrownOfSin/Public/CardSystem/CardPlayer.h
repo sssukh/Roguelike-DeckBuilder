@@ -7,6 +7,10 @@
 #include "Interfaces/Interface_StoryEncounter.h"
 #include "CardPlayer.generated.h"
 
+class UStatus_Draw;
+class UStatus_ManaGain;
+class UStatus_Mana;
+class UStatus_Initiative;
 class UChanceManagerComponent;
 class UPileComponent;
 class UPileShopComponent;
@@ -36,10 +40,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "Card Player | Debug")
-	void DisplayScreenLogMessage(FText Message, FColor Color);
-
-public:
 	/**
 	 * @brief 현재 액터에 추가된 모든 UPileComponent를 검색하고, 그들의 PileTag와 해당 컴포넌트를 PileTagLookup 맵에 추가합니다.
 	 * 이 함수는 카드 파일 컴포넌트(UPileComponent)를 검색하고, 이를 태그(PileTag)를 기준으로 매핑하여 관리할 수 있도록 합니다.
@@ -64,6 +64,11 @@ protected:
 	UStatusComponent* CreateNewStatusComponent(TSubclassOf<UStatusComponent> InStatusClass);
 
 
+public:
+	UFUNCTION(BlueprintCallable, Category = "Card Player | Debug")
+	void DisplayScreenLogMessage(FText Message, FColor Color);
+
+	
 	/*========================================================================================
 	*	Iinterface_CardTarget
 	=========================================================================================*/
@@ -92,6 +97,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
 	UChanceManagerComponent* ChanceManagerComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
+	UStatus_Initiative* Status_Initiative;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
+	UStatus_Mana* Status_Mana;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
+	UStatus_ManaGain* Status_ManaGain;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
+	UStatus_Draw* Status_Draw;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
 	UPileDestroyComponent* PileDestroyComponent;
 
@@ -124,6 +141,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
 	UPayloadHolderComponent* PayloadHolderComponent;
+
+
 
 public:
 	UPROPERTY(BlueprintReadWrite, Category="Card Player")

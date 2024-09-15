@@ -28,31 +28,32 @@ void UStatus_Armor::BeginPlay()
 	FGameplayTagContainer Tags;
 	Tags.AddTag(CosGameTags::Event_IncomingAttack);
 	Tags.AddTag(CosGameTags::Event_TurnStart);
-	
-	GetOwnersDispatcherHub()->BindMultipleEventsToHub(this,Tags);
-	
+
+	UDispatcherHubComponent* OwnersDispatcherHub;
+	if (GetOwnersDispatcherHub(OwnersDispatcherHub))
+		OwnersDispatcherHub->BindMultipleEventsToHub(this, Tags);
 }
 
 void UStatus_Armor::RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal,
-	UObject* PayLoad, const FGameplayTagContainer& CallTags)
+                                            UObject* PayLoad, const FGameplayTagContainer& CallTags)
 {
-	if(EventTag==CosGameTags::Event_TurnStart)
+	if (EventTag == CosGameTags::Event_TurnStart)
 	{
-		SetStatusValue(0,false,false,nullptr);
+		SetStatusValue(0, false, false, nullptr);
 	}
-	else if(EventTag==CosGameTags::Event_IncomingAttack)
+	else if (EventTag == CosGameTags::Event_IncomingAttack)
 	{
 		UCardEffectComponent* CardEffectComponent = Cast<UCardEffectComponent>(CallingObject);
 
 		OldArmor = StatusValue;
-		
-		SubtractStatusValue(CardEffectComponent->EffectValue,false,false,nullptr);
 
-		CardEffectComponent->EffectValue = FMath::Max(CardEffectComponent->EffectValue - OldArmor,0);
+		SubtractStatusValue(CardEffectComponent->EffectValue, false, false, nullptr);
 
-		if(CardEffectComponent->EffectValue == 0)
+		CardEffectComponent->EffectValue = FMath::Max(CardEffectComponent->EffectValue - OldArmor, 0);
+
+		if (CardEffectComponent->EffectValue == 0)
 		{
-			if(GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+			if (GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
 			{
 				IInterface_CardTarget::Execute_GetPuppet(GetOwner());
 
@@ -61,8 +62,4 @@ void UStatus_Armor::RunEvent_Implementation(const FGameplayTag& EventTag, UObjec
 			}
 		}
 	}
-	
 }
-
-
-

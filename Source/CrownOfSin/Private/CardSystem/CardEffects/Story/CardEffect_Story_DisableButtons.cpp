@@ -17,8 +17,6 @@ UCardEffect_Story_DisableButtons::UCardEffect_Story_DisableButtons()
 	// ...
 }
 
-
-// Called when the game starts
 void UCardEffect_Story_DisableButtons::BeginPlay()
 {
 	Super::BeginPlay();
@@ -29,12 +27,10 @@ void UCardEffect_Story_DisableButtons::BeginPlay()
 bool UCardEffect_Story_DisableButtons::ResolveCardEffect(AActor* TargetActor)
 {
 	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
-	if (!CardPlayer)
-		return false;
+	if (!CardPlayer) return false;
 
 	UUW_StoryEncounter* WBP_StoryEncounter = Cast<UUW_StoryEncounter>(CardPlayer->PlayerUI->StoryEncounterBox->GetChildAt(0));
-	if (!WBP_StoryEncounter)
-		return false;
+	if (!WBP_StoryEncounter) return false;
 
 	WBP_StoryEncounter->DisableOptions();
 	return true;

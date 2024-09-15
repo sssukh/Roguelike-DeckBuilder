@@ -26,10 +26,10 @@ UTargetingComponent_SpecifiedCardsInHand::UTargetingComponent_SpecifiedCardsInHa
 }
 
 bool UTargetingComponent_SpecifiedCardsInHand::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
-                                                                const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
+                                                                const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
 
-	ValidTargets.Reset();
+	OutValidTargets.Reset();
 	
 	if(bPreview)
 	{
@@ -54,12 +54,12 @@ bool UTargetingComponent_SpecifiedCardsInHand::FindValidTargets(TArray<AActor*>&
 		}
 	}
 
-	if(ValidTargets.IsEmpty())
+	if(OutValidTargets.IsEmpty())
 	{
 		return false;
 	}
 
-	if (ValidTargets.Num()>CardEffect.EffectValue)
+	if (OutValidTargets.Num()>CardEffect.EffectValue)
 	{
 		UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(CosGameTags::Event_CardSelectionMode,Card);
 
@@ -69,7 +69,7 @@ bool UTargetingComponent_SpecifiedCardsInHand::FindValidTargets(TArray<AActor*>&
 
 		CardhandWidget->EnableSelectionMode(CardEffect.EffectValue,CardEffect.GameplayTags);
 
-		ValidTargets.Reset();
+		OutValidTargets.Reset();
 
 		return true;
 	}
@@ -79,7 +79,7 @@ bool UTargetingComponent_SpecifiedCardsInHand::FindValidTargets(TArray<AActor*>&
 
 		for (ACardBase* ValidCard : ValidCards)
 		{
-			ValidTargets.Add(ValidCard);
+			OutValidTargets.Add(ValidCard);
 		}
 		
 		return true;

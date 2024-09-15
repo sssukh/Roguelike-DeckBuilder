@@ -28,7 +28,7 @@ struct FMapEvent : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Map Event")
 	FDataTableRowHandle SpecificEvent;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Map Event")
 	TArray<UDataTable*> EncounterTables;
 
@@ -56,11 +56,13 @@ struct FEncounterData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter")
 	FString Level = FString(TEXT("Arena"));
 
-	FEncounterData():Level("Default Level"){}
+	FEncounterData(): Level("Default Level")
+	{
+	}
 
 	FEncounterData& operator=(const FEncounterData& Other)
 	{
-		if(this!= &Other)
+		if (this != &Other)
 		{
 			GameplayTags = Other.GameplayTags;
 			Minions = Other.Minions;
@@ -82,21 +84,19 @@ USTRUCT(BlueprintType)
 struct FStoryEncounter : public FTableRowBase
 {
 	GENERATED_BODY()
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Story Encounter")
 	FGameplayTagContainer GameplayTags;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Story Encounter")
 	FText Description;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Story Encounter")
 	TObjectPtr<UTexture2D> Image;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Story Encounter")
-	TArray<FCard> EncounterOptions;
+	TSubclassOf<UUserWidget> EncounterWidget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Story Encounter")
-	TSubclassOf<UUserWidget> EncounterWidget;
+	TArray<FCard> EncounterOptions;
 };
-
-

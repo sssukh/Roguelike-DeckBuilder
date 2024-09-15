@@ -17,9 +17,9 @@ UTargetingComponent_AllValidCardsInHand::UTargetingComponent_AllValidCardsInHand
 }
 
 bool UTargetingComponent_AllValidCardsInHand::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
-                                                               ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
+                                                               ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
-	ValidTargets.Reset();
+	OutValidTargets.Reset();
 	
 	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 
@@ -31,7 +31,7 @@ bool UTargetingComponent_AllValidCardsInHand::FindValidTargets(TArray<AActor*>& 
 
 		if(CardEffect.GameplayTags.HasAnyExact(CardTags->GameplayTags))
 		{
-			ValidTargets.Add(CardInPile);
+			OutValidTargets.Add(CardInPile);
 		}
 	}
 	

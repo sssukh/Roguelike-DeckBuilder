@@ -6,18 +6,18 @@
 #include "CardEffectComponent.h"
 #include "CardEffect_ClearPile.generated.h"
 
-/*지정된 대상 구성요소 더미의 모든 카드를 지웁니다.*/
+/* UCardEffect_ClearPile 클래스는 지정된 대상의 카드 더미(Pile)를 제거하는 효과를 처리하는 클래스입니다.
+ * 타겟으로 지정된 구성요소가 카드 더미를 구현하는 경우, 해당 더미에 있는 모든 카드를 제거하는 기능을 제공합니다.
+ */
 UCLASS(ClassGroup=("COS|Card"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UCardEffect_ClearPile : public UCardEffectComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UCardEffect_ClearPile();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:

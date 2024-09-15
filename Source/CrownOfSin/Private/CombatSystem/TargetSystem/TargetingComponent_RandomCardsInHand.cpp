@@ -18,9 +18,9 @@ UTargetingComponent_RandomCardsInHand::UTargetingComponent_RandomCardsInHand()
 }
 
 bool UTargetingComponent_RandomCardsInHand::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
-	const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
+                                                             const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
-	ValidTargets.Reset();
+	OutValidTargets.Reset();
 
 	TArray<AActor*> FoundTargets;
 	
@@ -39,18 +39,18 @@ bool UTargetingComponent_RandomCardsInHand::FindValidTargets(TArray<AActor*>& Sp
 		}
 	}
 
-	while (FoundTargets.Num()>0 && ValidTargets.Num()<CardEffect.EffectValue)
+	while (FoundTargets.Num()>0 && OutValidTargets.Num()<CardEffect.EffectValue)
 	{
 		int32 Index;
 		
 		UFunctionLibrary_ArrayUtils::GetRandomElementFromArray(FoundTargets,Index);
 
-		ValidTargets.Add(FoundTargets[Index]);
+		OutValidTargets.Add(FoundTargets[Index]);
 		
 		FoundTargets.RemoveAt(Index);
 	}
 
-	return ValidTargets.Num()>0;
+	return OutValidTargets.Num()>0;
 }
 
 

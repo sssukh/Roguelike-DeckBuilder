@@ -15,15 +15,15 @@ UTargetingComponent_SpecifiedTarget::UTargetingComponent_SpecifiedTarget()
 }
 
 bool UTargetingComponent_SpecifiedTarget::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
-	const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
+                                                           const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
-	ValidTargets.Reset();
+	OutValidTargets.Reset();
 	
 	for (AActor* Target : SpecifiedTargets)
 	{
 		if(IsValid(Target) && CheckTargetHasGameplayTag(Target,CardEffect))
 		{
-			ValidTargets.Add(Target);
+			OutValidTargets.Add(Target);
 		}
 	}
 

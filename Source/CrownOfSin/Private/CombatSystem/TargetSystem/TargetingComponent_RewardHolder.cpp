@@ -14,13 +14,13 @@ UTargetingComponent_RewardHolder::UTargetingComponent_RewardHolder()
 }
 
 bool UTargetingComponent_RewardHolder::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
-                                                        ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
+                                                        ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
-	ValidTargets.Reset();
+	OutValidTargets.Reset();
 	
 	AActor* RewardHolder =  UGameplayStatics::GetActorOfClass(this, ARewardHolder::StaticClass());
 
-	ValidTargets.Add(RewardHolder);
+	OutValidTargets.Add(RewardHolder);
 	
 	return true;
 }

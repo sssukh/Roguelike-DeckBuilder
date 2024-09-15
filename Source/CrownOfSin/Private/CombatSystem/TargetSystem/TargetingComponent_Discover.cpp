@@ -25,7 +25,7 @@ UTargetingComponent_Discover::UTargetingComponent_Discover()
 	// ...
 }
 
-bool UTargetingComponent_Discover::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
+bool UTargetingComponent_Discover::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
 	if (bPreview)
 		return false;

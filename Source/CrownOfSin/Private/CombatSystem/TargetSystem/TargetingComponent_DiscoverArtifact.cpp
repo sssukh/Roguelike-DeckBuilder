@@ -28,7 +28,7 @@ UTargetingComponent_DiscoverArtifact::UTargetingComponent_DiscoverArtifact()
 }
 
 bool UTargetingComponent_DiscoverArtifact::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
-	const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& ValidTargets)
+                                                            const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
 	if(bPreview)
 		return false;
