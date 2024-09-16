@@ -1,6 +1,6 @@
 ﻿#include "CardSystem/CardEffects/CardEffect_ShowRewardScreen.h"
 
-#include "CardSystem/CardActions/Action_RewardScreen.h"
+#include "ActionSystem/Action_RewardScreen.h"
 
 
 // Sets default values for this component's properties

@@ -1,7 +1,7 @@
 ﻿#include "CardSystem/CardEffects/CardEffect_Attack.h"
 
 #include "CardSystem/CardBase.h"
-#include "CardSystem/CardActions/Action_ScreenShake.h"
+#include "ActionSystem/Action_ScreenShake.h"
 #include "Core/DispatcherHubLocalComponent.h"
 #include "StatusSystem/Status_Health.h"
 #include "Utilities/CosGameplayTags.h"

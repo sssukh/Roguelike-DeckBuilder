@@ -42,8 +42,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category="UW Layout Event")
 	bool ShouldNodeMapBeBlocked();
 	
+	/*ToDo:구현해야합니다.*/
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="UW Layout")
 	void DisplayScreenLogMessage(const FText& Message, const FColor& Color);
+
+	/*ToDo:구현해야합니다.*/
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="UW Layout")
+	void ToggleInGameMenu();
 
 	/*ToDo:구현해야합니다.*/
 	void UpdatePileWidgetAmount(FGameplayTag PileTag, int32 NewAmount);

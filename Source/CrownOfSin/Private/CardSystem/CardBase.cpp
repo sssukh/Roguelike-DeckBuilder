@@ -15,7 +15,7 @@
 
 #include "BlueprintGameplayTagLibrary.h"
 #include "CardSystem/CardEffects/CardEffectComponent.h"
-#include "CardSystem/CardActions/Action_Effect.h"
+#include "ActionSystem/Action_Effect.h"
 #include "CardSystem/CardUseRules/UseRuleComponent.h"
 
 #include "CardSystem/CardUseRules/UseRule_StatCost.h"

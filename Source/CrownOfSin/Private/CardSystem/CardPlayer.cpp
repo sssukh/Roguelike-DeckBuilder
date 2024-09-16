@@ -138,7 +138,7 @@ bool ACardPlayer::GetPileWithPileTag(FGameplayTag PileTag, UPileComponent*& OutP
 	return false;
 }
 
-bool ACardPlayer::IsValidStatusClass(TSubclassOf<UStatusComponent> InStatusClass)
+bool ACardPlayer::IsValidStatusClass(const TSubclassOf<UStatusComponent>& InStatusClass)
 {
 	if (!InStatusClass->IsChildOf(UStatusComponent::StaticClass()))
 	{
@@ -196,7 +196,73 @@ int32 ACardPlayer::AddToStatus_Implementation(TSubclassOf<UStatusComponent> InSt
 	return 0;
 }
 
+bool ACardPlayer::CheckIfValidTarget_Implementation(const FGameplayTagContainer& ValidTargets)
+{
+	return ValidTargets.HasTagExact(CosGameTags::Target_CardPlayer);
+}
+
+bool ACardPlayer::GetStatusValue_Implementation(TSubclassOf<UStatusComponent> InStatus, int32& OutStatusValue)
+{
+	if (UActorComponent* FoundStatus = GetComponentByClass(InStatus))
+	{
+		UStatusComponent* StatusComponent = Cast<UStatusComponent>(FoundStatus);
+		OutStatusValue = StatusComponent->StatusValue;
+		return true;
+	}
+	OutStatusValue = 0;
+	return false;
+}
+
+int32 ACardPlayer::SubtractFromStatus_Implementation(TSubclassOf<UStatusComponent> InStatusClass, int32 InAmount, bool bIsShowSplash, UObject* InPayLoad)
+{
+	return Execute_AddToStatus(this, InStatusClass, -InAmount, bIsShowSplash, InPayLoad);
+}
+
+void ACardPlayer::RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags)
+{
+	if (!bIsGlobal)
+	{
+		if (EventTag == CosGameTags::Event_TurnStart)
+		{
+			UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(CosGameTags::Event_Action_NewPlayerTurn, this);
+		}
+	}
+	else
+	{
+		if (EventTag == CosGameTags::Event_Death)
+		{
+			AActor* CallingActor = Cast<AActor>(CallingObject);
+			if (!CallingActor) return;
+
+			UGameplayTagComponent* CollingGameplayTagComponent = CallingActor->FindComponentByClass<UGameplayTagComponent>();
+			if (!CollingGameplayTagComponent) return;
+
+			if (CollingGameplayTagComponent->GameplayTags.HasTagExact(CosGameTags::Target_Hero))
+			{
+				PileDrawComponent->RemoveAllCardsOwnedByActor(CallingActor);
+				PileDiscardComponent->RemoveAllCardsOwnedByActor(CallingActor);
+				PileHandComponent->RemoveAllCardsOwnedByActor(CallingActor);
+			}
+		}
+	}
+}
+
+FText ACardPlayer::GetFriendlyName_Implementation()
+{
+	return FText::FromString("Card Player");
+}
+
+float ACardPlayer::GetPriority_Implementation()
+{
+	return Status_Initiative->StatusValue;
+}
+
 void ACardPlayer::InitializeStoryEncounter_Implementation(FDataTableRowHandle EncounterData, bool bIsFirstScreen)
 {
 	Execute_InitializeStoryEncounter(PlayerUI, EncounterData, bIsFirstScreen);
+}
+
+float ACardPlayer::GetInitiative_Implementation()
+{
+	return Status_Initiative->StatusValue;
 }

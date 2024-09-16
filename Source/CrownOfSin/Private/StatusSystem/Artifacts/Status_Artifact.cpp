@@ -1,7 +1,7 @@
 ﻿#include "StatusSystem/Artifacts/Status_Artifact.h"
 
 #include "CardSystem/CardPlayer.h"
-#include "CardSystem/CardActions/Action_ModifyStatus.h"
+#include "ActionSystem/Action_ModifyStatus.h"
 #include "Core/MinionBase.h"
 #include "Interfaces/Interface_CardGameInstance.h"
 #include "Libraries/FunctionLibrary_Singletons.h"

@@ -1,6 +1,6 @@
-﻿#include "Core/ActionManager.h"
+﻿#include "ActionSystem/ActionManager.h"
 
-#include "CardSystem/CardActions/ActionBase.h"
+#include "ActionSystem/ActionBase.h"
 #include "Interfaces/Interface_CardAction.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Libraries/DelayHelper.h"

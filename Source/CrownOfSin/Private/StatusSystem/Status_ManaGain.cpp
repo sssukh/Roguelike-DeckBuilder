@@ -1,35 +1,48 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "StatusSystem/Status_ManaGain.h"
 
+#include "Core/DispatcherHubComponent.h"
+#include "Libraries/FunctionLibrary_Event.h"
+#include "StatusSystem/Status_Mana.h"
+#include "Utilities/CosGameplayTags.h"
 
-#include "StatusSystem/Status_ManaGain.h"
-
-
-// Sets default values for this component's properties
 UStatus_ManaGain::UStatus_ManaGain()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	TextAlignment = EStatusTextAlignment::Center;
 }
 
-
-// Called when the game starts
 void UStatus_ManaGain::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	UDispatcherHubComponent* DispatcherHub;
+	if (GetOwnersDispatcherHub(DispatcherHub))
+	{
+		DispatcherHub->BindMultipleEventsToHub(this, FGameplayTagContainer(CosGameTags::Event_TurnStart));
+	}
 }
 
-
-// Called every frame
-void UStatus_ManaGain::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UStatus_ManaGain::RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	AActor* CallActor = Cast<AActor>(CallingObject);
+	if (!CallActor) return;
 
-	// ...
+	UStatus_Mana* StatusMana = CallActor->FindComponentByClass<UStatus_Mana>();
+	if (!StatusMana) return;
+	
+	if (EventTag == CosGameTags::Event_TurnStart)
+	{
+		UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_ManaGain, this);
+		
+		if (bInterrupt)
+		{
+			bInterrupt = false;
+			return;
+		}
+
+		StatusMana->SetStatusValue(StatusValue);
+	}
 }
-

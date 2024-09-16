@@ -6,7 +6,7 @@
 #include "Libraries/FunctionLibrary_Event.h"
 #include "Utilities/CosGameplayTags.h"
 
-UStatus_Initiative::UStatus_Initiative()
+UStatus_Initiative::UStatus_Initiative(): BeginDelayHelper(nullptr)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -25,7 +25,7 @@ void UStatus_Initiative::BeginPlay()
 	if (!TurnManager) return;
 
 	// 지연을 담당할 DelayHelper 생성
-	UDelayHelper* DelayHelper = NewObject<UDelayHelper>(this);
+	BeginDelayHelper = NewObject<UDelayHelper>(this);
 
 	auto CheckTurnManagerSetup = [TurnManager]() -> bool
 	{
@@ -36,12 +36,12 @@ void UStatus_Initiative::BeginPlay()
 	{
 	};
 
-	auto OnSetupComplete = [this, &DelayHelper]()
+	auto OnSetupComplete = [this]()
 	{
 		UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_TargetSpawned, GetOwner());
-		DelayHelper = nullptr;
+		BeginDelayHelper = nullptr;
 	};
 
 	// DelayWhile 함수 호출: 0초 딜레이로 조건을 반복 확인
-	DelayHelper->DelayWhile(CheckTurnManagerSetup, LogLoopProgress, OnSetupComplete, 0.0f);
+	BeginDelayHelper->DelayWhile(CheckTurnManagerSetup, LogLoopProgress, OnSetupComplete, 0.0f);
 }

@@ -39,6 +39,9 @@ public:
 	UGameplayTagComponent* GameplayTagComponent;
 	
 public:
+	UPROPERTY( BlueprintReadOnly, Category="Minion")
+	bool bDead=false;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion", meta=(ExposeOnSpawn="true"))
 	FMinion MinionData;
 

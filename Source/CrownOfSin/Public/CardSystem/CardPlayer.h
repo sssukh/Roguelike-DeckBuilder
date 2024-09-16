@@ -4,6 +4,8 @@
 #include "GameplayTagContainer.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/Interface_CardTarget.h"
+#include "Interfaces/Interface_EventHolder.h"
+#include "Interfaces/Interface_Initiative.h"
 #include "Interfaces/Interface_StoryEncounter.h"
 #include "CardPlayer.generated.h"
 
@@ -29,7 +31,7 @@ class UInputMappingContext;
 class UUW_Layout_Cos;
 
 UCLASS()
-class CROWNOFSIN_API ACardPlayer : public AActor, public IInterface_CardTarget, public IInterface_StoryEncounter
+class CROWNOFSIN_API ACardPlayer : public AActor, public IInterface_CardTarget, public IInterface_StoryEncounter, public IInterface_EventHolder, public IInterface_Initiative
 {
 	GENERATED_BODY()
 
@@ -58,31 +60,51 @@ public:
 
 protected:
 	/*상태 클래스가 UStatusComponent의 하위 클래스인지 확인하는 함수*/
-	bool IsValidStatusClass(TSubclassOf<UStatusComponent> InStatusClass);
+	bool IsValidStatusClass(const TSubclassOf<UStatusComponent>& InStatusClass);
 
 	/*새로운 상태 컴포넌트를 생성하는 함수*/
 	UStatusComponent* CreateNewStatusComponent(TSubclassOf<UStatusComponent> InStatusClass);
 
-
 public:
-	UFUNCTION(BlueprintCallable, Category = "Card Player | Debug")
+	UFUNCTION(BlueprintCallable, Category = "Card Player|Debug")
 	void DisplayScreenLogMessage(FText Message, FColor Color);
 
-	
+
 	/*========================================================================================
-	*	Iinterface_CardTarget
+	*	IIinterface_CardTarget
 	=========================================================================================*/
 public:
 	virtual int32 AddToStatus_Implementation(TSubclassOf<UStatusComponent> InStatusClass, int32 InAmount, bool bIsShowSplash, UObject* InPayLoad) override;
 
+	virtual bool CheckIfValidTarget_Implementation(const FGameplayTagContainer& ValidTargets) override;
+
+	virtual bool GetStatusValue_Implementation(TSubclassOf<UStatusComponent> InStatus, int32& OutStatusValue) override;
+
+	virtual int32 SubtractFromStatus_Implementation(TSubclassOf<UStatusComponent> InStatusClass, int32 InAmount, bool bIsShowSplash, UObject* InPayLoad) override;
+
 
 	/*========================================================================================
-	*	Iinterface_CardTarget
+	*	IInterface_EventHolder
+	=========================================================================================*/
+public:
+	virtual void RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags) override;
+
+	virtual FText GetFriendlyName_Implementation() override;
+
+	virtual float GetPriority_Implementation() override;
+
+	/*========================================================================================
+	*	IIinterface_CardTarget
 	=========================================================================================*/
 public:
 	virtual void InitializeStoryEncounter_Implementation(FDataTableRowHandle EncounterData, bool bIsFirstScreen) override;
 
 
+	/*========================================================================================
+	*	IInterface_Initiative
+	=========================================================================================*/
+public:
+	virtual float GetInitiative_Implementation() override;
 	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/
@@ -105,10 +127,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
 	UStatus_ManaGain* Status_ManaGain;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
 	UStatus_Draw* Status_Draw;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
 	UPileDestroyComponent* PileDestroyComponent;
 
@@ -141,8 +163,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
 	UPayloadHolderComponent* PayloadHolderComponent;
-
-
 
 public:
 	UPROPERTY(BlueprintReadWrite, Category="Card Player")

@@ -1,6 +1,6 @@
 ﻿#include "StatusSystem/StatusComponent.h"
 
-#include "CardSystem/CardActions/Action_ModifyStatus.h"
+#include "ActionSystem/Action_ModifyStatus.h"
 #include "Core/DispatcherHubComponent.h"
 #include "Interfaces/Interface_CardTarget.h"
 #include "Interfaces/Widget/Interface_StatusWidget.h"

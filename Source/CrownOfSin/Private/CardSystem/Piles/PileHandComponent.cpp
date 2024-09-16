@@ -64,7 +64,7 @@ bool UPileHandComponent::DrawCard(ACardBase* SpecifiedCard, TSubclassOf<UPileHan
 		}
 
 		// 더미가 비었으므로 카드 뽑기 컴포넌트에서 리셔플을 시도합니다.
-		UPileDrawComponent* PileDrawComponent = Cast<UPileDrawComponent>(GetOwner()->GetComponentByClass(UPileDrawComponent::StaticClass()));
+		UPileDrawComponent* PileDrawComponent = GetOwner()->FindComponentByClass<UPileDrawComponent>();
 		if (!PileDrawComponent)
 		{
 			// PileDrawComponent가 없을 경우 nullptr을 반환하고 종료
@@ -117,12 +117,12 @@ void UPileHandComponent::DiscardHand()
 	TArray<ACardBase*> HandCards = Cards;
 
 	// 손에 있는 모든 카드를 순회합니다.
-	for (ACardBase* CardInHand : HandCards)
+	for (ACardBase* Card : HandCards)
 	{
 		// 각 카드에 대해 턴 종료 시 발생하는 패시브 이벤트를 호출합니다.
 		FGameplayTagContainer CallTags;
 		CallTags.AddTag(CosGameTags::Flag_Passive);
-		CardInHand->RunEndTurnEvent(CallTags);
+		Card->RunEndTurnEvent(CallTags);
 	}
 }
 

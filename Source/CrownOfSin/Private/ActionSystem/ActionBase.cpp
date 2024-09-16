@@ -1,6 +1,6 @@
-﻿#include "CardSystem/CardActions/ActionBase.h"
+﻿#include "ActionSystem/ActionBase.h"
 
-#include "Core/ActionManager.h"
+#include "ActionSystem/ActionManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utilities/CosLog.h"
 

@@ -47,7 +47,7 @@ public:
 	 * 시각적 효과가 필요할 경우 이를 처리합니다.
 	 */
 	UFUNCTION(BlueprintCallable, Category="Status Component|Status Management")
-	int32 SetStatusValue(int32 InAmount, bool bShowSplashNumber, bool bShowSplashIcon, UObject* Payload);
+	int32 SetStatusValue(int32 InAmount, bool bShowSplashNumber=false, bool bShowSplashIcon=false, UObject* Payload=nullptr);
 
 	/**
 	 * 상태의 최대 값(MaxValue)을 설정하고, 현재 상태 값(StatusValue)을 새로운 최대 값에 맞춰 조정합니다.

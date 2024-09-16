@@ -29,7 +29,13 @@ public:
 	                                            float EndDelay = -1.0f, UObject* Payload = nullptr, FGameplayTagContainer CallTags = FGameplayTagContainer());
 
 	UFUNCTION(BlueprintCallable, Category="COS|Function Library|Event")
+	static bool CallEventWithCallTagsInGlobalDispatcherHub(FGameplayTag EventTag, UObject* CallingObject,UObject* CallSpecificObject, FGameplayTagContainer CallTags);
+	
+	UFUNCTION(BlueprintCallable, Category="COS|Function Library|Event")
 	static bool CallMultipleEventsInGlobalDispatcherHub(FGameplayTagContainer EventTags, UObject* CallingObject, UObject* CallSpecificObject);
+
+	
+	
 
 	UFUNCTION(BlueprintCallable, Category="COS|Function Library|Event")
 	static void BindMultipleEventsToGlobalDispatcherHub(UObject* EventHolder, FGameplayTagContainer EventTags);

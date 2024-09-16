@@ -5,6 +5,7 @@
 #include "Status_Initiative.generated.h"
 
 
+class UDelayHelper;
 /* 
  * UStatus_Initiative 클래스는 이니셔티브(행동 순서) 시스템을 관리하는 상태 컴포넌트입니다.
  * 소유자가 이니셔티브에 따라 더 높은 우선순위를 가진 상태일수록 더 빠르게 행동할 수 있도록 설정됩니다.
@@ -21,4 +22,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY()
+	UDelayHelper* BeginDelayHelper;
 };
