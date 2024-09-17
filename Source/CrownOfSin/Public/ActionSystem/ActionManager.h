@@ -6,9 +6,11 @@
 #include "Libraries/DelayHelper.h"
 #include "ActionManager.generated.h"
 
-/*액션 큐 처리를 담당합니다.
- *생성된 모든 BP_CardAction은 작업 대기열에 추가되고 작업 관리자는 이러한 작업을 순서대로 실행하여 더 이상 사용되지 않으면 제거합니다.
- *작업은 작업을 생성하는 게임플레이 로직과 비동기적으로 발생하므로 게임플레이 로직이 아닌 시각화에 사용되는 몇 가지 예외가 있습니다.*/
+/**
+ * 액션 큐 처리를 담당합니다.
+ * 생성된 모든 액션은 작업 대기열에 추가되고 작업 관리자는 이러한 작업을 순서대로 실행하여 더 이상 사용되지 않으면 제거합니다.
+ * 작업은 게임플레이 로직과 비동기적으로 발생하므로 게임플레이 로직이 아닌 시각화에 사용됩니다.
+ */
 UCLASS()
 class CROWNOFSIN_API AActionManager : public AActor, public IInterface_CardActionManager
 {

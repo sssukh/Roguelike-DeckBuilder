@@ -1,12 +1,8 @@
 ﻿#include "ActionSystem/ActionBase.h"
-
-#include "ActionSystem/ActionManager.h"
-#include "Kismet/GameplayStatics.h"
-#include "Utilities/CosLog.h"
+#include "ActionSystem/ActionManagerSubsystem.h"
 
 
-// Sets default values
-AActionBase::AActionBase(): ActionManagerRef(nullptr)
+AActionBase::AActionBase()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -16,26 +12,29 @@ AActionBase::AActionBase(): ActionManagerRef(nullptr)
 	SetRootComponent(DefaultSceneRoot);
 }
 
-// Called when the game starts or when spawned
 void AActionBase::BeginPlay()
 {
 	Super::BeginPlay();
 
 	SetUpAction();
 
-	AActionManager* ActionManager = Cast<AActionManager>(UGameplayStatics::GetActorOfClass(this, AActionManager::StaticClass()));
-	if (!ActionManager)
+	if (UWorld* World = GetWorld())
 	{
-		COS_SCREEN(TEXT("World에 ActionManager가 존재하지 않습니다. "));
-		return;
+		if (UActionManagerSubsystem* ActionManagerSubsystem = World->GetSubsystem<UActionManagerSubsystem>())
+		{
+			ActionManagerSubsystem->QueueAction(this);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ActionManagerSubsystem을 가져올 수 없습니다."));
+		}
 	}
-
-	ActionManager->QueueAction(this);
 }
 
 void AActionBase::AnimateAction_Implementation(UObject* CallingActionManager)
 {
-	ActionManagerRef = CallingActionManager;
+	// 수정 전 코드
+	// ActionManagerReference = CallingActionManager;
 	PlayAction();
 }
 
@@ -46,12 +45,24 @@ void AActionBase::EndAction_Implementation()
 		FTimerHandle EndDelayTimerHandle;
 		GetWorld()->GetTimerManager().SetTimer(EndDelayTimerHandle, [this]()
 		{
-			IInterface_CardActionManager::Execute_ProceedFromOngoingAction(ActionManagerRef, this);
-		}, EndDelay, false); // 반복 없이 한 번만 실행
+			if (UWorld* World = GetWorld())
+			{
+				if (UActionManagerSubsystem* ActionManagerSubsystem = World->GetSubsystem<UActionManagerSubsystem>())
+				{
+					ActionManagerSubsystem->ProceedFromOngoingAction(this);
+				}
+			}
+		}, EndDelay, false);
 	}
 	else
 	{
-		IInterface_CardActionManager::Execute_ProceedFromOngoingAction(ActionManagerRef, this);
+		if (UWorld* World = GetWorld())
+		{
+			if (UActionManagerSubsystem* ActionManagerSubsystem = World->GetSubsystem<UActionManagerSubsystem>())
+			{
+				ActionManagerSubsystem->ProceedFromOngoingAction(this);
+			}
+		}
 	}
 }
 
@@ -67,4 +78,5 @@ void AActionBase::SetUpAction_Implementation()
 
 void AActionBase::PlayAction_Implementation()
 {
+	EndAction();
 }

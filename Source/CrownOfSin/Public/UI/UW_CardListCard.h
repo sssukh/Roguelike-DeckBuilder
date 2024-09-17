@@ -8,6 +8,7 @@
 #include "Interfaces/Widget/Interface_CardWidget.h"
 #include "UW_CardListCard.generated.h"
 
+class UUW_CardVisual;
 class UUW_ToolTipList;
 class UButton;
 class USizeBox;
@@ -30,11 +31,10 @@ public:
 
 	virtual void NativeConstruct() override;
 
-	UFUNCTION(BlueprintCallable,Category="UW Card List Card Event")
+	UFUNCTION(BlueprintCallable, Category="UW Card List Card Event")
 	UUserWidget* SetCardVisualWidget(ACardBase* InCardActor);
 
 
-	
 	// Interface_Utility
 public:
 	virtual void Initialize_Implementation(const FGameplayTagContainer& Tags) override;
@@ -44,43 +44,41 @@ public:
 	virtual void UpdateCardWidget_Implementation(ACardBase* InCardActor) override;
 
 
-	
-
 	// Member Variables
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardListCard", meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card List Card", meta = (BindWidget))
 	TObjectPtr<USizeBox> CardVisualBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardListCard", meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card List Card", meta = (BindWidget))
 	TObjectPtr<UButton> HoverButton;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardListCard", meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card List Card", meta = (BindWidget))
 	TObjectPtr<UUW_ToolTipList> WBP_TooltipList;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardListCard", meta = (ExposeOnSpawn))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card List Card|Config|SetUp")
+	TSubclassOf<UUW_CardVisual> CardVisualClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card List Card", meta = (ExposeOnSpawn))
 	TObjectPtr<ACardBase> CardActor;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardListCard")
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card List Card")
 	TObjectPtr<UWidget> PairedWidget;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardListCard")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card List Card")
 	bool bBlockHoverAnim;
 
 	/*WBP_CardVisual 클래스입니다.*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardListCard")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card List Card")
 	TObjectPtr<UUserWidget> CardVisual;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardListCard | Config")
-	TSubclassOf<UUserWidget> CardVisualClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardListCard", Transient, meta = (BindWidgetAnim))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card List Card", Transient, meta = (BindWidgetAnim))
 	TObjectPtr<UWidgetAnimation> Select;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardListCard", Transient, meta = (BindWidgetAnim))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card List Card", Transient, meta = (BindWidgetAnim))
 	TObjectPtr<UWidgetAnimation> FadeOut;
-	// Delegate
+
 public:
-	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "CardListCard")
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Card List Card|Delegate")
 	FOnCardClicked OnCardClicked;
 };

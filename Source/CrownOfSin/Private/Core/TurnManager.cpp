@@ -224,7 +224,8 @@ void ATurnManager::ExitCombat()
 	FTransform SpawnTransform = FTransform::Identity;
 
 	// 맵 로드 액션을 지연 생성
-	if (AAction_LoadMap* NewActionLoadMap = GetWorld()->SpawnActorDeferred<AAction_LoadMap>(AAction_LoadMap::StaticClass(), SpawnTransform,
+	if (AAction_LoadMap* NewActionLoadMap = GetWorld()->SpawnActorDeferred<AAction_LoadMap>(AAction_LoadMap::StaticClass(),
+	                                                                                        SpawnTransform,
 	                                                                                        nullptr, nullptr,
 	                                                                                        ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
 	{

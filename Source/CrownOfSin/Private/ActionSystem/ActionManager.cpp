@@ -44,11 +44,11 @@ void AActionManager::AttemptToPlayNextAction()
 	}
 
 	// 큐의 다음 인덱스가 유효한지와 현재 틱에서 허용된 최대 액션 수를 초과하지 않았는지 확인하는 조건 람다 함수
-	auto ShouldStopActionLoop = [this]()
+	auto ShouldCompleted = [this]()
 	{
-		bool bIsQueueInvalid = IsValid(ActionQueue[GetNextQueueIndex(QueueCounter)]); // 다음 큐에 유효한 액션이 있는지 확인합니다.
-		bool bPerTickLimitReached = ActionsThisTick < MaxActionsPerTick; // 현재 틱에서 최대 액션 수를 초과했는지 확인합니다.
-		return bIsQueueInvalid && bPerTickLimitReached; // 둘 다 참이어야 합니다.
+		bool bIsNextActionValid = IsValid(ActionQueue[GetNextQueueIndex(QueueCounter)]); // 다음 큐에 유효한 액션이 있는지 확인합니다.
+		bool bCanExecuteMoreActionsThisTick = ActionsThisTick < MaxActionsPerTick; // 현재 틱에서 최대 액션 수를 초과했는지 확인합니다.
+		return bIsNextActionValid && bCanExecuteMoreActionsThisTick; // 둘 다 참이어야 합니다.
 	};
 
 	// 조건이 거짓일 때 반복 호출될 함수
@@ -66,7 +66,7 @@ void AActionManager::AttemptToPlayNextAction()
 		IInterface_CardAction::Execute_AnimateAction(Action, this);
 	};
 
-	DelayHelper_NextAction->DelayWhile(ShouldStopActionLoop, OnLoop, OnCompleted, 0.0f);
+	DelayHelper_NextAction->DelayWhile(ShouldCompleted, OnLoop, OnCompleted, 0.0f);
 }
 
 void AActionManager::QueueAction(UObject* Action)
@@ -77,9 +77,7 @@ void AActionManager::QueueAction(UObject* Action)
 	// FillCounter 위치에 액션이 비어 있는지 확인합니다.
 	if (!IsValid(ActionQueue[FillCounter]))
 	{
-		// 액션 큐의 FillCounter 위치에 액션을 삽입합니다.
-		// Insert 함수는 지정된 위치에 액션을 삽입하고, 그 뒤의 액션들을 뒤로 이동시킵니다.
-		ActionQueue.Insert(Action, FillCounter);
+		ActionQueue[FillCounter] = Action;
 	}
 	else
 	{
@@ -103,7 +101,7 @@ void AActionManager::QueueDelay(float InDelay)
 
 int32 AActionManager::GetNextQueueIndex(int32 InCurrentIndex)
 {
-	return UKismetMathLibrary::Percent_IntInt(ActionQueue.Num(), (InCurrentIndex + 1));
+	return (InCurrentIndex + 1) % ActionQueue.Num();
 }
 
 void AActionManager::ProceedFromOngoingAction_Implementation(UObject* OngoingAction)
@@ -111,6 +109,7 @@ void AActionManager::ProceedFromOngoingAction_Implementation(UObject* OngoingAct
 	if (OngoingAction->GetClass()->ImplementsInterface(UInterface_CardAction::StaticClass()))
 	{
 		IInterface_CardAction::Execute_AttemptDestroyAction(OngoingAction);
+		ActionQueue[QueueCounter] = nullptr; // 큐에서 액션 제거
 		AttemptToPlayNextAction();
 	}
 	else

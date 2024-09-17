@@ -123,7 +123,6 @@ public:
 	/*카드 사용 시, 타겟 입력이 필요한 경우 유효한 타겟들을 받아 저장하고, 이후 카드의 다음 타겟을 처리하는 함수.*/
 	UFUNCTION(BlueprintCallable, Category = "Card|Usage")
 	void ProceedOnInputTargetsReceived(TArray<AActor*> Targets);
-	
 
 
 	/*========================================================================================
@@ -175,10 +174,10 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Card|Data")
 	UTexture2D* GetCardFrame(ECardDataType InCardType);
-	
+
 	UFUNCTION(BlueprintPure, Category = "Card|Data")
 	UTexture2D* GetCardPortrait(ECardDataType InCardType);
-	
+
 
 	/*카드의 게임플레이 태그 컨테이너를 반환합니다.*/
 	UFUNCTION(BlueprintPure, Category = "Card|Data")
@@ -229,7 +228,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Card|Data")
 	TSubclassOf<UUserWidget> GetCardVisualWidget(ECardDataType Type);
-	
+
 	/*카드 사용 규칙 중 상태 컴포넌트에 해당하는 비용을 가져오는 함수.*/
 	bool GetStatusCostValueFromUseRules(ECardDataType InPile, const TSubclassOf<UStatusComponent>& StatusClass, int32& OutStatusCost, int32& OutUseRuleIndex);
 
