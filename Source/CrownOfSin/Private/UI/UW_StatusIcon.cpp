@@ -6,9 +6,10 @@
 #include "Interfaces/Interface_Utility.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetTextLibrary.h"
-#include "Libraries/AssetTableRef.h"
+#include "Libraries/AssetPath.h"
 #include "StatusSystem/StatusComponent.h"
 #include "UI/UW_ToolTipList.h"
+#include "Utilities/CosLog.h"
 
 UUW_StatusIcon::UUW_StatusIcon(const FObjectInitializer& Initializer) : Super(Initializer), StatusButton(nullptr), BottomRightNumber(nullptr), CenterNumber(nullptr), BottomLeftNumber(nullptr),
                                                                         AlertModify(nullptr),
@@ -17,14 +18,25 @@ UUW_StatusIcon::UUW_StatusIcon(const FObjectInitializer& Initializer) : Super(In
                                                                         StatusComponent(nullptr),
                                                                         StatusAppearance()
 {
-	if (TSubclassOf<UUW_ToolTip> FoundToolTipClass = FAssetReferenceUtility::FindClassFromDataTable<UUW_ToolTip>(AssetRefPath::BluePrintPath, FName("WBP_Tooltip"), true))
+	static ConstructorHelpers::FClassFinder<UUW_ToolTip> WBP_ToolTip(*AssetPath::Blueprint::WBP_ToolTip_C);
+	if (WBP_ToolTip.Succeeded())
 	{
-		WBP_ToolTipClass = FoundToolTipClass;
+		WBP_ToolTipClass = WBP_ToolTip.Class;
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("WBP_ToolTip를 로드하지 못했습니다."));
 	}
 
-	if (TSubclassOf<UUW_ToolTipList> FoundToolTipListClass = FAssetReferenceUtility::FindClassFromDataTable<UUW_ToolTipList>(AssetRefPath::BluePrintPath, FName("WBP_TooltipList"), true))
+
+	static ConstructorHelpers::FClassFinder<UUW_ToolTipList> WBP_ToolTipList(*AssetPath::Blueprint::WBP_ToolTipList_C);
+	if (WBP_ToolTipList.Succeeded())
 	{
-		WBP_ToolTipListClass = FoundToolTipListClass;
+		WBP_ToolTipListClass = WBP_ToolTipList.Class;
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("WBP_ToolTipList를 로드하지 못했습니다."));
 	}
 }
 

@@ -1,5 +1,6 @@
 ﻿#include "Core/TurnManager.h"
 
+#include "ActionSystem/ActionManagerSubsystem.h"
 #include "ActionSystem/Action_LoadMap.h"
 #include "Core/DispatcherHubLocalComponent.h"
 #include "Interfaces/Interface_Initiative.h"
@@ -223,17 +224,13 @@ void ATurnManager::ExitCombat()
 	// 기본 변환 값 설정
 	FTransform SpawnTransform = FTransform::Identity;
 
-	// 맵 로드 액션을 지연 생성
-	if (AAction_LoadMap* NewActionLoadMap = GetWorld()->SpawnActorDeferred<AAction_LoadMap>(AAction_LoadMap::StaticClass(),
-	                                                                                        SpawnTransform,
-	                                                                                        nullptr, nullptr,
-	                                                                                        ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
+	//액션 로드맵 생성
+	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
+	AAction_LoadMap* NewAction_LoadMap = ActionManagerSubsystem->CreateAndQueueAction<AAction_LoadMap>([CurrentNodeMap](AAction_LoadMap* Action_LoadMap)
 	{
-		// 로드할 맵과 딜레이 값 설정
-		NewActionLoadMap->Level = CurrentNodeMap;
-		NewActionLoadMap->EndDelay = -1.0f;
-		NewActionLoadMap->FinishSpawning(SpawnTransform);
-	}
+		Action_LoadMap->Level = CurrentNodeMap;
+		Action_LoadMap->EndDelay = -1.0f;
+	});
 }
 
 int32 ATurnManager::AddActorToInitiative(AActor* InActor, TArray<AActor*>& InitiativeArray)

@@ -162,7 +162,8 @@ UStatusComponent* ACardPlayer::CreateNewStatusComponent(TSubclassOf<UStatusCompo
 	NewStatusComponent->OwnerUiRef = PlayerUI;
 	NewStatusComponent->bShowImmediately = false;
 	NewStatusComponent->GameplayTags = FGameplayTagContainer();
-
+	AddInstanceComponent(NewStatusComponent);
+	
 	return NewStatusComponent;
 }
 

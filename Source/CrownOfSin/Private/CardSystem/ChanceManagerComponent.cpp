@@ -2,7 +2,7 @@
 
 #include "BlueprintGameplayTagLibrary.h"
 #include "Interfaces/Interface_CardGameInstance.h"
-#include "Libraries/AssetTableRef.h"
+#include "Libraries/AssetPath.h"
 #include "Libraries/FunctionLibrary_ArrayUtils.h"
 #include "Libraries/FunctionLibrary_Singletons.h"
 #include "StatusSystem/StatusComponent.h"
@@ -20,17 +20,27 @@ UChanceManagerComponent::UChanceManagerComponent()
 
 	// ...
 
-	if (UDataTable* DT_Cards_Rewards = FAssetReferenceUtility::LoadAssetFromDataTable<UDataTable>(AssetRefPath::DataTablePath, FName(TEXT("DT_Cards_Rewards"))))
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_Cards_Rewards(*AssetPath::DataTable::DT_Cards_Rewards);
+	if (DT_Cards_Rewards.Succeeded())
 	{
-		CardRewardDataRowHandle.DataTable = DT_Cards_Rewards;
+		CardRewardDataRowHandle.DataTable = DT_Cards_Rewards.Object;
 		CardRewardDataRowHandle.RowName = FName(TEXT("ConsolationPrize"));
 	}
-
-	if (UDataTable* DT_Artifacts = FAssetReferenceUtility::LoadAssetFromDataTable<UDataTable>(AssetRefPath::DataTablePath, FName("DT_Artifacts")))
+	else
 	{
-		ArtifactTables.Add(DT_Artifacts);
+		COS_LOG_ERROR(TEXT("DT_Cards_Rewards를 로드하지 못했습니다."));
 	}
 
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_Artifacts(*AssetPath::DataTable::DT_Artifacts);
+	if (DT_Artifacts.Succeeded())
+	{
+		ArtifactTables.Add(DT_Artifacts.Object);
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("DT_Artifacts 를 로드하지 못했습니다."));
+	}
+	
 
 	DefaultArtifactRarityWeights.Add(CosGameTags::Rarity_Common, 1.0f);
 	DefaultArtifactRarityWeights.Add(CosGameTags::Rarity_Rare, 0.0f);

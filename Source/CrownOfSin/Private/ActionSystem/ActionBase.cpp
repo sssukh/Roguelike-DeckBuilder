@@ -17,25 +17,21 @@ void AActionBase::BeginPlay()
 	Super::BeginPlay();
 
 	SetUpAction();
+	
+}
 
-	if (UWorld* World = GetWorld())
-	{
-		if (UActionManagerSubsystem* ActionManagerSubsystem = World->GetSubsystem<UActionManagerSubsystem>())
-		{
-			ActionManagerSubsystem->QueueAction(this);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("ActionManagerSubsystem을 가져올 수 없습니다."));
-		}
-	}
+void AActionBase::SetUpAction_Implementation()
+{
+}
+
+void AActionBase::PlayAction_Implementation()
+{
+	Execute_EndAction(this);
 }
 
 void AActionBase::AnimateAction_Implementation(UObject* CallingActionManager)
 {
-	// 수정 전 코드
-	// ActionManagerReference = CallingActionManager;
-	PlayAction();
+	Execute_PlayAction(this);
 }
 
 void AActionBase::EndAction_Implementation()
@@ -70,13 +66,4 @@ bool AActionBase::AttemptDestroyAction_Implementation()
 {
 	Destroy();
 	return true;
-}
-
-void AActionBase::SetUpAction_Implementation()
-{
-}
-
-void AActionBase::PlayAction_Implementation()
-{
-	EndAction();
 }

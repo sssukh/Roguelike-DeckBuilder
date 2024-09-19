@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Core/MinionBase.h"
 #include "AttackPatternComponent.generated.h"
 
 
@@ -23,4 +24,8 @@ protected:
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attack Pattern", meta=(ExposeOnSpawn="true"))
+	FDataTableRowHandle AttackPatternData;
 };

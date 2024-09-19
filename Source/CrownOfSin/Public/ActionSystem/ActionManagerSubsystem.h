@@ -48,13 +48,21 @@ private:
 
 public:
 	template <typename T>
-	T* CreateAndQueueAction(TFunction<void(T*)> InitFunction)
+	T* CreateAndQueueAction(TFunction<void(T*)> InitFunction,
+	                        ESpawnActorCollisionHandlingMethod CollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn,
+	                        ESpawnActorScaleMethod ScaleMethod = ESpawnActorScaleMethod::OverrideRootScale)
 	{
 		if (UWorld* World = GetWorld())
 		{
 			FTransform SpawnTransform = FTransform::Identity;
 
-			if (T* NewAction = World->SpawnActorDeferred<T>(T::StaticClass(), SpawnTransform))
+			// 지정된 클래스와 스폰 파라미터를 사용하여 액터를 스폰 (지연 방식)
+			if (T* NewAction = World->SpawnActorDeferred<T>(T::StaticClass(),
+			                                                SpawnTransform,
+			                                                nullptr,
+			                                                nullptr,
+			                                                CollisionHandlingMethod,
+			                                                ScaleMethod))
 			{
 				// InitFunction을 사용하여 액션의 변수를 설정
 				InitFunction(NewAction);
@@ -71,34 +79,74 @@ public:
 		return nullptr;
 	}
 
-	// 사용 예시
-	// AAction_LoadMap* LoadMapAction = ActionManagerSubsystem->CreateAndQueueAction<AAction_LoadMap>([](AAction_LoadMap* Action)
+	template <typename T>
+	T* CreateAndQueueActionWithClass(UClass* ActionClass,
+	                                 TFunction<void(T*)> InitFunction,
+	                                 ESpawnActorCollisionHandlingMethod CollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn,
+	                                 ESpawnActorScaleMethod ScaleMethod = ESpawnActorScaleMethod::OverrideRootScale)
+	{
+		if (UWorld* World = GetWorld())
+		{
+			FTransform SpawnTransform = FTransform::Identity;
+
+			// 지정된 클래스를 사용하여 액터를 스폰 (지연 방식)
+			if (T* NewAction = Cast<T>(World->SpawnActorDeferred<AActor>(ActionClass,
+			                                                             SpawnTransform,
+			                                                             nullptr,
+			                                                             nullptr,
+			                                                             CollisionHandlingMethod,
+			                                                             ScaleMethod)))
+			{
+				// InitFunction을 사용하여 액션의 변수를 설정
+				InitFunction(NewAction);
+
+				// 액터 스포닝 완료
+				NewAction->FinishSpawning(SpawnTransform);
+
+				// 액션을 큐에 추가
+				QueueAction(NewAction);
+
+				return NewAction;
+			}
+		}
+		return nullptr;
+	}
+
+
+	//사용 예시
+	// UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
+	// AAction_ModifyStatus* NewAction = ActionManagerSubsystem->CreateAndQueueAction<AAction_ModifyStatus>([](AAction_ModifyStatus* Action_ModifyStatus)
 	// {
-	// 	Action->SetMapName("MyMap");
+	// 	Action_ModifyStatus->NewValue = 0;
+	// 	Action_ModifyStatus->bShowSplashIcon = false;
+	// 	Action_ModifyStatus->bShowSplashNumber = false;
+	// 	Action_ModifyStatus->bRefreshAppearance = true;
+	// 	Action_ModifyStatus->TextOverride = FText::FromString(TEXT("HideReward"));
+	// 	Action_ModifyStatus->bCanBeZero = false;
+	// 	Action_ModifyStatus->EndDelay = -1.0f;
 	// });
 
 private:
-	/** 액션 큐 */
-	UPROPERTY(BlueprintReadWrite, Category="Action Manager SubSystem")
-	TQueue<UObject*> ActionQueue;
-
-	/** 현재 실행 중인 액션 */
-	UPROPERTY(BlueprintReadWrite, Category="Action Manager SubSystem")
-	UObject* CurrentAction;
-
 	/** 액션 진행 상태 */
-	UPROPERTY(BlueprintReadWrite, Category="Action Manager SubSystem")
+	UPROPERTY(BlueprintReadWrite, Category="Action Manager SubSystem", meta=(AllowPrivateAccess="true"))
 	bool bIsActionInProgress;
 
 	/** 현재 틱에서 실행된 액션 수 */
-	UPROPERTY(BlueprintReadWrite, Category="Action Manager SubSystem")
+	UPROPERTY(BlueprintReadWrite, Category="Action Manager SubSystem", meta=(AllowPrivateAccess="true"))
 	int32 ActionsThisTick;
 
 	/** 최대 액션 실행 횟수 */
-	UPROPERTY(BlueprintReadWrite, Category="Action Manager SubSystem")
+	UPROPERTY(BlueprintReadWrite, Category="Action Manager SubSystem", meta=(AllowPrivateAccess="true"))
 	int32 MaxActionsPerTick;
 
+	/** 현재 실행 중인 액션 */
+	UPROPERTY(BlueprintReadWrite, Category="Action Manager SubSystem", meta=(AllowPrivateAccess="true"))
+	UObject* CurrentAction;
+
+	/** 액션 큐 */
+	TQueue<UObject*> ActionQueue;
+
 	/** 액션 실행을 지연시키기 위한 타이머 */
-	UPROPERTY(BlueprintReadWrite, Category="Action Manager SubSystem")
+	UPROPERTY(BlueprintReadWrite, Category="Action Manager SubSystem", meta=(AllowPrivateAccess="true"))
 	FTimerHandle ActionTimerHandle;
 };

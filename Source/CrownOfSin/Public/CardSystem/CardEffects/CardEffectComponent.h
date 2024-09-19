@@ -98,7 +98,7 @@ public:
 
 	// 카드 효과가 발동될 때 실행될 액션 클래스입니다.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")
-	TSubclassOf<AAction_Effect> EffectAction;
+	TSubclassOf<AAction_Effect> EffectActionClass;
 
 	// 사용된 카드의 데이터를 나타내는 변수입니다.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect | Variable")

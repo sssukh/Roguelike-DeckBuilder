@@ -9,6 +9,7 @@
 #include "Interfaces/Interface_Utility.h"
 #include "StatusComponent.generated.h"
 
+
 class UDispatcherHubComponent;
 class URetriggerAbleDelay;
 
@@ -214,7 +215,7 @@ public:
 	/** 상태 인디케이터 객체의 참조입니다. */
 	UPROPERTY(BlueprintReadWrite, Category="Status Component", meta=(ExposeOnSpawn="true"))
 	UObject* StatusIndicator;
-
+	
 
 	/** RetriggerAbleDelay 인스턴스입니다. 루프 가드를 위한 딜레이 처리를 담당합니다. */
 private:

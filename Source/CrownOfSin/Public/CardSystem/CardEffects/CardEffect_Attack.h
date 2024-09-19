@@ -1,5 +1,4 @@
-﻿
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "CardEffectComponent.h"
@@ -20,16 +19,20 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	/**
+	 * @brief 카드를 통한 공격 효과를 처리하는 함수. 대상 액터에게 공격을 가하고 적절한 이벤트를 호출합니다.
+	 * @param TargetActor 공격 대상 액터
+	 * @return 성공적으로 처리되면 true 반환
+	 */
 	virtual bool ResolveCardEffect(AActor* TargetActor) override;
 
 	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/
 public:
-	UPROPERTY(BlueprintReadWrite,Category="Card Effect Attack")
+	UPROPERTY(BlueprintReadWrite, Category="Card Effect Attack")
 	AActor* AttackTarget;
-	
-	UPROPERTY(BlueprintReadWrite,Category="Card Effect Attack")
+
+	UPROPERTY(BlueprintReadWrite, Category="Card Effect Attack")
 	float DamageScaleFactor = 0.15f;
-	
 };

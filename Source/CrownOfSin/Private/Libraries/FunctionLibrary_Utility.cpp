@@ -16,8 +16,22 @@ void UFunctionLibrary_Utility::DisplayWarningIfMultipleSingletons(const UObject*
 	}
 }
 
-void UFunctionLibrary_Utility::SendScreenLogMessage(FText Message, FColor Color)
+void UFunctionLibrary_Utility::SendScreenLogMessage(const UObject* WorldContextObject,FText Message, FColor Color)
 {
-	if (ACardPlayer* CardPlayer = Cast<ACardPlayer>(UGameplayStatics::GetActorOfClass(GEngine->GameViewport->GetWorld(), ACardPlayer::StaticClass())))
+	if (ACardPlayer* CardPlayer = Cast<ACardPlayer>(UGameplayStatics::GetActorOfClass(WorldContextObject, ACardPlayer::StaticClass())))
 		CardPlayer->DisplayScreenLogMessage(Message, Color);
+}
+
+FName UFunctionLibrary_Utility::GenerateUniqueObjectName(UObject* Outer, UClass* ObjectClass, const FString& Suffix)
+{
+	// Get the class name of the object
+	FString ClassName = ObjectClass->GetName();
+    
+	// Generate a base name using the class name and optional suffix
+	FString BaseName = FString::Printf(TEXT("%s_%s"), *ClassName, *Suffix);
+    
+	// Use MakeUniqueObjectName to generate a unique name within the given outer context
+	FName UniqueName = MakeUniqueObjectName(Outer, ObjectClass, FName(*BaseName));
+
+	return UniqueName;
 }

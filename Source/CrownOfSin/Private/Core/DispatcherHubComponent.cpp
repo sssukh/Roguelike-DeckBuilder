@@ -1,6 +1,7 @@
 ﻿#include "Core/DispatcherHubComponent.h"
 
 
+#include "ActionSystem/ActionManagerSubsystem.h"
 #include "ActionSystem/Action_DispatcherEvent.h"
 #include "Interfaces/Interface_CardGameInstance.h"
 #include "Interfaces/Interface_EventHolder.h"
@@ -182,66 +183,39 @@ bool UDispatcherHubComponent::ResolveCallEvent(FGameplayTag EventTag, UObject* C
 
 void UDispatcherHubComponent::QueueEvent(FGameplayTag Event, UObject* CallingObject, UObject* CallSpecificObject, float EndDelay, UObject* PayLoad, FGameplayTagContainer CallTags)
 {
-	
-
-	// 액터가 생성될 위치 및 회전을 나타내는 기본 변환 값을 설정.
-	FTransform SpawnTransform = FTransform::Identity;
-
-	// 지연 생성 방식으로 AAction_DispatcherEvent 액터를 생성. 액터 생성이 성공한 경우에만 이후 로직을 실행.
-	AAction_DispatcherEvent* NewDispatcherEvent = GetWorld()->SpawnActorDeferred<AAction_DispatcherEvent>(
-		AAction_DispatcherEvent::StaticClass(),
-		SpawnTransform,
-		nullptr, nullptr,
-		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
-	);
-
-	if (NewDispatcherEvent)
-	{
-		// 생성된 액터에 이벤트와 관련된 속성들을 설정.
-		NewDispatcherEvent->Event = Event;
-		NewDispatcherEvent->CallingObject = CallingObject;
-		NewDispatcherEvent->DispatcherHub = this;
-		NewDispatcherEvent->AlsoCallGlobal = ECallGlobal::CallAfter; // 전역 이벤트 호출 여부 설정.
-		NewDispatcherEvent->PayLoad = PayLoad;
-		NewDispatcherEvent->CallTags = CallTags;
-		NewDispatcherEvent->EndDelay = EndDelay;
-
-		// 액터의 생성이 완료됨을 알림.
-		NewDispatcherEvent->FinishSpawning(SpawnTransform);
-	}
+	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_DispatcherEvent>(
+		[this,Event,CallingObject,CallSpecificObject,EndDelay,PayLoad,CallTags](AAction_DispatcherEvent* Action_DispatcherEvent)
+		{
+			// 생성된 액터에 이벤트와 관련된 속성들을 설정.
+			Action_DispatcherEvent->Event = Event;
+			Action_DispatcherEvent->CallingObject = CallingObject;
+			Action_DispatcherEvent->CallSpecificObject = CallSpecificObject;
+			Action_DispatcherEvent->DispatcherHubReference = this;
+			Action_DispatcherEvent->AlsoCallGlobal = ECallGlobal::CallAfter; // 전역 이벤트 호출 여부 설정.
+			Action_DispatcherEvent->PayLoad = PayLoad;
+			Action_DispatcherEvent->CallTags = CallTags;
+			Action_DispatcherEvent->EndDelay = EndDelay;
+		});
 }
 
 void UDispatcherHubComponent::QueueEventWithPayloadAndCallTags(FGameplayTag Event, UObject* CallingObject, UObject* CallSpecificObject, float EndDelay, UObject* PayLoad,
                                                                FGameplayTagContainer CallTags)
 {
-	
-	// 액터가 생성될 위치와 회전을 나타내는 기본 변환 값을 설정합니다.
-	FTransform SpawnTransform = FTransform::Identity;
-
-	// AAction_DispatcherEvent 액터를 지연 생성. 액터가 성공적으로 생성된 경우에만 이후 로직을 실행합니다.
-	AAction_DispatcherEvent* NewDispatcherEvent = GetWorld()->SpawnActorDeferred<AAction_DispatcherEvent>(
-		AAction_DispatcherEvent::StaticClass(), // 생성할 액터 클래스
-		SpawnTransform, // 액터의 스폰 변환 정보
-		nullptr, // 소유자 (필요 시 설정)
-		nullptr, // 인스턴스화된 Pawn이나 캐릭터 (필요 시 설정)
-		ESpawnActorCollisionHandlingMethod::AlwaysSpawn // 충돌 핸들링 방법
-	);
-
-	// 액터가 성공적으로 생성되었다면 필요한 속성들을 설정합니다.
-	if (NewDispatcherEvent)
-	{
-		NewDispatcherEvent->Event = Event;
-		NewDispatcherEvent->CallingObject = CallingObject;
-		NewDispatcherEvent->CallSpecificObject = CallSpecificObject;
-		NewDispatcherEvent->DispatcherHub = this;
-		NewDispatcherEvent->AlsoCallGlobal = ECallGlobal::CallAfter; // 전역 이벤트 호출 여부 설정
-		NewDispatcherEvent->PayLoad = PayLoad;
-		NewDispatcherEvent->CallTags = CallTags;
-		NewDispatcherEvent->EndDelay = EndDelay;
-
-		// 액터 생성이 완료됨을 알립니다.
-		NewDispatcherEvent->FinishSpawning(SpawnTransform);
-	}
+	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_DispatcherEvent>(
+		[this,Event,CallingObject,CallSpecificObject,EndDelay,PayLoad,CallTags](AAction_DispatcherEvent* NewDispatcherEvent)
+		{
+			// 생성된 액터에 이벤트와 관련된 속성들을 설정.
+			NewDispatcherEvent->Event = Event;
+			NewDispatcherEvent->CallingObject = CallingObject;
+			NewDispatcherEvent->CallSpecificObject = CallSpecificObject;
+			NewDispatcherEvent->DispatcherHubReference = this;
+			NewDispatcherEvent->AlsoCallGlobal = ECallGlobal::CallAfter;
+			NewDispatcherEvent->PayLoad = PayLoad;
+			NewDispatcherEvent->CallTags = CallTags;
+			NewDispatcherEvent->EndDelay = EndDelay;
+		});
 }
 
 bool UDispatcherHubComponent::CallEventWithPayload(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, UObject* PayLoad)

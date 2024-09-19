@@ -1,14 +1,20 @@
 ﻿#include "UI/UW_ToolTipList.h"
 
 #include "Components/VerticalBox.h"
-#include "Libraries/AssetTableRef.h"
+#include "Libraries/AssetPath.h"
 #include "UI/UW_ToolTip.h"
+#include "Utilities/CosLog.h"
 
 UUW_ToolTipList::UUW_ToolTipList(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), ToolTipBox(nullptr)
 {
-	if (TSubclassOf<UUW_ToolTip> FoundToolTipClass = FAssetReferenceUtility::FindClassFromDataTable<UUW_ToolTip>(AssetRefPath::BluePrintPath, FName("WBP_Tooltip"), true))
+	static ConstructorHelpers::FClassFinder<UUW_ToolTip> WBP_ToolTip(*AssetPath::Blueprint::WBP_ToolTip_C);
+	if (WBP_ToolTip.Succeeded())
 	{
-		WBP_ToolTipClass = FoundToolTipClass;
+		WBP_ToolTipClass = WBP_ToolTip.Class;
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("WBP_ToolTip를 로드하지 못했습니다."));
 	}
 }
 

@@ -5,9 +5,10 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Libraries/AssetTableRef.h"
+#include "Libraries/AssetPath.h"
 #include "Libraries/FunctionLibrary_Utility.h"
 #include "UI/UW_TargetingBezierPoint.h"
+#include "Utilities/CosLog.h"
 
 UUW_TargetingBezier::UUW_TargetingBezier(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), BezierPanel(nullptr), ControlPointPanel(nullptr), ControlPoint_1(nullptr),
                                                                                         ControlPoint_2(nullptr),
@@ -17,14 +18,27 @@ UUW_TargetingBezier::UUW_TargetingBezier(const FObjectInitializer& ObjectInitial
 	ControlPoint1 = FVector2D(860.0f, 928.0f);
 	ControlPoint2 = FVector2D(880.0f, 436.0f);
 	ControlPoint3 = FVector2D(1345.0f, 394.0f);
-
-	if (TSubclassOf<UUW_TargetingBezierPoint> WBP_TargetingBezierPoint = FAssetReferenceUtility::FindClassFromDataTable<UUW_TargetingBezierPoint>(AssetRefPath::BluePrintPath, FName("WBP_TargetingBezierPoint"), true))
+	
+	static ConstructorHelpers::FClassFinder<UUserWidget> WBP_TargetingBezierPoint(*AssetPath::Blueprint::WBP_TargetingBezierPoint_C);
+	if (WBP_TargetingBezierPoint.Succeeded())
 	{
-		WBP_TargetingBezierPointClass = WBP_TargetingBezierPoint;
+		WBP_TargetingBezierPointClass = WBP_TargetingBezierPoint.Class;
 	}
-	if (UTexture2D* T_TargetArrow = FAssetReferenceUtility::LoadAssetFromDataTable<UTexture2D>(AssetRefPath::TexturesPath, FName("T_TargetArrow")))
+	else
 	{
-		BezierPointTexture = T_TargetArrow;
+		COS_LOG_ERROR(TEXT("WBP_TargetingBezierPoint를 로드하지 못했습니다."));
+	}
+
+
+	const TCHAR* sd = *AssetPath::Texture::T_TargetArrow;
+	static ConstructorHelpers::FObjectFinder<UTexture2D> T_TargetArrow(*AssetPath::Texture::T_TargetArrow);
+	if (T_TargetArrow.Succeeded())
+	{
+		BezierPointTexture = T_TargetArrow.Object;
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("T_TargetArrow를 로드하지 못했습니다."));
 	}
 }
 
@@ -34,6 +48,13 @@ void UUW_TargetingBezier::NativePreConstruct()
 
 	// 기존의 BezierPoints 배열을 비웁니다.
 	BezierPoints.Empty();
+
+	if (!WBP_TargetingBezierPointClass)
+	{
+		COS_LOG_SCREEN_ERROR(TEXT("UUW_TargetingBezier 에서 WBP_TargetingBezierPointClass를 설정해주세요"));
+		return;
+	}
+
 
 	// NumBezierPoints 수만큼 새로운 Bezier 포인트 위젯을 생성하고 설정
 	for (int32 PointIndex = 0; PointIndex < NumBezierPoints; ++PointIndex)
@@ -93,13 +114,13 @@ void UUW_TargetingBezier::UpdateBezierPoints()
 		// 포인트의 위치와 각도를 계산하기 위한 변수들
 		FVector2D CalculatedPosition;
 		float CalculatedAngle;
-        
+
 		// Bezier 곡선상의 현재 포인트의 비율 계산 (Alpha)
 		float BezierAlpha = PointIndex / static_cast<float>(NumBezierPoints);
-        
+
 		// 주어진 Alpha 값에 따라 위치와 각도를 계산
 		GetPositionAtBezierAlpha(BezierAlpha, CalculatedPosition, CalculatedAngle);
-        
+
 		// 계산된 위치를 현재 Bezier 포인트의 캔버스 슬롯에 설정
 		CurrentBezierSlot->SetPosition(CalculatedPosition);
 
@@ -179,24 +200,24 @@ void UUW_TargetingBezier::GetPositionAtBezierAlpha(float InAlpha, FVector2D& Out
 
 	// 첫 번째 및 두 번째 제어점 간의 선형 보간
 	FVector2D LerpBetweenPoint1And2 = UFunctionLibrary_Utility::LerpVector2D(ControlPoint1Slot->GetPosition(), ControlPoint2Slot->GetPosition(), InAlpha);
-    
+
 	// 두 번째 및 세 번째 제어점 간의 선형 보간
 	FVector2D LerpBetweenPoint2And3 = UFunctionLibrary_Utility::LerpVector2D(ControlPoint2Slot->GetPosition(), ControlPoint3Slot->GetPosition(), InAlpha);
-    
+
 	// 위의 두 보간 위치 간의 선형 보간 결과 (최종 Bezier 곡선 위치)
 	FVector2D FinalBezierPosition = UFunctionLibrary_Utility::LerpVector2D(LerpBetweenPoint1And2, LerpBetweenPoint2And3, InAlpha);
-    
+
 	// 3D 공간에서의 시작 위치 설정
 	FVector StartLocation(FinalBezierPosition.X, FinalBezierPosition.Y, 0);
 
 	// 작은 오프셋을 사용하여 타겟 위치 계산 (알파 값 조정)
 	float AdjustedAlpha = InAlpha + 0.001f;
-    
+
 	// 조정된 알파 값을 사용하여 타겟 위치 계산
 	FVector2D AdjustedLerpPoint1And2 = UFunctionLibrary_Utility::LerpVector2D(ControlPoint1Slot->GetPosition(), ControlPoint2Slot->GetPosition(), AdjustedAlpha);
 	FVector2D AdjustedLerpPoint2And3 = UFunctionLibrary_Utility::LerpVector2D(ControlPoint2Slot->GetPosition(), ControlPoint3Slot->GetPosition(), AdjustedAlpha);
 	FVector2D AdjustedFinalBezierPosition = UFunctionLibrary_Utility::LerpVector2D(AdjustedLerpPoint1And2, AdjustedLerpPoint2And3, AdjustedAlpha);
-    
+
 	// 3D 공간에서의 타겟 위치 설정
 	FVector TargetLocation(AdjustedFinalBezierPosition.X, AdjustedFinalBezierPosition.Y, 0);
 

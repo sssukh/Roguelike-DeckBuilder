@@ -3,15 +3,21 @@
 #include "Components/HorizontalBox.h"
 #include "Components/VerticalBox.h"
 #include "Interfaces/Interface_Utility.h"
-#include "Libraries/AssetTableRef.h"
+#include "Libraries/AssetPath.h"
 #include "StatusSystem/StatusComponent.h"
 #include "UI/UW_StatusIcon.h"
+#include "Utilities/CosLog.h"
 
 UUW_StatusBar::UUW_StatusBar(const FObjectInitializer& Initializer) : Super(Initializer), StatusBoxHorizontal(nullptr), StatusBoxVertical(nullptr)
 {
-	if (TSubclassOf<UUW_StatusIcon> WBP_StatusIcon = FAssetReferenceUtility::FindClassFromDataTable<UUW_StatusIcon>(AssetRefPath::BluePrintPath, FName("WBP_StatusIcon"), true))
+	static ConstructorHelpers::FClassFinder<UUW_StatusIcon> WBP_StatusIcon(*AssetPath::Blueprint::WBP_StatusIcon_C);
+	if (WBP_StatusIcon.Succeeded())
 	{
-		WBP_StatusIconClass = WBP_StatusIcon;
+		WBP_StatusIconClass = WBP_StatusIcon.Class;
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("WBP_StatusIcon를 로드하지 못했습니다."));
 	}
 }
 

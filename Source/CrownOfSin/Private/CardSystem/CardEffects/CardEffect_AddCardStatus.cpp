@@ -29,6 +29,7 @@ bool UCardEffect_AddCardStatus::ResolveCardEffect(AActor* TargetActor)
 		NewStatusComponent->StatusValue = EffectValue;
 		NewStatusComponent->bShowImmediately = false;
 		NewStatusComponent->GameplayTags = GameplayTags;
+		TargetActor->AddInstanceComponent(NewStatusComponent);
 		return true;
 	}
 

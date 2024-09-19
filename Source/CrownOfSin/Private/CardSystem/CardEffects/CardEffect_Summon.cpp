@@ -44,7 +44,7 @@ bool UCardEffect_Summon::ResolveCardEffect(AActor* TargetActor)
 	{
 		int32 BackIndex;
 		AActor* BackTarget;
-		MinionBase->MinionTrack->GetBackMinion(BackIndex, BackTarget);
+		MinionBase->MinionTrack->GetBackMinion(BackTarget, BackIndex);
 
 		int32 Index = GameplayTags.HasTagExact(CosGameTags::Position_Back) ? BackIndex + 1 : 0;
 		MinionBase->MinionTrack->AddMinionToTrack(Index, *FoundMinion, true);

@@ -6,7 +6,7 @@
 #include "Interfaces/Interface_CardGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Libraries/AssetTableRef.h"
+#include "Libraries/AssetPath.h"
 #include "Libraries/FunctionLibrary_Singletons.h"
 #include "Utilities/CosLog.h"
 #include "NodeSystem/MapEventComponent.h"
@@ -26,24 +26,38 @@ ANodeBase::ANodeBase()
 	NodeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("NodeMesh"));
 	NodeMesh->SetupAttachment(RootComponent);
 
-	if (UStaticMesh* Plane = FAssetReferenceUtility::LoadAssetFromDataTable<UStaticMesh>(AssetRefPath::MeshesPath, FName("Plane")))
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM_Plane(*AssetPath::Meshes::SM_Plane);
+	if (SM_Plane.Succeeded())
 	{
-		NodeMesh->SetStaticMesh(Plane);
-
-		if (UMaterialInterface* M_Node = FAssetReferenceUtility::LoadAssetFromDataTable<UMaterialInterface>(AssetRefPath::MaterialPath, FName("M_Node")))
+		NodeMesh->SetStaticMesh(SM_Plane.Object);
+		static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Node(*AssetPath::Material::M_Node);
+		if (M_Node.Succeeded())
 		{
-			NodeMeshMaterial = M_Node;
+			NodeMeshMaterial = M_Node.Object;
 			NodeMesh->SetMaterial(0, NodeMeshMaterial);
 		}
+		else
+		{
+			COS_LOG_ERROR(TEXT("M_Node를 로드하지 못했습니다."));
+		}
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("Plane를 로드하지 못했습니다."));
 	}
 
 
 	CrossMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CrossMesh"));
 	CrossMesh->SetupAttachment(NodeMesh);
 
-	if (UStaticMesh* SM_Edge = FAssetReferenceUtility::LoadAssetFromDataTable<UStaticMesh>(AssetRefPath::MeshesPath, FName("SM_Edge")))
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM_Edge(*AssetPath::Meshes::SM_Edge);
+	if (SM_Edge.Object)
 	{
-		SplineMesh = SM_Edge;
+		SplineMesh = SM_Edge.Object;
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("를 로드하지 못했습니다."));
 	}
 
 	MapEventClass = UMapEvent_Multi::StaticClass();
@@ -61,8 +75,10 @@ void ANodeBase::BeginPlay()
 		COS_SCREEN(TEXT("MapEventClass를 설정해주세요!"));
 		return;
 	}
+	
 	MapEventRef = NewObject<UMapEventComponent>(this, MapEventClass);
 	MapEventRef->RegisterComponent();
+	AddInstanceComponent(MapEventRef);
 }
 
 void ANodeBase::OnConstruction(const FTransform& Transform)

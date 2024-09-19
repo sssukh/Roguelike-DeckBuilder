@@ -38,4 +38,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Targeting Bezier Point", meta=(ExposeOnSpawn="true"))
 	UTexture2D* Texture;
+
+
 };

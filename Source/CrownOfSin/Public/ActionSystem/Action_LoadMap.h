@@ -19,6 +19,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	
+public:
+	virtual void PlayAction_Implementation() override;
+
 	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/

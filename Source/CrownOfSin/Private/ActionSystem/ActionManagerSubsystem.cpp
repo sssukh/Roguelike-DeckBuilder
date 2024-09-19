@@ -4,13 +4,19 @@
 #include "Utilities/CosLog.h"
 #include "ActionSystem/Action_Delay.h"
 
-UActionManagerSubsystem::UActionManagerSubsystem() : CurrentAction(nullptr), bIsActionInProgress(false), ActionsThisTick(0), MaxActionsPerTick(5)
+UActionManagerSubsystem::UActionManagerSubsystem() : bIsActionInProgress(false), ActionsThisTick(0), MaxActionsPerTick(5), CurrentAction(nullptr)
 {
 }
 
 void UActionManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
+
+	// 현재 액션이 진행 중이 아니면 즉시 시도
+	if (!bIsActionInProgress)
+	{
+		AttemptToPlayNextAction();
+	}
 }
 
 void UActionManagerSubsystem::Deinitialize()
@@ -64,16 +70,10 @@ void UActionManagerSubsystem::QueueAction(UObject* Action)
 
 void UActionManagerSubsystem::QueueDelay(float InDelay)
 {
-	// 딜레이 액션 생성 및 큐에 추가
-	FTransform SpawnTransform = FTransform::Identity;
-	if (AAction_Delay* NewAction = GetWorld()->SpawnActorDeferred<AAction_Delay>(AAction_Delay::StaticClass(),
-	                                                                             SpawnTransform,
-	                                                                             nullptr, nullptr,
-	                                                                             ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
+	CreateAndQueueAction<AAction_Delay>([InDelay](AAction_Delay* Action_Delay)
 	{
-		NewAction->EndDelay = InDelay;
-		NewAction->FinishSpawning(SpawnTransform);
-	}
+		Action_Delay->EndDelay = InDelay;
+	});
 }
 
 void UActionManagerSubsystem::AttemptToPlayNextAction()

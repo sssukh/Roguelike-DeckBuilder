@@ -24,7 +24,7 @@ struct FMapEvent : public FTableRowBase
 	TSubclassOf<UMapEventComponent> MapEventClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Map Event")
-	TObjectPtr<UTexture2D> Icon;
+	UTexture2D* Icon=nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Map Event")
 	FDataTableRowHandle SpecificEvent;

@@ -1,13 +1,19 @@
 ﻿#include "UI/UW_TargetingBezierPoint.h"
 
 #include "Components/Image.h"
-#include "Libraries/AssetTableRef.h"
+#include "Libraries/AssetPath.h"
+#include "Utilities/CosLog.h"
 
 UUW_TargetingBezierPoint::UUW_TargetingBezierPoint(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer), PointImage(nullptr), Bounce(nullptr), Texture(nullptr)
 {
-	if (UTexture2D* T_TargetArrow = FAssetReferenceUtility::LoadAssetFromDataTable<UTexture2D>(AssetRefPath::TexturesPath, FName(TEXT("T_TargetArrow"))))
+	static ConstructorHelpers::FObjectFinder<UTexture2D> T_TargetArrow(*AssetPath::Texture::T_TargetArrow);
+	if (T_TargetArrow.Succeeded())
 	{
-		Texture = T_TargetArrow;
+		Texture = T_TargetArrow.Object;
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("T_TargetArrow를 로드하지 못했습니다."));
 	}
 }
 

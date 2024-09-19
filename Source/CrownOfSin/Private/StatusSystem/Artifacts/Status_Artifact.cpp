@@ -1,5 +1,6 @@
 ﻿#include "StatusSystem/Artifacts/Status_Artifact.h"
 
+#include "ActionSystem/ActionManagerSubsystem.h"
 #include "CardSystem/CardPlayer.h"
 #include "ActionSystem/Action_ModifyStatus.h"
 #include "Core/MinionBase.h"
@@ -82,26 +83,19 @@ bool UStatus_Artifact::Interact_Implementation(const FGameplayTagContainer& Tags
 	if (Tags.HasTagExact(CosGameTags::StatusBar_RewardBar))
 	{
 		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
-		if (!CardPlayer) return false;
-
 		IInterface_CardTarget::Execute_AddToStatus(CardPlayer, GetClass(), StatusValue, true, nullptr);
 
-		FTransform SpawnTransform = FTransform::Identity;
-
-		if (AAction_ModifyStatus* NewActionModifyStatus = GetWorld()->SpawnActorDeferred<AAction_ModifyStatus>(AAction_ModifyStatus::StaticClass(),
-		                                                                                                       SpawnTransform,
-		                                                                                                       nullptr, nullptr,
-		                                                                                                       ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
+		UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
+		AAction_ModifyStatus* NewAction = ActionManagerSubsystem->CreateAndQueueAction<AAction_ModifyStatus>([](AAction_ModifyStatus* Action_ModifyStatus)
 		{
-			NewActionModifyStatus->NewValue = 0;
-			NewActionModifyStatus->bShowSplashIcon = false;
-			NewActionModifyStatus->bShowSplashNumber = false;
-			NewActionModifyStatus->bRefreshAppearance = true;
-			NewActionModifyStatus->TextOverride = FText::FromString(TEXT("HideReward"));
-			NewActionModifyStatus->bCanBeZero = false;
-			NewActionModifyStatus->EndDelay = -1.0f;
-			NewActionModifyStatus->FinishSpawning(SpawnTransform);
-		}
+			Action_ModifyStatus->NewValue = 0;
+			Action_ModifyStatus->bShowSplashIcon = false;
+			Action_ModifyStatus->bShowSplashNumber = false;
+			Action_ModifyStatus->bRefreshAppearance = true;
+			Action_ModifyStatus->TextOverride = FText::FromString(TEXT("HideReward"));
+			Action_ModifyStatus->bCanBeZero = false;
+			Action_ModifyStatus->EndDelay = -1.0f;
+		});
 
 		return true;
 	}

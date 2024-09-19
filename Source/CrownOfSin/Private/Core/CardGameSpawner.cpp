@@ -3,8 +3,9 @@
 #include "Core/MinionTrack.h"
 #include "Interfaces/Interface_CardGameInstance.h"
 #include "Kismet/GameplayStatics.h"
-#include "Libraries/AssetTableRef.h"
+#include "Libraries/AssetPath.h"
 #include "Libraries/FunctionLibrary_Singletons.h"
+#include "Utilities/CosLog.h"
 
 ACardGameSpawner::ACardGameSpawner()
 {
@@ -12,30 +13,49 @@ ACardGameSpawner::ACardGameSpawner()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
-
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 	SetRootComponent(DefaultSceneRoot);
 
 
-	if (TSubclassOf<AActor> BP_GlobalDispatcherHub = FAssetReferenceUtility::FindClassFromDataTable<AActor>(AssetRefPath::BluePrintPath, FName("BP_GlobalDispatcherHub"), true))
+	// 생성자 내에서 ConstructorHelpers::FClassFinder 사용 - AssetPath 네임스페이스를 활용
+	static ConstructorHelpers::FClassFinder<AActor> BP_GlobalDispatcherHub(*AssetPath::Blueprint::BP_GlobalDispatcherHub_C);
+	if (BP_GlobalDispatcherHub.Succeeded())
 	{
-		SpawnOrderActors.Add(BP_GlobalDispatcherHub);
+		SpawnOrderActors.Add(BP_GlobalDispatcherHub.Class);
 	}
-	if (TSubclassOf<AActor> BP_ActionManager = FAssetReferenceUtility::FindClassFromDataTable<AActor>(AssetRefPath::BluePrintPath, FName("BP_ActionManager"), true))
+	else
 	{
-		SpawnOrderActors.Add(BP_ActionManager);
+		COS_LOG_ERROR(TEXT("BP_GlobalDispatcherHub를 로드하지 못했습니다."));
 	}
-	if (TSubclassOf<AActor> BP_CardPlayer = FAssetReferenceUtility::FindClassFromDataTable<AActor>(AssetRefPath::BluePrintPath, FName("BP_CardPlayer"), true))
+
+	static ConstructorHelpers::FClassFinder<AActor> BP_CardPlayer(*AssetPath::Blueprint::BP_CardPlayer_C);
+	if (BP_CardPlayer.Succeeded())
 	{
-		SpawnOrderActors.Add(BP_CardPlayer);
+		SpawnOrderActors.Add(BP_CardPlayer.Class);
 	}
-	if (TSubclassOf<AActor> BP_RewardHolder = FAssetReferenceUtility::FindClassFromDataTable<AActor>(AssetRefPath::BluePrintPath, FName("BP_RewardHolder"), true))
+	else
 	{
-		SpawnOrderActors.Add(BP_RewardHolder);
+		COS_LOG_ERROR(TEXT("BP_CardPlayer를 로드하지 못했습니다."));
 	}
-	if (TSubclassOf<AActor> BP_TurnManager = FAssetReferenceUtility::FindClassFromDataTable<AActor>(AssetRefPath::BluePrintPath, FName("BP_TurnManager"), true))
+
+	static ConstructorHelpers::FClassFinder<AActor> BP_RewardHolder(*AssetPath::Blueprint::BP_RewardHolder_C);
+	if (BP_RewardHolder.Succeeded())
 	{
-		SpawnOrderActors.Add(BP_TurnManager);
+		SpawnOrderActors.Add(BP_RewardHolder.Class);
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("BP_RewardHolder를 로드하지 못했습니다."));
+	}
+
+	static ConstructorHelpers::FClassFinder<AActor> BP_TurnManager(*AssetPath::Blueprint::BP_TurnManager_C);
+	if (BP_TurnManager.Succeeded())
+	{
+		SpawnOrderActors.Add(BP_TurnManager.Class);
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("BP_TurnManager를 로드하지 못했습니다."));
 	}
 }
 

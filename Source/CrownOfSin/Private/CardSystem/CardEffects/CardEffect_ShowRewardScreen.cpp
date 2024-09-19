@@ -1,5 +1,6 @@
 ﻿#include "CardSystem/CardEffects/CardEffect_ShowRewardScreen.h"
 
+#include "ActionSystem/ActionManagerSubsystem.h"
 #include "ActionSystem/Action_RewardScreen.h"
 
 
@@ -22,14 +23,11 @@ void UCardEffect_ShowRewardScreen::BeginPlay()
 
 bool UCardEffect_ShowRewardScreen::ResolveCardEffect(AActor* TargetActor)
 {
-	FTransform SpawnTransform = FTransform::Identity;
-
-	if (AAction_RewardScreen* NewActionRewardScreen = GetWorld()->SpawnActorDeferred<AAction_RewardScreen>(AAction_RewardScreen::StaticClass(), SpawnTransform,
-	                                                                                                       nullptr, nullptr,
-	                                                                                                       ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
+	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_RewardScreen>([](AAction_RewardScreen* Action_RewardScreen)
 	{
-		NewActionRewardScreen->FinishSpawning(SpawnTransform);
-	}
+		Action_RewardScreen->EndDelay = -1.0f;
+	});
 
 	return true;
 }

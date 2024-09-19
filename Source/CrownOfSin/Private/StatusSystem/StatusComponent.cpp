@@ -1,12 +1,13 @@
 ﻿#include "StatusSystem/StatusComponent.h"
 
+#include "ActionSystem/ActionManagerSubsystem.h"
 #include "ActionSystem/Action_ModifyStatus.h"
 #include "Core/DispatcherHubComponent.h"
 #include "Interfaces/Interface_CardTarget.h"
 #include "Interfaces/Widget/Interface_StatusWidget.h"
 #include "Kismet/KismetStringLibrary.h"
 #include "Kismet/KismetTextLibrary.h"
-#include "Libraries/AssetTableRef.h"
+#include "Libraries/AssetPath.h"
 #include "Libraries/FunctionLibrary_Event.h"
 #include "Libraries/RetriggerAbleDelay.h"
 #include "Utilities/CosGameplayTags.h"
@@ -20,10 +21,14 @@ UStatusComponent::UStatusComponent(): OwnerUiRef(nullptr), StatusIndicator(nullp
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 
 	// ...
-
-	if (UTexture2D* T_CrossMark = FAssetReferenceUtility::LoadAssetFromDataTable<UTexture2D>(AssetRefPath::TexturesPath, FName("T_CrossMark")))
+	static ConstructorHelpers::FObjectFinder<UTexture2D> T_CrossMark(*AssetPath::Texture::T_CrossMark);
+	if (T_CrossMark.Succeeded())
 	{
-		Icon = T_CrossMark;
+		Icon = T_CrossMark.Object;
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("T_CrossMark를 로드하지 못했습니다."));
 	}
 
 	Tint = FLinearColor(0, 1, 0, 1);
@@ -177,31 +182,23 @@ void UStatusComponent::ApplyStatusChange(int32 InAmount, bool bShowSplashNumber,
 
 void UStatusComponent::SpawnModifyStatusAction(int32 InAmount, bool bShowSplashNumber, bool bShowSplashIcon, bool bRefreshAppearance)
 {
-	// 스폰 위치 초기화
-	FTransform SpawnTransform = FTransform::Identity;
-
-	// AAction_ModifyStatus 액터를 지연 스폰
-	if (AAction_ModifyStatus* NewActionModifyStatus = GetWorld()->SpawnActorDeferred<AAction_ModifyStatus>(
-		AAction_ModifyStatus::StaticClass(), SpawnTransform, nullptr, nullptr,
-		ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
+	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_ModifyStatus>([&](AAction_ModifyStatus* Action_ModifyStatus)
 	{
 		// 시각적 효과 설정
-		NewActionModifyStatus->Status = this;
-		NewActionModifyStatus->NewValue = StatusValue;
-		NewActionModifyStatus->bShowSplashIcon = bShowSplashIcon;
-		NewActionModifyStatus->bShowSplashNumber = (InAmount != 0 || bCanBeZero) && bShowSplashNumber;
+		Action_ModifyStatus->StatusReference = this;
+		Action_ModifyStatus->NewValue = StatusValue;
+		Action_ModifyStatus->bShowSplashIcon = bShowSplashIcon;
+		Action_ModifyStatus->bShowSplashNumber = (InAmount != 0 || bCanBeZero) && bShowSplashNumber;
 
 		// Splash 텍스트 생성
-		NewActionModifyStatus->SplashText = GenerateSplashText(InAmount, bShowSplashNumber);
+		Action_ModifyStatus->SplashText = GenerateSplashText(InAmount, bShowSplashNumber);
 
 		// 추가 설정
-		NewActionModifyStatus->bRefreshAppearance = bRefreshAppearance;
-		NewActionModifyStatus->bCanBeZero = bCanBeZero;
-		NewActionModifyStatus->EndDelay = bShowSplashIcon ? 0.3f : -1.0f;
-
-		// 스폰 완료
-		NewActionModifyStatus->FinishSpawning(SpawnTransform);
-	}
+		Action_ModifyStatus->bRefreshAppearance = bRefreshAppearance;
+		Action_ModifyStatus->bCanBeZero = bCanBeZero;
+		Action_ModifyStatus->EndDelay = bShowSplashIcon ? 0.3f : -1.0f;
+	});
 }
 
 FText UStatusComponent::GenerateSplashText(int32 InAmount, bool bShowSplashNumber)

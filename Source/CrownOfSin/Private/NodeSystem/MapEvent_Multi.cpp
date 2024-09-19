@@ -1,13 +1,20 @@
 ﻿#include "NodeSystem/MapEvent_Multi.h"
 
-#include "Libraries/AssetTableRef.h"
+#include "Libraries/AssetPath.h"
+#include "Utilities/CosLog.h"
 
 
 UMapEvent_Multi::UMapEvent_Multi()
 {
-	if(UTexture2D* MapEventIcon = FAssetReferenceUtility::LoadAssetFromDataTable<UTexture2D>(AssetRefPath::TexturesPath, FName("T_RandomDice")))
+	// Map Event Icon 로딩
+	static ConstructorHelpers::FObjectFinder<UTexture2D> T_RandomDice(*AssetPath::Texture::T_RandomDice);
+	if (T_RandomDice.Succeeded())
 	{
-		CurrentMapEventStruct.Icon = MapEventIcon;	
+		CurrentMapEventStruct.Icon = T_RandomDice.Object;
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("T_RandomDice 텍스처를 로드하지 못했습니다."));
 	}
 }
 
@@ -16,7 +23,7 @@ void UMapEvent_Multi::RunMapEvent(FDataTableRowHandle EventData)
 	// 데이터 테이블이 유효한지 확인
 	if (!EventData.DataTable)
 	{
-		COS_LOG_SCREEN_ERROR(TEXT("EventData.DataTable is nullptr"));
+		COS_LOG_SCREEN_ERROR(TEXT("EventData.DataTable이 nullptr입니다."));
 		return;
 	}
 
@@ -24,7 +31,7 @@ void UMapEvent_Multi::RunMapEvent(FDataTableRowHandle EventData)
 	FMapEvent* MapEvent = EventData.DataTable->FindRow<FMapEvent>(EventData.RowName, TEXT("MapEvent_Multi의 FMapEvent"));
 	if (!MapEvent)
 	{
-		COS_LOG_SCREEN_ERROR(TEXT("Row not found: %s"), *EventData.RowName.ToString());
+		COS_LOG_SCREEN_ERROR(TEXT("행을 찾을 수 없습니다.: %s"), *EventData.RowName.ToString());
 		return;
 	}
 
@@ -50,6 +57,7 @@ UMapEventComponent* UMapEvent_Multi::CreateNewMapEventComponent(TSubclassOf<UMap
 	if (NewMapEventComponent)
 	{
 		NewMapEventComponent->RegisterComponent();
+		GetOwner()->AddInstanceComponent(NewMapEventComponent);
 	}
 	else
 	{
@@ -82,6 +90,6 @@ void UMapEvent_Multi::RunRandomEvent(UMapEventComponent* MapEventComponent, cons
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to choose a random encounter event"));
+		COS_LOG_ERROR(TEXT("무작위 만남 이벤트를 선택하지 못했습니다."));
 	}
 }

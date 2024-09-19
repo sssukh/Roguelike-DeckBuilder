@@ -6,7 +6,7 @@
 #include "CardSystem/Piles/PileDestroyComponent.h"
 
 #include "Core/DispatcherHubLocalComponent.h"
-#include "Libraries/AssetTableRef.h"
+#include "Libraries/AssetPath.h"
 #include "Libraries/FunctionLibrary_ArrayUtils.h"
 #include "Libraries/FunctionLibrary_Singletons.h"
 
@@ -25,10 +25,15 @@ UPileComponent::UPileComponent()
 	FriendlyName = FText::FromString(FString(TEXT("UnNamed Pile")));
 	PileTag = CosGameTags::Pile;
 
-	if (UDataTable* DT_Tooltips_Statuses = FAssetReferenceUtility::LoadAssetFromDataTable<UDataTable>(AssetRefPath::DataTablePath, FName("DT_Tooltips_Statuses")))
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_Tooltips_Statuses(*AssetPath::DataTable::DT_Tooltips_Statuses);
+	if (DT_Tooltips_Statuses.Succeeded())
 	{
-		Tooltip.DataTable = DT_Tooltips_Statuses;
+		Tooltip.DataTable = DT_Tooltips_Statuses.Object;
 		Tooltip.RowName = FName(TEXT("Deck"));
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("DT_Tooltips_Statuses 데이터 테이블을 로드하지 못했습니다."));
 	}
 }
 

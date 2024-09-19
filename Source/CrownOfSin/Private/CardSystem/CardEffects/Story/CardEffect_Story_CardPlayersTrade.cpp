@@ -2,9 +2,10 @@
 
 #include "CardSystem/CardBase.h"
 #include "CardSystem/CardPlayer.h"
-#include "Libraries/AssetTableRef.h"
+#include "Libraries/AssetPath.h"
 #include "Libraries/FunctionLibrary_Singletons.h"
 #include "Utilities/CosGameplayTags.h"
+#include "Utilities/CosLog.h"
 
 
 // Sets default values for this component's properties
@@ -15,17 +16,21 @@ UCardEffect_Story_CardPlayersTrade::UCardEffect_Story_CardPlayersTrade()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-
-	if (UDataTable* DT_StoryEncounters = FAssetReferenceUtility::LoadAssetFromDataTable<UDataTable>(AssetRefPath::DataTablePath, FName("DT_StoryEncounters")))
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_StoryEncounters(*AssetPath::DataTable::DT_StoryEncounters);
+	if (DT_StoryEncounters.Succeeded())
 	{
-		CommonEncounter.DataTable = DT_StoryEncounters;
+		CommonEncounter.DataTable = DT_StoryEncounters.Object;
 		CommonEncounter.RowName = FName(*FString(TEXT("CardPlayers_a1")));
 
-		EpicEncounter.DataTable = DT_StoryEncounters;
+		EpicEncounter.DataTable = DT_StoryEncounters.Object;
 		EpicEncounter.RowName = FName(*FString(TEXT("CardPlayers_a2")));
 
-		TrashEncounter.DataTable = DT_StoryEncounters;
+		TrashEncounter.DataTable = DT_StoryEncounters.Object;
 		TrashEncounter.RowName = FName(*FString(TEXT("CardPlayers_a3")));
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("DT_StoryEncounters 를 로드하지 못했습니다."));
 	}
 }
 

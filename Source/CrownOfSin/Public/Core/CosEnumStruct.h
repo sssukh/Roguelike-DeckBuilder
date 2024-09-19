@@ -498,7 +498,7 @@ USTRUCT(BlueprintType)
 struct FCard : public FTableRowBase
 {
 	GENERATED_BODY()
-	
+
 	// 카드 소유자 ID
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card")
 	FString OwnerID;
@@ -578,7 +578,6 @@ struct FCard : public FTableRowBase
 		  , Frame(nullptr)
 		  , FrameTint(FLinearColor(1, 1, 1, 1))
 	{
-		
 	}
 
 	// 복사 생성자

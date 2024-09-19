@@ -1,3 +1,0 @@
-﻿
-
-#include "Libraries/AssetTableRef.h"

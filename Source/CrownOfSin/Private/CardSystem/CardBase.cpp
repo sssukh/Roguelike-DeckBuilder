@@ -14,6 +14,8 @@
 #include "StatusSystem/StatusComponent.h"
 
 #include "BlueprintGameplayTagLibrary.h"
+
+#include "ActionSystem/ActionManagerSubsystem.h"
 #include "CardSystem/CardEffects/CardEffectComponent.h"
 #include "ActionSystem/Action_Effect.h"
 #include "CardSystem/CardUseRules/UseRuleComponent.h"
@@ -145,6 +147,7 @@ void ACardBase::SetupUseRuleComponents()
 		// 5. 컴포넌트를 등록하고 초기화합니다.
 		NewUseRuleComponent->RegisterComponent();
 		NewUseRuleComponent->InitializeUseRule();
+		AddInstanceComponent(NewUseRuleComponent);
 
 		// 6. 생성된 컴포넌트를 사용 규칙 인스턴스에 추가합니다.
 		UseRuleInstances.Add(UseRule.Rule, NewUseRuleComponent);
@@ -164,11 +167,11 @@ void ACardBase::SetupStatusComponents()
 
 		// 4. 새로운 UStatusComponent를 생성하고, 상태 값과 태그를 설정합니다.
 		UStatusComponent* NewStatusComponent = NewObject<UStatusComponent>(this, StatusData.StatusClass, UniqueStatusComponentName);
+
+		NewStatusComponent->RegisterComponent();
 		NewStatusComponent->StatusValue = StatusData.Value;
 		NewStatusComponent->GameplayTags = StatusData.GameplayTags;
-
-		// 5. 컴포넌트를 등록합니다.
-		NewStatusComponent->RegisterComponent();
+		AddInstanceComponent(NewStatusComponent);
 	}
 }
 
@@ -192,7 +195,7 @@ bool ACardBase::AttemptUseCard(TArray<AActor*> Targets, bool SkipPlayableCheck, 
 	}
 
 	// 사용불가능한 상태이므로 에러메시지 출력
-	UFunctionLibrary_Utility::SendScreenLogMessage(FText::FromString(FailMessage), FColor::Red);
+	UFunctionLibrary_Utility::SendScreenLogMessage(this, FText::FromString(FailMessage), FColor::Red);
 	return false;
 }
 
@@ -424,15 +427,17 @@ void ACardBase::InitializeCurrentCardEffect(const FCardEffect& CardEffect)
 	CurrentCardEffectComponent->GameplayTags = CardEffect.GameplayTags;
 	CurrentCardEffectComponent->TargetingClass = CardEffect.Targeting;
 	CurrentCardEffectComponent->HeroAnim = CardEffect.HeroAnim;
-	CurrentCardEffectComponent->EffectAction = CardEffect.EffectAction;
+	CurrentCardEffectComponent->EffectActionClass = CardEffect.EffectAction;
 	CurrentCardEffectComponent->UsedData = CardEffect.UsedData;
 	CurrentCardEffectComponent->Identifier = CardEffect.Identifier;
+
+	AddInstanceComponent(NewCardEffectComponent);
 }
 
 void ACardBase::HandleImmediateCardEffect()
 {
 	// 카드 효과의 액션이 유효한지 확인하고 실행.
-	if (IsValid(CurrentCardEffectComponent->EffectAction))
+	if (IsValid(CurrentCardEffectComponent->EffectActionClass))
 	{
 		ExecuteEffectAction();
 	}
@@ -534,6 +539,7 @@ UTargetingComponent* ACardBase::AccessTargetingClassLazy(AActor* TargetingHolder
 		// 새로운 타겟팅 컴포넌트를 생성하고 등록합니다.
 		UTargetingComponent* NewTargetingComponent = NewObject<UTargetingComponent>(TargetingHolderActor, TargetingClass);
 		NewTargetingComponent->RegisterComponent();
+		TargetingHolderActor->AddInstanceComponent(NewTargetingComponent);
 
 		return NewTargetingComponent;
 	}
@@ -754,41 +760,26 @@ void ACardBase::ContinueAfterCardResolved()
 void ACardBase::QueueCardEffectAction(AActor* TargetActor, AActor* SourcePuppet, UCardEffectComponent* CardEffect, bool bAnimateSourcePuppet)
 {
 	// 1. 카드 효과에 대한 액션이 유효한지 확인합니다.
-	if (!IsValid(CardEffect->EffectAction))
-		return;
+	if (!IsValid(CardEffect->EffectActionClass)) return;
 
-	// 2. Deferred 방식으로 AAction_Effect 액터를 생성합니다.
-	AAction_Effect* ActionEffect = GetWorld()->SpawnActorDeferred<AAction_Effect>(
-		CardEffect->EffectAction, // 스폰할 액션 클래스
-		FTransform::Identity, // 위치와 회전값 (기본값)
-		nullptr, // 소유자 (필요시 설정)
-		nullptr, // 인스턴스화된 Pawn이나 캐릭터 (필요시 설정)
-		ESpawnActorCollisionHandlingMethod::Undefined, // 충돌 핸들링 방식
-		ESpawnActorScaleMethod::SelectDefaultAtRuntime // 스케일 방식
-	);
+	// 2. 카드 효과가 유효한지 다시 확인 (생성 실패시 로그 출력).
+	if (!CardEffect) return;
 
-	// 3. 카드 효과가 유효한지 다시 확인 (생성 실패시 로그 출력).
-	if (!CardEffect)
+	// 3. AAction_Effect 액터를 생성합니다.
+	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
+	ActionManagerSubsystem->CreateAndQueueActionWithClass<AAction_Effect>(CardEffect->EffectActionClass, [this,TargetActor,SourcePuppet,CardEffect,bAnimateSourcePuppet](AAction_Effect* Action_Effect)
 	{
-		COS_SCREEN(TEXT("ACardBase : ActionEffect가 생성되지 않습니다."));
-		return;
-	}
+		Action_Effect->Target = TargetActor;
+		Action_Effect->SourcePuppet = SourcePuppet;
 
-	// 4. 타겟과 소스 퍼펫 설정.
-	ActionEffect->Target = TargetActor;
-	ActionEffect->SourcePuppet = SourcePuppet;
+		if (bAnimateSourcePuppet)
+			Action_Effect->HeroAnim = CardEffect->HeroAnim;
 
-	// 5. 소스 퍼펫에 애니메이션을 적용할지 여부를 확인하고 적용합니다.
-	if (bAnimateSourcePuppet)
-		ActionEffect->HeroAnim = CardEffect->HeroAnim;
+		const TArray<FCardEffect>& HandCardEffect = GetCardEffects(ECardDataType::Hand);
 
-	// 6. 현재 반복 루프의 카드 효과를 설정합니다.
-	const TArray<FCardEffect>& HandCardEffect = GetCardEffects(ECardDataType::Hand);
-	// if (HandCardEffect.Contains(EffectLoopIndex))
-	ActionEffect->Effect = HandCardEffect[EffectLoopIndex];
-
-	// 7. 액터 스폰을 마무리합니다.
-	ActionEffect->FinishSpawning(FTransform::Identity);
+		if (HandCardEffect.IsValidIndex(EffectLoopIndex))
+			Action_Effect->Effect = HandCardEffect[EffectLoopIndex];
+	}, ESpawnActorCollisionHandlingMethod::Undefined, ESpawnActorScaleMethod::SelectDefaultAtRuntime);
 }
 
 bool ACardBase::BindLocalCardEvents(UObject* EventHolder, FGameplayTagContainer EventTags)

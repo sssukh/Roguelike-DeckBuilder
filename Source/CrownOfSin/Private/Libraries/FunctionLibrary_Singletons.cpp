@@ -1,7 +1,7 @@
 ﻿#include "Libraries/FunctionLibrary_Singletons.h"
 
+#include "ActionSystem/ActionManagerSubsystem.h"
 #include "CardSystem/CardPlayer.h"
-#include "ActionSystem/ActionManager.h"
 #include "Interfaces/Interface_CardGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utilities/CosLog.h"
@@ -45,9 +45,6 @@ UGameInstance* UFunctionLibrary_Singletons::GetCardGameInstance(const UObject* W
 
 void UFunctionLibrary_Singletons::QueueDelay(const UObject* WorldContextObject, float Delay)
 {
-	AActor* ActionManagerActor = UGameplayStatics::GetActorOfClass(WorldContextObject, AActionManager::StaticClass());
-	if (!ActionManagerActor) return;
-
-	AActionManager* ActionManager = Cast<AActionManager>(ActionManagerActor);
-	ActionManager->QueueDelay(Delay);
+	UActionManagerSubsystem* ActionManagerSubsystem = WorldContextObject->GetWorld()->GetSubsystem<UActionManagerSubsystem>();
+	ActionManagerSubsystem->QueueDelay(Delay);
 }

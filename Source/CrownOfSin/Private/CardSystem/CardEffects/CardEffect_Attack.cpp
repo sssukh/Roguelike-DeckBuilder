@@ -1,5 +1,6 @@
 ﻿#include "CardSystem/CardEffects/CardEffect_Attack.h"
 
+#include "ActionSystem/ActionManagerSubsystem.h"
 #include "CardSystem/CardBase.h"
 #include "ActionSystem/Action_ScreenShake.h"
 #include "Core/DispatcherHubLocalComponent.h"
@@ -27,53 +28,56 @@ void UCardEffect_Attack::BeginPlay()
 
 bool UCardEffect_Attack::ResolveCardEffect(AActor* TargetActor)
 {
+	// 공격 대상을 설정
 	AttackTarget = TargetActor;
 
+	// ParentCard가 유효한 경우, 공격 전 이벤트를 호출
 	if (IsValid(ParentCard))
 	{
-		UDispatcherHubLocalComponent* DispatcherHubLocal = Cast<UDispatcherHubLocalComponent>(ParentCard->GetOwner()->GetComponentByClass(UDispatcherHubLocalComponent::StaticClass()));
+		// ParentCard 소유자의 DispatcherHubLocalComponent를 가져옴
+		UDispatcherHubLocalComponent* DispatcherHubLocal = Cast<UDispatcherHubLocalComponent>
+			(ParentCard->GetOwner()->GetComponentByClass(UDispatcherHubLocalComponent::StaticClass()));
+
+		// DispatcherHubLocal이 유효하면 사전 공격 이벤트 호출
 		if (IsValid(DispatcherHubLocal))
 		{
 			DispatcherHubLocal->CallEvent(CosGameTags::Event_PreAttack, this);
 		}
 	}
 
-
-	FTransform SpawnTransform = FTransform::Identity;
-
-	if (AAction_ScreenShake* NewActionScreenShake = GetWorld()->SpawnActorDeferred<AAction_ScreenShake>(AAction_ScreenShake::StaticClass(), SpawnTransform,
-	                                                                                                    nullptr, nullptr,
-	                                                                                                    ESpawnActorCollisionHandlingMethod::Undefined))
+	// 액션 매니저 서브시스템에서 화면 흔들림 액션을 생성하고 큐에 추가
+	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_ScreenShake>([this](AAction_ScreenShake* ScreenShakeAction)
 	{
-		NewActionScreenShake->Scale = FMath::Abs(EffectValue) * DamageScaleFactor;
-		//ToDo 값을 설정해야합니다.
-		// NewActionScreenShake->ShakeClass = 
-		NewActionScreenShake->FinishSpawning(SpawnTransform);
+		ScreenShakeAction->Scale = FMath::Abs(EffectValue) * DamageScaleFactor; // 화면 흔들림의 스케일을 설정
+	}, ESpawnActorCollisionHandlingMethod::Undefined);
+
+
+	// 공격 대상의 DispatcherHubLocalComponent에서 IncomingAttack 이벤트를 호출
+	if (UDispatcherHubLocalComponent* TargetDispatcherHub = Cast<UDispatcherHubLocalComponent>(
+		AttackTarget->GetComponentByClass(UDispatcherHubLocalComponent::StaticClass())))
+	{
+		TargetDispatcherHub->CallEvent(CosGameTags::Event_IncomingAttack, this);
 	}
 
-	if (UDispatcherHubLocalComponent* DispatcherHubLocalComponent = Cast<UDispatcherHubLocalComponent>(AttackTarget->GetComponentByClass(UDispatcherHubLocalComponent::StaticClass())))
+	// 대상의 상태 컴포넌트에서 체력(Status_Health)을 찾아 공격 데미지 처리
+	UStatus_Health* TargetHealthStatus = Cast<UStatus_Health>(AttackTarget->GetComponentByClass(UStatus_Health::StaticClass()));
+	if (IsValid(TargetHealthStatus))
 	{
-		DispatcherHubLocalComponent->CallEvent(CosGameTags::Event_IncomingAttack, this);
+		// 체력 감소 처리
+		TargetHealthStatus->SubtractStatusValue(EffectValue, true, false, nullptr);
 	}
 
-	UStatus_Health* Status_Health = Cast<UStatus_Health>(AttackTarget->GetComponentByClass(UStatus_Health::StaticClass()));
-	if (IsValid(Status_Health))
+	// 공격 후 이벤트를 호출
+	if (IsValid(ParentCard) && IsValid(ParentCard->GetOwner()))
 	{
-		Status_Health->SubtractStatusValue(EffectValue, true, false, nullptr);
-	}
-
-	if (IsValid(ParentCard))
-	{
-		if (IsValid(ParentCard->GetOwner()))
+		// ParentCard 소유자의 DispatcherHubLocalComponent에서 PostAttack 이벤트를 호출
+		if (UDispatcherHubLocalComponent* PostAttackDispatcherHub = Cast<UDispatcherHubLocalComponent>(
+			ParentCard->GetOwner()->GetComponentByClass(UDispatcherHubLocalComponent::StaticClass())))
 		{
-			if (UDispatcherHubLocalComponent* DispatcherHubLocalComponent = Cast<UDispatcherHubLocalComponent>
-				(ParentCard->GetOwner()->GetComponentByClass(UDispatcherHubLocalComponent::StaticClass())))
-			{
-				DispatcherHubLocalComponent->CallEvent(CosGameTags::Event_PostAttack, this);
-			}
+			PostAttackDispatcherHub->CallEvent(CosGameTags::Event_PostAttack, this);
 		}
 	}
-
 
 	return true;
 }

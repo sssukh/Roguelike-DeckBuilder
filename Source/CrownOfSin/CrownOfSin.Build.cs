@@ -17,7 +17,7 @@ public class CrownOfSin : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
-			
+			"NavigationSystem", "ClothingSystemRuntimeNv", "ChaosCloth"
 		});
 
 		// Uncomment if you are using Slate UI

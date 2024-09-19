@@ -1,36 +1,31 @@
-﻿
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "ActionBase.h"
 #include "Action_ScreenShake.generated.h"
 
+/*대기열의 플레이어 카메라 관리자에서 입력 화면 흔들림을 트리거합니다.*/
 UCLASS()
 class CROWNOFSIN_API AAction_ScreenShake : public AActionBase
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	AAction_ScreenShake();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	virtual void PlayAction_Implementation() override;
 
 	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/
 public:
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Action ScreenShake",meta=(ExposeOnSpawn="true"))
-	float Scale =1.0f;
-
-	//ToDo:기본값 설정해야합니다.
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Action ScreenShake",meta=(ExposeOnSpawn="true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Action ScreenShake", meta=(ExposeOnSpawn="true"))
+	float Scale = 1.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Action ScreenShake", meta=(ExposeOnSpawn="true"))
 	TSubclassOf<UCameraShakeBase> ShakeClass;
 };
