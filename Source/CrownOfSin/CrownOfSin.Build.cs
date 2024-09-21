@@ -12,7 +12,7 @@ public class CrownOfSin : ModuleRules
 			"Core", "CoreUObject", "Engine", "InputCore",
 			"Slate","SlateCore","UMG",
 			"GameplayTags","Niagara",
-			"EnhancedInput"
+			"EnhancedInput", "Paper2D","ModelViewViewModel"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[]

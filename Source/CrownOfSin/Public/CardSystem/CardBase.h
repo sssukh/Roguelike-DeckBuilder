@@ -229,7 +229,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Card|Data")
 	TSubclassOf<UUserWidget> GetCardVisualWidget(ECardDataType Type);
 
-	/*카드 사용 규칙 중 상태 컴포넌트에 해당하는 비용을 가져오는 함수.*/
+	/* 카드 사용 규칙 중 상태 컴포넌트에 해당하는 비용을 가져오는 함수.*/
 	bool GetStatusCostValueFromUseRules(ECardDataType InPile, const TSubclassOf<UStatusComponent>& StatusClass, int32& OutStatusCost, int32& OutUseRuleIndex);
 
 	/*카드가 현재 '손'에 있는지 확인하는 함수.*/

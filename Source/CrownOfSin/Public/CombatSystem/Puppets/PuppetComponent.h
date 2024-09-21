@@ -11,7 +11,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnimationEvent, AActor*, InPuppe
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnimationEnd, AActor*, InPuppet, FGameplayTag, InAnimationTag);
 
 
-/*RLDB의 애니메이션 설정과 함께 작동하기 위해 퍼펫에 추가할 구성 요소*/
+/*애니메이션 설정과 함께 작동하기 위해 퍼펫에 추가할 구성 요소*/
 UCLASS(ClassGroup=("COS|Core"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UPuppetComponent : public UActorComponent
 {
@@ -24,12 +24,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category="Puppet Component|Delegate")
 	FOnAnimationEvent OnAnimationEvent;
-	
+
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category="Puppet Component|Delegate")
 	FOnAnimationEnd OnAnimationEnd;
 };

@@ -1,18 +1,23 @@
-﻿#include "CombatSystem/Puppets//PuppetComponent.h"
+﻿
+
+#include "StatusSystem/Status_AttackPattern.h"
 
 
-UPuppetComponent::UPuppetComponent()
+UStatus_AttackPattern::UStatus_AttackPattern()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	PrimaryComponentTick.bStartWithTickEnabled = false;
 
 	// ...
 }
 
-
-void UPuppetComponent::BeginPlay()
+void UStatus_AttackPattern::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// ...
+	
 }
+
+

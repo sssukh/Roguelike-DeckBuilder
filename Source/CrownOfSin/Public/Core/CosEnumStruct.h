@@ -122,25 +122,25 @@ struct FMinion : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
-	FString UniqueID;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
 	FText Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
-	USkeletalMesh* SkeletalMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
-	TArray<UMaterial*> Materials;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
-	UTexture* Texture;
+	FString UniqueID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
 	TSubclassOf<AActor> Puppet;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
+	USkeletalMesh* SkeletalMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
 	TSubclassOf<UAnimInstance> AnimationBlueprint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
+	UTexture* Texture;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
+	TArray<UMaterial*> Materials;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
 	FGameplayTagContainer GameplayTags;
@@ -151,11 +151,11 @@ struct FMinion : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
 	FTransform TransformOffset;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion", meta = (RowType="/Script/CrownOfSin.CardPattern"))
-	FDataTableRowHandle AttackPatternData;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
 	TSubclassOf<UAttackPatternComponent> AttackPatternComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion", meta = (RowType="/Script/CrownOfSin.CardPattern"))
+	FDataTableRowHandle AttackPatternData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minion")
 	TMap<TSubclassOf<UStatusComponent>, int32> StartingStatuses;
@@ -164,8 +164,8 @@ struct FMinion : public FTableRowBase
 	TMap<TSubclassOf<UStatusComponent>, int32> StatusLimits;
 
 	// 기본 생성자
-	FMinion() : UniqueID(TEXT("")), SkeletalMesh(nullptr)
-	            , Texture(nullptr), Puppet(nullptr), AnimationBlueprint(nullptr), UIScale(FVector2D(200, 500))
+	FMinion() : UniqueID(TEXT("")), Puppet(nullptr)
+	            , SkeletalMesh(nullptr), AnimationBlueprint(nullptr), Texture(nullptr), UIScale(FVector2D(200, 500))
 	            , TransformOffset(FTransform::Identity)
 	{
 	}
@@ -629,7 +629,7 @@ struct FCardOption
 };
 
 USTRUCT(BlueprintType)
-struct FCardOptions
+struct FCardOptions : public FTableRowBase
 {
 	GENERATED_BODY()
 

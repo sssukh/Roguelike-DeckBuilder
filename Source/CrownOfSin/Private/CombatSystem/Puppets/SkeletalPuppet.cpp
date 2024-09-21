@@ -8,6 +8,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Core/MinionBase.h"
+#include "Libraries/AssetPath.h"
 #include "NavAreas/NavArea_Obstacle.h"
 #include "Utilities/CosGameplayTags.h"
 
@@ -62,13 +63,13 @@ ASkeletalPuppet::ASkeletalPuppet()
 		BottomUIWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, -40.0f));
 		BottomUIWidgetComponent->SetRelativeRotation(FRotator(0.0f, 90.000244f, 0.0f));
 
-		//ToDo:COS
+
 		// 위젯 클래스 설정 (WBP_MinionUI의 클래스를 찾아서 설정) 
-		// static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClassFinder(TEXT("/Game/RLDB/Widgets/WBP_MinionUI"));
-		// if (WidgetClassFinder.Succeeded())
-		// {
-		// 	BottomUI->SetWidgetClass(WidgetClassFinder.Class);
-		// }
+		static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClassFinder(*AssetPath::Blueprint::WBP_MinionUiTop);
+		if (WidgetClassFinder.Succeeded())
+		{
+			BottomUIWidgetComponent->SetWidgetClass(WidgetClassFinder.Class);
+		}
 
 		// 이 컴포넌트를 액터의 루트 컴포넌트 또는 다른 컴포넌트에 부착할 수 있습니다.
 		BottomUIWidgetComponent->SetupAttachment(RootComponent); // 루트 컴포넌트에 부착
@@ -120,13 +121,11 @@ ASkeletalPuppet::ASkeletalPuppet()
 		TopUIWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 256.0f));
 		TopUIWidgetComponent->SetRelativeRotation(FRotator(0.0f, 90.000244f, 0.0f));
 
-		//ToDo:COS
-		// 위젯 클래스 설정 (WBP_MinionUiTop 위젯 클래스)
-		// static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClassFinder(TEXT("/Game/RLDB/Widgets/WBP_MinionUiTop.WBP_MinionUiTop_C"));
-		// if (WidgetClassFinder.Succeeded())
-		// {
-		// 	TopUIWidgetComponent->SetWidgetClass(WidgetClassFinder.Class);
-		// }
+		static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClassFinder(*AssetPath::Blueprint::WBP_MinionUiTop);
+		if (WidgetClassFinder.Succeeded())
+		{
+			TopUIWidgetComponent->SetWidgetClass(WidgetClassFinder.Class);
+		}
 
 		// 이 컴포넌트를 액터의 루트 컴포넌트 또는 다른 컴포넌트에 부착할 수 있습니다.
 		TopUIWidgetComponent->SetupAttachment(RootComponent);
@@ -139,6 +138,40 @@ ASkeletalPuppet::ASkeletalPuppet()
 void ASkeletalPuppet::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void ASkeletalPuppet::SetRenderCustomDepthForPrimitives(const TArray<UPrimitiveComponent*>& PrimitiveComponents, bool bVisibility, int32 StencilValue)
+{
+	for (UPrimitiveComponent* PrimitiveComponent : PrimitiveComponents)
+	{
+		PrimitiveComponent->SetRenderCustomDepth(bVisibility);
+		PrimitiveComponent->SetCustomDepthStencilValue(StencilValue);
+	}
+}
+
+void ASkeletalPuppet::SetRenderCustomDepthForEntirePuppet(bool bVisibility, int32 StencilValue)
+{
+	TArray<UPrimitiveComponent*> PrimitiveComponents;
+
+	TArray<UActorComponent*> SkeletalMeshComponents;
+	GetComponents(USkeletalMeshComponent::StaticClass(), SkeletalMeshComponents);
+	for (UActorComponent* FoundSkeletalMeshComponent : SkeletalMeshComponents)
+	{
+		UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(FoundSkeletalMeshComponent);
+		if (!PrimitiveComponent) continue;
+		PrimitiveComponents.Add(PrimitiveComponent);
+	}
+
+	TArray<UActorComponent*> StaticMeshComponents;
+	GetComponents(UStaticMeshComponent::StaticClass(), StaticMeshComponents);
+	for (UActorComponent* FoundStaticMeshComponent : StaticMeshComponents)
+	{
+		UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(FoundStaticMeshComponent);
+		if (!PrimitiveComponent) continue;
+		PrimitiveComponents.Add(PrimitiveComponent);
+	}
+
+	SetRenderCustomDepthForPrimitives(PrimitiveComponents, bVisibility, StencilValue);
 }
 
 void ASkeletalPuppet::InitializePuppet_Implementation(AMinionBase* InMinion, bool bSpawnedDuringGameplay)
@@ -208,4 +241,56 @@ void ASkeletalPuppet::InitializePuppet_Implementation(AMinionBase* InMinion, boo
 			Action_AdvAnim->EndDelay = -1.0f;
 		});
 	}
+}
+
+void ASkeletalPuppet::AnimatePuppet_Implementation(FGameplayTag InAnimationTag)
+{
+	if (SkeletalMeshComponent->GetAnimInstance()->Implements<UInterface_CardPuppet>())
+	{
+		Execute_AnimatePuppet(SkeletalMeshComponent->GetAnimInstance(), InAnimationTag);
+	}
+}
+
+void ASkeletalPuppet::SignalAnimEvent_Implementation(FGameplayTag InAnimationTag,FName InNotify)
+{
+	if (PuppetComponent->OnAnimationEnd.IsBound())
+		PuppetComponent->OnAnimationEvent.Broadcast(this, InAnimationTag);
+}
+
+void ASkeletalPuppet::SignalAnimEnd_Implementation(FGameplayTag InAnimationTag)
+{
+	if (PuppetComponent->OnAnimationEnd.IsBound())
+		PuppetComponent->OnAnimationEnd.Broadcast(this, InAnimationTag);
+}
+
+void ASkeletalPuppet::MarkPuppet_Implementation()
+{
+	SetRenderCustomDepthForEntirePuppet(true, 0);
+}
+
+void ASkeletalPuppet::UnmarkPuppet_Implementation()
+{
+	SetRenderCustomDepthForEntirePuppet(false, 0);
+}
+
+bool ASkeletalPuppet::GetMinionFromPuppet_Implementation(AMinionBase*& OutMinion)
+{
+	if (IsValid(ParentMinion))
+	{
+		OutMinion = ParentMinion;
+		return true;
+	}
+	OutMinion = nullptr;
+	return false;
+}
+
+UObject* ASkeletalPuppet::GetPuppetUI_Implementation(EStatusSlot InSlot)
+{
+	UWidgetComponent* UIWidgetComponent = InSlot == EStatusSlot::Active ? TopUIWidgetComponent : BottomUIWidgetComponent;
+	return UIWidgetComponent->GetWidget();
+}
+
+FVector ASkeletalPuppet::GetPuppetRelativeCenter_Implementation()
+{
+	return FVector(0, 0, SkeletalMeshComponent->Bounds.BoxExtent.Z / 1.5f);
 }

@@ -66,7 +66,7 @@ protected:
 	/**
      * 개별 영웅과 덱을 게임 인스턴스에 추가하고, 영웅의 시작 상태를 설정하는 함수입니다.
      */
-	void AddHeroAndDeckToGameInstance(UGameInstance* GameInstance, FHeroDeck& HeroDeck);
+	void AddHeroAndDeckToGameInstance(UGameInstance* GameInstance,const FHeroDeck& HeroDeck);
 
 	/**
      * 영웅의 시작 상태를 게임 인스턴스에 추가하는 함수입니다.

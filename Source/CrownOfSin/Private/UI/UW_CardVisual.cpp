@@ -135,14 +135,15 @@ void UUW_CardVisual::UpdateCardWidget_Implementation(ACardBase* InCardActor)
 	UpdateManaCrystal();
 
 	const FSlateColor& CardFrameTint = CardActor->GetCardFrameTint(ECardDataType::Hand);
+	
 	TypeBanner->SetBrushTintColor(CardFrameTint);
+	
 	ManaCrystalFrame->SetBrushTintColor(CardFrameTint);
-
+	
 	FrameImage->SetBrushTintColor(CardFrameTint);
 	FrameImage->SetBrushFromTexture(CardActor->GetCardFrame(ECardDataType::Hand));
 
 	CardImage->SetBrushFromTexture(CardActor->GetCardPortrait(ECardDataType::Hand));
-
 	CardName->SetText(CardActor->GetCardName(ECardDataType::Hand));
 
 	ReplacePowerValues();

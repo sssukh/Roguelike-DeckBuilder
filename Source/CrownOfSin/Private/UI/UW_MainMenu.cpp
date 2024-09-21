@@ -120,16 +120,16 @@ UGameInstance* UUW_MainMenu::ValidateAndResetGameInstance()
 void UUW_MainMenu::ProcessSelectedHeroesAndDecks(UGameInstance* GameInstance)
 {
 	// 선택된 영웅과 덱을 가져옴
-	TArray<FHeroDeck> SelectedHeroesAndDecks = WBP_HeroAddBox->GetSelectedHeroesAndDecks();
+	const TArray<FHeroDeck>& SelectedHeroesAndDecks = WBP_HeroAddBox->GetSelectedHeroesAndDecks();
 
 	// 각 영웅과 덱에 대해 처리
-	for (FHeroDeck& HeroDeck : SelectedHeroesAndDecks)
+	for (const FHeroDeck& HeroDeck : SelectedHeroesAndDecks)
 	{
 		AddHeroAndDeckToGameInstance(GameInstance, HeroDeck);
 	}
 }
 
-void UUW_MainMenu::AddHeroAndDeckToGameInstance(UGameInstance* GameInstance, FHeroDeck& HeroDeck)
+void UUW_MainMenu::AddHeroAndDeckToGameInstance(UGameInstance* GameInstance, const FHeroDeck& HeroDeck)
 {
 	FString UniqueID;
 

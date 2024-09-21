@@ -29,9 +29,18 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Puppet")
 	void AnimatePuppet(FGameplayTag InAnimationTag);
-
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Puppet")
+	void SignalAnimEvent(FGameplayTag InAnimationTag, FName InNotify);
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Puppet")
+	void SignalAnimEnd(FGameplayTag InAnimationTag);
+	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Puppet")
 	FVector GetPuppetRelativeCenter();
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Puppet")
+	bool GetMinionFromPuppet(AMinionBase*& OutMinion);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Puppet")
 	UObject* GetPuppetUI(EStatusSlot InSlot);
@@ -41,4 +50,10 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Puppet")
 	void MarkPuppet();
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Puppet")
+	void DisappearPuppet(float InSpeedProp);
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Puppet")
+	void AppearPuppet(float InSpeedProp);
 };
