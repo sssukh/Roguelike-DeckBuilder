@@ -8,8 +8,10 @@
 #include "Components/TextBlock.h"
 #include "Kismet/KismetStringLibrary.h"
 #include "Kismet/KismetTextLibrary.h"
+#include "Libraries/AssetPath.h"
 #include "StatusSystem/Status_Mana.h"
 #include "Utilities/CosGameplayTags.h"
+#include "Utilities/CosLog.h"
 
 UUW_CardVisual::UUW_CardVisual(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), ManaCrystalOverlay(nullptr), GlowBorder(nullptr),
                                                                               TypeBanner(nullptr), RarityGem(nullptr), ManaCrystalFrame(nullptr), GemShadow(nullptr), FrameImage(nullptr),
@@ -22,6 +24,16 @@ UUW_CardVisual::UUW_CardVisual(const FObjectInitializer& ObjectInitializer) : Su
 	TypeNames.Add(CosGameTags::Effect_Power, FText::FromString(FString(TEXT("Power"))));
 	TypeNames.Add(CosGameTags::Effect_Invalid, FText::FromString(FString(TEXT(""))));
 	TypeNames.Add(CosGameTags::Effect_Curse, FText::FromString(FString(TEXT("Curse"))));
+
+	static ConstructorHelpers::FObjectFinder<UTexture2D> T_Transparent(*AssetPath::Texture::T_Transparent);
+	if(T_Transparent.Succeeded())
+	{
+		DefaultRarityGemTexture = T_Transparent.Object;
+	}
+	else
+	{
+		COS_SCREEN(TEXT("T_Transparent를 로드하지 못했습니다."));
+	}
 }
 
 void UUW_CardVisual::NativeConstruct()

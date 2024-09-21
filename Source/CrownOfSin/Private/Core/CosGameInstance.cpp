@@ -294,16 +294,15 @@ bool UCosGameInstance::AddPersistentHeroToInstance_Implementation(FDataTableRowH
 {
 	// 영웅 데이터를 가져오고 유효성 검사
 	FMinion* FoundMinion = HeroData.DataTable->FindRow<FMinion>(HeroData.RowName,TEXT(""));
-	if (!FoundMinion)
-	{
-		return false;
-	}
-
+	if (!FoundMinion) return false;
+	
+	FMinion MinionData = *FoundMinion;
+	
 	// 고유한 영웅 ID 생성
 	FString UniqueID = MakeUniqueHeroId(HeroData.RowName.ToString());
 
 	// 영웅의 시작 상태에서 아티팩트를 필터링하고 상태를 설정
-	SetFilteredStartingStatusesForMinion(*FoundMinion, UniqueID);
+	SetFilteredStartingStatusesForMinion(MinionData, UniqueID);
 
 	// 영웅의 덱을 설정
 	if (!AssignHeroDeckToMinion(HeroDeck, UniqueID))

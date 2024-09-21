@@ -16,7 +16,7 @@ void AActionBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetUpAction();
+	Execute_SetUpAction(this);
 	
 }
 

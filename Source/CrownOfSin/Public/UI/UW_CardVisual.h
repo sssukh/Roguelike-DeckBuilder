@@ -104,7 +104,7 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Card Visual|Config|Setup")
 	TMap<FGameplayTag, UTexture2D*> RarityGems;
 	
-	UPROPERTY(BlueprintReadWrite, Category="Card Visual|Config|Setup")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Card Visual|Config|Setup")
 	 UTexture2D* DefaultRarityGemTexture;
 
 	UPROPERTY(BlueprintReadWrite, Category="Card Visual")
