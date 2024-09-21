@@ -29,6 +29,7 @@ namespace AssetPath
 		const FString T_TargetArrow = TEXT("Texture2D'/Game/RLDB/Demo/Textures/UI/T_TargetArrow.T_TargetArrow'");
 		const FString T_RandomDice = TEXT("Texture2D'/Game/RLDB/Demo/Textures/NodeMap/T_RandomDice.T_RandomDice'");
 		const FString T_CrossMark = TEXT("Texture2D'/Game/RLDB/Demo/Textures/NodeMap/T_CrossMark.T_CrossMark'");
+		const FString T_Transparent = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Card/T_Transparent.T_Transparent'");
 	}
 
 	namespace DataTable

@@ -38,7 +38,7 @@ void UUW_CardSelectorList::UpdateCardList(TArray<ACardBase*>& Cards, const FText
 
 	for (int index=0; index<Cards.Num(); index++)
 	{
-		UUW_CardListCard* CardList = Cast<UUW_CardListCard>(CreateWidget(GetWorld(),UUW_CardListCard::StaticClass()));
+		UUW_CardListCard* CardList = Cast<UUW_CardListCard>(CreateWidget(GetWorld(),CardListClass));
 		
 		CardList->CardActor = Cards[index];
 

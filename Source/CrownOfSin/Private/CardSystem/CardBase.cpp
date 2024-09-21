@@ -337,7 +337,7 @@ void ACardBase::ContinueToNextEffect()
 
 		// 7. 타겟 입력이 필요한 경우 처리합니다.
 		if (CurrentTargetingComponent->bRequiresInput)
-		{
+		{			
 			// 타겟 입력을 받기 위한 델리게이트를 추가합니다.
 			CurrentTargetingComponent->OnInputTargetsReceived.AddUniqueDynamic(this, &ACardBase::ProceedOnInputTargetsReceived);
 

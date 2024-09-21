@@ -58,7 +58,7 @@ void AAction_ModifyStatus::PlayAction_Implementation()
 {
 	// 상태 아이콘을 변경할 수 있는지 확인
 	if (!StatusIndicator->Implements<UInterface_StatusIcon>()) return;
-
+	
 	// 상태 위젯에 상태를 반영
 	IInterface_StatusIcon::Execute_ModifyStatusWidget(StatusIndicator, NewValue, TextOverride, bRefreshAppearance, StatusAppearance, bCanBeZero);
 

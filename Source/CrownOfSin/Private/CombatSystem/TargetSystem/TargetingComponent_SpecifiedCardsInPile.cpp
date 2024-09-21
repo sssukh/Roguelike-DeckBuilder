@@ -12,11 +12,7 @@
 
 UTargetingComponent_SpecifiedCardsInPile::UTargetingComponent_SpecifiedCardsInPile(): CardSelectorList(nullptr)
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	bRequiresInput = true;
 }
 
 bool UTargetingComponent_SpecifiedCardsInPile::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
@@ -35,7 +31,7 @@ bool UTargetingComponent_SpecifiedCardsInPile::FindValidTargets(TArray<AActor*>&
 
 	BindToCardConfirm(CardPlayer->PlayerUI->WBP_CardSelectorList);
 
-	FText Title = FText::FromString(FString(TEXT("카드를 선택하세요")));
+	FText Title = FText::FromString(FString(TEXT("Choose Your Cards")));
 	CardPlayer->PlayerUI->WBP_CardSelectorList->UpdateCardList(PileComponent->Cards, Title);
 
 	return true;
