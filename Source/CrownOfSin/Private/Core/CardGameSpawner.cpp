@@ -28,16 +28,16 @@ ACardGameSpawner::ACardGameSpawner()
 		COS_LOG_ERROR(TEXT("BP_GlobalDispatcherHub를 로드하지 못했습니다."));
 	}
 
-	static ConstructorHelpers::FClassFinder<AActor> BP_CardPlayer(*AssetPath::Blueprint::BP_CardPlayer_C);
-	if (BP_CardPlayer.Succeeded())
+	static ConstructorHelpers::FClassFinder<AActor> BP_TurnManager(*AssetPath::Blueprint::BP_TurnManager_C);
+	if (BP_TurnManager.Succeeded())
 	{
-		SpawnOrderActors.Add(BP_CardPlayer.Class);
+		SpawnOrderActors.Add(BP_TurnManager.Class);
 	}
 	else
 	{
-		COS_LOG_ERROR(TEXT("BP_CardPlayer를 로드하지 못했습니다."));
+		COS_LOG_ERROR(TEXT("BP_TurnManager를 로드하지 못했습니다."));
 	}
-
+	
 	static ConstructorHelpers::FClassFinder<AActor> BP_RewardHolder(*AssetPath::Blueprint::BP_RewardHolder_C);
 	if (BP_RewardHolder.Succeeded())
 	{
@@ -47,15 +47,14 @@ ACardGameSpawner::ACardGameSpawner()
 	{
 		COS_LOG_ERROR(TEXT("BP_RewardHolder를 로드하지 못했습니다."));
 	}
-
-	static ConstructorHelpers::FClassFinder<AActor> BP_TurnManager(*AssetPath::Blueprint::BP_TurnManager_C);
-	if (BP_TurnManager.Succeeded())
+	static ConstructorHelpers::FClassFinder<AActor> BP_CardPlayer(*AssetPath::Blueprint::BP_CardPlayer_C);
+	if (BP_CardPlayer.Succeeded())
 	{
-		SpawnOrderActors.Add(BP_TurnManager.Class);
+		SpawnOrderActors.Add(BP_CardPlayer.Class);
 	}
 	else
 	{
-		COS_LOG_ERROR(TEXT("BP_TurnManager를 로드하지 못했습니다."));
+		COS_LOG_ERROR(TEXT("BP_CardPlayer를 로드하지 못했습니다."));
 	}
 }
 
@@ -75,12 +74,11 @@ void ACardGameSpawner::BeginPlay()
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		SpawnParams.TransformScaleMethod = ESpawnActorScaleMethod::SelectDefaultAtRuntime;
-		AActor* NewSpawnedActor = GetWorld()->SpawnActor<AActor>(SpawnActor, SpawnTransform, SpawnParams);
+		GetWorld()->SpawnActor<AActor>(SpawnActor, SpawnTransform, SpawnParams);
 	}
 
-	// 카드 게임 인스턴스를 가져옵니다. (없으면 함수 종료)
+	// 카드 게임 인스턴스를 가져옵니다.
 	UGameInstance* CardGameInstance = COS_FSingletons::GetCardGameInstance(this);
-	if (!CardGameInstance) return;
 
 	// 현재 게임 상태를 저장하려고 시도합니다.
 	IInterface_CardGameInstance::Execute_AttemptSaveGame(CardGameInstance, FString(TEXT("")), false);

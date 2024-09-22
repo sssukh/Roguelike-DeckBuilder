@@ -32,7 +32,6 @@ namespace CosGameTags
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Exhaust, TEXT("Event.Card.Exhaust"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Grab, TEXT("Event.Card.Grab"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_GenerateCard, TEXT("Event.Card.Generate"));
-	UE_DEFINE_GAMEPLAY_TAG(Event_Card_CardSelectionMode, TEXT("Event.Card.CardSelectionMode"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_DropCard, TEXT("Event.Card.Drop"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Void, TEXT("Event.Card.Void"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Destroy, TEXT("Event.Card.Destroy"));

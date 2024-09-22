@@ -73,13 +73,16 @@ void AMinionBase::BeginPlay()
 	}
 
 	// 4. 공격 패턴 컴포넌트 생성
-	FName UniqueName = UFunctionLibrary_Utility::GenerateUniqueObjectName(this, MinionData.AttackPatternComponent);
-	UAttackPatternComponent* NewAttackPatternComponent = NewObject<UAttackPatternComponent>(this, MinionData.AttackPatternComponent, UniqueName);
-	NewAttackPatternComponent->RegisterComponent();
-	NewAttackPatternComponent->AttackPatternData = MinionData.AttackPatternData;
+	if (MinionData.AttackPatternComponent)
+	{
+		FName UniqueName = UFunctionLibrary_Utility::GenerateUniqueObjectName(this, MinionData.AttackPatternComponent);
+		UAttackPatternComponent* NewAttackPatternComponent = NewObject<UAttackPatternComponent>(this, MinionData.AttackPatternComponent, UniqueName);
+		NewAttackPatternComponent->RegisterComponent();
+		NewAttackPatternComponent->AttackPatternData = MinionData.AttackPatternData;
 
-	// 공격 패턴 컴포넌트 액터에 등록
-	AddInstanceComponent(NewAttackPatternComponent);
+		// 공격 패턴 컴포넌트 액터에 등록
+		AddInstanceComponent(NewAttackPatternComponent);
+	}
 }
 
 void AMinionBase::RemoveFromGame()

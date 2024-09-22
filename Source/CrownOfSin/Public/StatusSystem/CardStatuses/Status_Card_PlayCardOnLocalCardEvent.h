@@ -6,7 +6,7 @@
 #include "StatusSystem/StatusComponent.h"
 #include "Status_Card_PlayCardOnLocalCardEvent.generated.h"
 
-
+/*ToDo:Cos*/
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UStatus_Card_PlayCardOnLocalCardEvent : public UStatusComponent
 {

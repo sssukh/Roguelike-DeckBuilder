@@ -27,7 +27,7 @@ public:
 	 * 패턴이 끝에 도달하면 지정된 반복 지점으로 돌아가서 다시 카드를 선택합니다.
 	 */
 	UFUNCTION(BlueprintCallable, Category="Attack Pattern Component")
-	ACardBase* GetNextCard();
+	virtual ACardBase* GetNextCard();
 
 	/**
 	 * 주어진 카드 옵션 중에서 가중치 기반으로 무작위로 카드를 선택합니다.

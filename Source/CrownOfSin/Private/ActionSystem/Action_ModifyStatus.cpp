@@ -25,7 +25,7 @@ AAction_ModifyStatus::AAction_ModifyStatus(): StatusReference(nullptr), bRefresh
 	{
 		COS_LOG_ERROR(TEXT("BP_IconSplash 클래스를 로드하지 못했습니다."));
 	}
-	
+
 	static ConstructorHelpers::FClassFinder<ATextSplash> BP_TextSplash(*AssetPath::Blueprint::BP_TextSplash_C);
 	if (BP_TextSplash.Succeeded())
 	{
@@ -57,10 +57,11 @@ void AAction_ModifyStatus::SetUpAction_Implementation()
 void AAction_ModifyStatus::PlayAction_Implementation()
 {
 	// 상태 아이콘을 변경할 수 있는지 확인
-	if (!StatusIndicator->Implements<UInterface_StatusIcon>()) return;
-	
-	// 상태 위젯에 상태를 반영
-	IInterface_StatusIcon::Execute_ModifyStatusWidget(StatusIndicator, NewValue, TextOverride, bRefreshAppearance, StatusAppearance, bCanBeZero);
+	if (StatusIndicator && StatusIndicator->Implements<UInterface_StatusIcon>())
+	{
+		// 상태 위젯에 상태를 반영
+		IInterface_StatusIcon::Execute_ModifyStatusWidget(StatusIndicator, NewValue, TextOverride, bRefreshAppearance, StatusAppearance, bCanBeZero);
+	}
 
 	// 스플래시 아이콘을 화면에 표시해야 하는지 확인
 	if (bShowSplashIcon && Puppet && Puppet->Implements<UInterface_CardTarget>())

@@ -1,7 +1,4 @@
 ﻿#include "Libraries/DelayHelper.h"
-
-#include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Utilities/CosLog.h"
 
 
@@ -9,34 +6,32 @@ UDelayHelper::UDelayHelper(): LoopIndex(0), CachedWorld(nullptr), Interval(0)
 {
 }
 
-void UDelayHelper::DelayWhile(TFunction<bool()> Condition, TFunction<void(int32)> OnLoop, TFunction<void()> OnComplete, float CheckInterval)
+void UDelayHelper::DelayWhile(const FConditionDelegate& Condition, const FOnLoopDelegate& OnLoop, const FOnCompleteDelegate& OnComplete, float CheckInterval, bool bAuToDestroy)
 {
+	COS_LOG_WARNING(TEXT("DelayHelper::DelayWhile called"));
+
 	CachedWorld = GetWorld();
 	if (!CachedWorld)
 	{
-		COS_LOG_ERROR(TEXT("DelayWhile: 유효한 UWorld를 가져올 수 없습니다!"));
+		COS_LOG_SCREEN_ERROR(TEXT("DelayWhile: 유효한 UWorld를 가져올 수 없습니다!"));
 		return;
 	}
 
-	// 함수 포인터를 멤버 변수로 저장
-	ConditionFunc = Condition;
-	OnLoopFunc = OnLoop;
-	OnCompleteFunc = OnComplete;
+	// 델리게이트를 멤버 변수에 바인딩
+	ConditionDelegate = Condition;
+	OnLoopDelegate = OnLoop;
+	OnCompleteDelegate = OnComplete;
+
+	// 루프 횟수 초기화
+	LoopIndex = 0;
+	bLoopClear = bAuToDestroy;
 
 	// 최소 지연 시간 설정
 	Interval = (CheckInterval <= 0.0f) ? 0.017f : CheckInterval;
 
-	// 타이머가 이미 존재하면 삭제하여 중복 실행을 방지
-	if (CachedWorld->GetTimerManager().IsTimerActive(LoopTimerHandle))
-	{
-		CachedWorld->GetTimerManager().ClearTimer(LoopTimerHandle);
-	}
-
-	LoopIndex = 0; // 루프 횟수 초기화
-
-	// 루프 타이머 설정
+	// 타이머 설정
 	CachedWorld->GetTimerManager().SetTimer(LoopTimerHandle, this, &UDelayHelper::OnTick, Interval, true);
-
+	COS_LOG_WARNING(TEXT("DelayWhile: Timer set with Interval %f"), Interval);
 }
 
 void UDelayHelper::Reset()
@@ -44,39 +39,44 @@ void UDelayHelper::Reset()
 	// LoopIndex를 초기화하고 타이머를 정리합니다.
 	LoopIndex = 0;
 
-	if (CachedWorld)
+	if (GetWorld()->GetTimerManager().IsTimerActive(LoopTimerHandle))
 	{
-		CachedWorld->GetTimerManager().ClearTimer(LoopTimerHandle);
+		GetWorld()->GetTimerManager().ClearTimer(LoopTimerHandle);
+		COS_LOG_WARNING(TEXT("DelayHelper 재설정: 타이머가 지워졌습니다."));
+	}
+	else
+	{
+		COS_LOG_SCREEN_ERROR(TEXT("DelayHelper 재설정: 타이머가 활성화되어 있지 않아서 지울 필요가 없습니다."));
 	}
 
-	// 함수 포인터 초기화
-	ConditionFunc = nullptr;
-	OnLoopFunc = nullptr;
-	OnCompleteFunc = nullptr;
+	// 델리게이트 초기화
+	ConditionDelegate.Unbind();
+	OnLoopDelegate.Unbind();
+	OnCompleteDelegate.Unbind();
 }
 
 void UDelayHelper::OnTick()
 {
-	if (ConditionFunc && ConditionFunc())
+	if (ConditionDelegate.IsBound() && ConditionDelegate.Execute())
 	{
-		if (OnCompleteFunc)
+		if (OnLoopDelegate.IsBound())
 		{
-			OnCompleteFunc();
+			OnLoopDelegate.Execute(LoopIndex);
 		}
-		LoopIndex = 0;
-		if (CachedWorld)
-		{
-			CachedWorld->GetTimerManager().ClearTimer(LoopTimerHandle);
-		}
+		LoopIndex++;
 	}
 	else
 	{
-		if (OnLoopFunc)
+		if (OnCompleteDelegate.IsBound())
 		{
-			OnLoopFunc(LoopIndex);
+			OnCompleteDelegate.Execute();
 		}
-		LoopIndex++;
-		// 타이머는 루프 중이므로 추가적인 타이머 설정이 필요하지 않습니다.
+
+		// 타이머 정리 및 상태 초기화
+		if (bLoopClear)
+		{
+			Reset();
+		}
 	}
 }
 

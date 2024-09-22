@@ -203,19 +203,18 @@ void UDispatcherHubComponent::QueueEventWithPayloadAndCallTags(FGameplayTag Even
                                                                FGameplayTagContainer CallTags)
 {
 	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-	ActionManagerSubsystem->CreateAndQueueAction<AAction_DispatcherEvent>(
-		[this,Event,CallingObject,CallSpecificObject,EndDelay,PayLoad,CallTags](AAction_DispatcherEvent* NewDispatcherEvent)
-		{
-			// 생성된 액터에 이벤트와 관련된 속성들을 설정.
-			NewDispatcherEvent->Event = Event;
-			NewDispatcherEvent->CallingObject = CallingObject;
-			NewDispatcherEvent->CallSpecificObject = CallSpecificObject;
-			NewDispatcherEvent->DispatcherHubReference = this;
-			NewDispatcherEvent->AlsoCallGlobal = ECallGlobal::CallAfter;
-			NewDispatcherEvent->PayLoad = PayLoad;
-			NewDispatcherEvent->CallTags = CallTags;
-			NewDispatcherEvent->EndDelay = EndDelay;
-		});
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_DispatcherEvent>([&](AAction_DispatcherEvent* NewDispatcherEvent)
+	{
+		// 생성된 액터에 이벤트와 관련된 속성들을 설정.
+		NewDispatcherEvent->Event = Event;
+		NewDispatcherEvent->CallingObject = CallingObject;
+		NewDispatcherEvent->CallSpecificObject = CallSpecificObject;
+		NewDispatcherEvent->DispatcherHubReference = this;
+		NewDispatcherEvent->AlsoCallGlobal = ECallGlobal::CallAfter;
+		NewDispatcherEvent->PayLoad = PayLoad;
+		NewDispatcherEvent->CallTags = CallTags;
+		NewDispatcherEvent->EndDelay = EndDelay;
+	});
 }
 
 bool UDispatcherHubComponent::CallEventWithPayload(FGameplayTag EventTag, UObject* CallingObject, UObject* CallSpecificObject, ECallGlobal AlsoCallGlobal, UObject* PayLoad)

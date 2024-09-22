@@ -1,27 +1,19 @@
 ﻿#include "ActionSystem/ActionManagerSubsystem.h"
 #include "Interfaces/Interface_CardAction.h"
-#include "Kismet/GameplayStatics.h"
-#include "Utilities/CosLog.h"
 #include "ActionSystem/Action_Delay.h"
+#include "Libraries/DelayHelper.h"
 
-UActionManagerSubsystem::UActionManagerSubsystem() : bIsActionInProgress(false), ActionsThisTick(0), MaxActionsPerTick(5), CurrentAction(nullptr)
+UActionManagerSubsystem::UActionManagerSubsystem() : ActionsThisTick(0), MaxActionsPerTick(5), CurrentAction(nullptr), PlayNextActionDelayHelper(nullptr)
 {
 }
 
 void UActionManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-
-	// 현재 액션이 진행 중이 아니면 즉시 시도
-	if (!bIsActionInProgress)
-	{
-		AttemptToPlayNextAction();
-	}
 }
 
 void UActionManagerSubsystem::Deinitialize()
 {
-	// 액션 큐 정리
 	while (!ActionQueue.IsEmpty())
 	{
 		UObject* RemainingAction = nullptr;
@@ -60,7 +52,6 @@ void UActionManagerSubsystem::QueueAction(UObject* Action)
 	{
 		ActionQueue.Enqueue(Action);
 
-		// 현재 액션이 진행 중이 아니면 즉시 시도
 		if (!bIsActionInProgress)
 		{
 			AttemptToPlayNextAction();
@@ -78,40 +69,64 @@ void UActionManagerSubsystem::QueueDelay(float InDelay)
 
 void UActionManagerSubsystem::AttemptToPlayNextAction()
 {
-	// 현재 액션이 진행 중이면 대기
 	if (bIsActionInProgress) return;
 
-	// 액션 실행 조건을 확인합니다.
-	if (ShouldPlayNextAction())
+	if (ActionQueue.IsEmpty())
 	{
-		if (ActionQueue.Dequeue(CurrentAction))
-		{
-			if (CurrentAction->GetClass()->ImplementsInterface(UInterface_CardAction::StaticClass()))
-			{
-				bIsActionInProgress = true;
-				ActionsThisTick++;
-				IInterface_CardAction::Execute_AnimateAction(CurrentAction, this);
-			}
-			else
-			{
-				COS_SCREEN(TEXT("액션이 IInterface_CardAction을 구현하지 않았습니다."));
-				CurrentAction = nullptr;
-				bIsActionInProgress = false;
-				AttemptToPlayNextAction();
-			}
-		}
+		PlayNextActionDelayHelper->Reset();
+		return;
 	}
-	else
+
+	if (!PlayNextActionDelayHelper)
 	{
-		// 조건이 충족되지 않으면 타이머로 재시도
-		GetWorld()->GetTimerManager().SetTimer(ActionTimerHandle, this, &UActionManagerSubsystem::AttemptToPlayNextAction, 0.17f, false);
+		PlayNextActionDelayHelper = NewObject<UDelayHelper>(this);
 	}
+
+	// 기존 타이머를 리셋
+	PlayNextActionDelayHelper->Reset();
+
+	// 델리게이트 생성 및 바인딩
+	FConditionDelegate ConditionDelegate;
+	ConditionDelegate.BindUObject(this, &UActionManagerSubsystem::OnShouldProceedToNextAction);
+
+	FOnLoopDelegate OnLoopDelegate;
+	OnLoopDelegate.BindUObject(this, &UActionManagerSubsystem::OnAttemptLoopProgress);
+
+	FOnCompleteDelegate OnCompleteDelegate;
+	OnCompleteDelegate.BindUObject(this, &UActionManagerSubsystem::OnNextPlayAction);
+
+	// DelayWhile 실행
+	PlayNextActionDelayHelper->DelayWhile(ConditionDelegate, OnLoopDelegate, OnCompleteDelegate, 0.0f, false);
 }
 
-bool UActionManagerSubsystem::ShouldPlayNextAction() const
+int32 UActionManagerSubsystem::GetCurrentIndex()
 {
-	// 현재 틱에서 실행된 액션 수가 최대치를 넘지 않았는지 확인하고, 액션 큐에 액션이 있는지 확인
-	return ActionsThisTick < MaxActionsPerTick && !ActionQueue.IsEmpty();
+	if (ActionQueue.IsEmpty())
+		CurrentSpawnIndex = 0;
+
+	return CurrentSpawnIndex++;
+}
+
+bool UActionManagerSubsystem::OnShouldProceedToNextAction()
+{
+	return ActionsThisTick >= MaxActionsPerTick || IsValid(CurrentAction);
+}
+
+void UActionManagerSubsystem::OnAttemptLoopProgress(int32 Index)
+{
+}
+
+void UActionManagerSubsystem::OnNextPlayAction()
+{
+	if (ActionQueue.Dequeue(CurrentAction))
+	{
+		if (CurrentAction->GetClass()->ImplementsInterface(UInterface_CardAction::StaticClass()))
+		{
+			bIsActionInProgress = true;
+			ActionsThisTick++;
+			IInterface_CardAction::Execute_AnimateAction(CurrentAction, this);
+		}
+	}
 }
 
 void UActionManagerSubsystem::ProceedFromOngoingAction(UObject* OngoingAction)
@@ -121,20 +136,11 @@ void UActionManagerSubsystem::ProceedFromOngoingAction(UObject* OngoingAction)
 		if (OngoingAction->GetClass()->ImplementsInterface(UInterface_CardAction::StaticClass()))
 		{
 			IInterface_CardAction::Execute_AttemptDestroyAction(OngoingAction);
-			CurrentAction = nullptr;
-			bIsActionInProgress = false;
+		}
 
-			// 다음 액션 시도
-			AttemptToPlayNextAction();
-		}
-		else
-		{
-			COS_SCREEN(TEXT("OngoingAction이 IInterface_CardAction을 구현하지 않았습니다."));
-		}
-	}
-	else
-	{
-		COS_SCREEN(TEXT("OngoingAction이 CurrentAction과 일치하지 않습니다."));
+		CurrentAction = nullptr;
+		bIsActionInProgress = false;
+		AttemptToPlayNextAction();
 	}
 }
 

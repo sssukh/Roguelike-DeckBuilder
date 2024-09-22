@@ -17,7 +17,6 @@ void AActionBase::BeginPlay()
 	Super::BeginPlay();
 
 	Execute_SetUpAction(this);
-	
 }
 
 void AActionBase::SetUpAction_Implementation()
@@ -36,28 +35,21 @@ void AActionBase::AnimateAction_Implementation(UObject* CallingActionManager)
 
 void AActionBase::EndAction_Implementation()
 {
-	if (EndDelay >= 0.0f)
+	if (EndDelay > 0.0f)
 	{
-		FTimerHandle EndDelayTimerHandle;
 		GetWorld()->GetTimerManager().SetTimer(EndDelayTimerHandle, [this]()
 		{
-			if (UWorld* World = GetWorld())
+			if (UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>())
 			{
-				if (UActionManagerSubsystem* ActionManagerSubsystem = World->GetSubsystem<UActionManagerSubsystem>())
-				{
-					ActionManagerSubsystem->ProceedFromOngoingAction(this);
-				}
+				ActionManagerSubsystem->ProceedFromOngoingAction(this);
 			}
 		}, EndDelay, false);
 	}
 	else
 	{
-		if (UWorld* World = GetWorld())
+		if (UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>())
 		{
-			if (UActionManagerSubsystem* ActionManagerSubsystem = World->GetSubsystem<UActionManagerSubsystem>())
-			{
-				ActionManagerSubsystem->ProceedFromOngoingAction(this);
-			}
+			ActionManagerSubsystem->ProceedFromOngoingAction(this);
 		}
 	}
 }

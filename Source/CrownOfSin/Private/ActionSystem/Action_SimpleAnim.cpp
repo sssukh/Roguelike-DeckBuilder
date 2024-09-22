@@ -1,5 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 
 #include "ActionSystem/Action_SimpleAnim.h"
 
@@ -16,14 +15,12 @@ AAction_SimpleAnim::AAction_SimpleAnim()
 
 void AAction_SimpleAnim::PlayAction_Implementation()
 {
-	if(!Puppet->GetClass()->ImplementsInterface(UInterface_CardPuppet::StaticClass()))
+	if (!Puppet->GetClass()->ImplementsInterface(UInterface_CardPuppet::StaticClass()))
 	{
 		COS_SCREEN(TEXT("인터페이스 CardPuppet을 상속받지 않았습니다."));
 		return;
 	}
 
-	IInterface_CardPuppet::Execute_AnimatePuppet(Puppet,Animation);
-
+	IInterface_CardPuppet::Execute_AnimatePuppet(Puppet, Animation);
 	Execute_EndAction(this);
 }
-

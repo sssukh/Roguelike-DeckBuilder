@@ -1,26 +1,41 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "ActionSystem/Action_AdvAnim.h"
+
+#include "CombatSystem/Puppets/PuppetComponent.h"
+#include "Interfaces/Interface_CardPuppet.h"
+#include "Libraries/FunctionLibrary_Utility.h"
 
 
-#include "ActionSystem/Action_AdvAnim.h"
-
-
-// Sets default values
-AAction_AdvAnim::AAction_AdvAnim()
+AAction_AdvAnim::AAction_AdvAnim(): Puppet(nullptr)
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
 void AAction_AdvAnim::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
-// Called every frame
-void AAction_AdvAnim::Tick(float DeltaTime)
+void AAction_AdvAnim::PlayAction_Implementation()
 {
-	Super::Tick(DeltaTime);
+	if (!UFunctionLibrary_Utility::CheckObjectImplementsInterface(this, Puppet, UInterface_CardPuppet::StaticClass())) return;
+
+	IInterface_CardPuppet::Execute_AnimatePuppet(Puppet, Animation);
+
+	UPuppetComponent* PuppetComponent = Puppet->FindComponentByClass<UPuppetComponent>();
+	if (!PuppetComponent) return;
+
+	PuppetComponent->OnAnimationEvent.AddDynamic(this, &AAction_AdvAnim::CheckAnimationEvent);
+
+	IInterface_CardPuppet::Execute_AnimatePuppet(Puppet, Animation);
 }
 
+void AAction_AdvAnim::CheckAnimationEvent(AActor* InPuppet, FGameplayTag InAnimationTag)
+{
+	if (InAnimationTag == Animation)
+	{
+		UPuppetComponent* PuppetComponent = Puppet->FindComponentByClass<UPuppetComponent>();
+		PuppetComponent->OnAnimationEvent.RemoveDynamic(this, &AAction_AdvAnim::CheckAnimationEvent);
+		Execute_EndAction(this);
+	}
+}

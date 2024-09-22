@@ -163,7 +163,7 @@ UStatusComponent* ACardPlayer::CreateNewStatusComponent(TSubclassOf<UStatusCompo
 	NewStatusComponent->bShowImmediately = false;
 	NewStatusComponent->GameplayTags = FGameplayTagContainer();
 	AddInstanceComponent(NewStatusComponent);
-	
+
 	return NewStatusComponent;
 }
 

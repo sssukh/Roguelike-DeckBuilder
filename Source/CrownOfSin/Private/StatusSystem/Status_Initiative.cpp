@@ -5,6 +5,7 @@
 #include "Libraries/DelayHelper.h"
 #include "Libraries/FunctionLibrary_Event.h"
 #include "Utilities/CosGameplayTags.h"
+#include "Utilities/CosLog.h"
 
 UStatus_Initiative::UStatus_Initiative(): BeginDelayHelper(nullptr)
 {
@@ -21,27 +22,51 @@ void UStatus_Initiative::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if(AActor* TurnManagerActor = UGameplayStatics::GetActorOfClass(this, ATurnManager::StaticClass()) )
+	{
+		ATurnManager* TurnManager = Cast<ATurnManager>(TurnManagerActor);
+
+		// 지연을 담당할 DelayHelper 생성
+		BeginDelayHelper = NewObject<UDelayHelper>(this);
+
+		// 델리게이트 생성 및 바인딩
+		FConditionDelegate ConditionDelegate;
+		ConditionDelegate.BindUObject(this, &UStatus_Initiative::CheckTurnManagerSetup);
+
+		FOnLoopDelegate OnLoopDelegate;
+		OnLoopDelegate.BindUObject(this, &UStatus_Initiative::LogLoopProgress);
+
+		FOnCompleteDelegate OnCompleteDelegate;
+		OnCompleteDelegate.BindUObject(this, &UStatus_Initiative::OnSetupComplete);
+
+		// DelayWhile 함수 호출: 0초 딜레이로 조건을 반복 확인
+		BeginDelayHelper->DelayWhile(ConditionDelegate, OnLoopDelegate, OnCompleteDelegate, 0.0f);
+	}
+		
+}
+
+bool UStatus_Initiative::CheckTurnManagerSetup()
+{
 	ATurnManager* TurnManager = Cast<ATurnManager>(UGameplayStatics::GetActorOfClass(this, ATurnManager::StaticClass()));
-	if (!TurnManager) return;
-
-	// 지연을 담당할 DelayHelper 생성
-	BeginDelayHelper = NewObject<UDelayHelper>(this);
-
-	auto CheckTurnManagerSetup = [TurnManager]() -> bool
+	if (!TurnManager)
 	{
-		return TurnManager->bSetUpDone;
-	};
+		return true; // 조건 불충족으로 처리
+	}
 
-	auto LogLoopProgress = [](int32 LoopIndex)
-	{
-	};
+	return !TurnManager->bSetUpDone;
+}
 
-	auto OnSetupComplete = [this]()
-	{
-		UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_TargetSpawned, GetOwner());
-		BeginDelayHelper = nullptr;
-	};
+void UStatus_Initiative::LogLoopProgress(int32 LoopIndex)
+{
+}
 
-	// DelayWhile 함수 호출: 0초 딜레이로 조건을 반복 확인
-	BeginDelayHelper->DelayWhile(CheckTurnManagerSetup, LogLoopProgress, OnSetupComplete, 0.0f);
+void UStatus_Initiative::OnSetupComplete()
+{
+	AActor* Owner = GetOwner();
+
+	// 글로벌 디스패처 허브에 이벤트 호출
+	UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_TargetSpawned, Owner);
+
+	// BeginDelayHelper를 nullptr로 설정하여 더 이상 참조하지 않도록 함
+	BeginDelayHelper = nullptr;
 }

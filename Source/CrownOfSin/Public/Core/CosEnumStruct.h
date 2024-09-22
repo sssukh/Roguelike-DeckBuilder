@@ -232,6 +232,10 @@ struct FToolTipValue
 	FToolTipValue(): bValued(false)
 	{
 	};
+
+	FToolTipValue(const FDataTableRowHandle& NewToolTipTable, bool NewValued): ToolTipTable(NewToolTipTable), bValued(NewValued)
+	{
+	};
 };
 
 USTRUCT(BlueprintType, Blueprintable)
@@ -646,9 +650,9 @@ struct FCardPattern : public FTableRowBase
 	TArray<FCardOptions> CardPattern;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CardPattern")
-	int32 RepeatFrom;
+	int32 RepeatFrom = 0;
 
-	FCardPattern(): RepeatFrom(0)
+	FCardPattern()
 	{
 	}
 };

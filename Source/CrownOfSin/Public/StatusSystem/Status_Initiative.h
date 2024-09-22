@@ -24,6 +24,12 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	// 델리게이트로 사용할 멤버 함수들
+	bool CheckTurnManagerSetup();
+	void LogLoopProgress(int32 LoopIndex);
+	void OnSetupComplete();
+
+private:
 	UPROPERTY()
 	UDelayHelper* BeginDelayHelper;
 };

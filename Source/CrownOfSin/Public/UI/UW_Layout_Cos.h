@@ -1,9 +1,9 @@
-﻿
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Blueprint/UserWidget.h"
+#include "Interfaces/Interface_EventHolder.h"
 #include "Interfaces/Interface_StoryEncounter.h"
 #include "UW_Layout_Cos.generated.h"
 
@@ -17,18 +17,19 @@ class UUW_ScreenFade;
 class UWidgetSwitcher;
 class USizeBox;
 class UUW_RewardScreen;
+
 /**
  * 
  */
 UCLASS()
-class CROWNOFSIN_API UUW_Layout_Cos : public UUserWidget, public IInterface_StoryEncounter
+class CROWNOFSIN_API UUW_Layout_Cos : public UUserWidget, public IInterface_StoryEncounter, public IInterface_EventHolder
 {
 	GENERATED_BODY()
 
 public:
 	UUW_Layout_Cos(const FObjectInitializer& ObjectInitializer);
 
-
+protected:
 	virtual void NativeConstruct() override;
 
 public:
@@ -41,7 +42,7 @@ public:
 public:
 	UFUNCTION(BlueprintCallable, Category="UW Layout Event")
 	bool ShouldNodeMapBeBlocked();
-	
+
 	/*ToDo:구현해야합니다.*/
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="UW Layout")
 	void DisplayScreenLogMessage(const FText& Message, const FColor& Color);
@@ -57,7 +58,7 @@ public:
 	/*ToDo 구현해야합니다*/
 	UFUNCTION(BlueprintPure, Category="UW LayOut")
 	bool GetEndTurnButtonIsEnabled();
-	
+
 	/*ToDo 구현해야합니다*/
 	UFUNCTION(BlueprintPure, Category="UW LayOut")
 	ESlateVisibility GetCurrencyBoxVisibility();

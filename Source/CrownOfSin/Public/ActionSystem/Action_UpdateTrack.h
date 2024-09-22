@@ -6,27 +6,25 @@
 
 class AMinionTrack;
 
+/*모든 하수인을 대기열의 적절한 위치로 밀어넣도록 입력 트랙에 지시합니다.*/
 UCLASS()
 class CROWNOFSIN_API AAction_UpdateTrack : public AActionBase
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	AAction_UpdateTrack();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void PlayAction_Implementation() override;
 
-
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Action Update Track", meta=(ExposeOnSpawn="true"))
 	float StartDelay;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Action Update Track", meta=(ExposeOnSpawn="true"))
 	AMinionTrack* Track;
 };

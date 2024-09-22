@@ -5,12 +5,14 @@
 #include "Tickable.h"
 #include "ActionManagerSubsystem.generated.h"
 
+class UDelayHelper;
+
 /**
  * 액션 매니저 서브시스템입니다.
  * 월드 수준에서 액션을 관리합니다.
  */
 UCLASS()
-class CROWNOFSIN_API UActionManagerSubsystem : public UWorldSubsystem, public FTickableGameObject
+class CROWNOFSIN_API UActionManagerSubsystem : public UTickableWorldSubsystem
 {
 	GENERATED_BODY()
 
@@ -21,7 +23,6 @@ public:
 
 	virtual void Deinitialize() override;
 
-	// FTickableGameObject 인터페이스 구현
 	virtual void Tick(float DeltaTime) override;
 
 	virtual TStatId GetStatId() const override;
@@ -42,10 +43,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Action Manager SubSystem")
 	void AttemptToPlayNextAction();
 
-private:
-	/** 액션 실행 조건을 확인합니다 */
-	bool ShouldPlayNextAction() const;
-
 public:
 	template <typename T>
 	T* CreateAndQueueAction(TFunction<void(T*)> InitFunction,
@@ -55,22 +52,17 @@ public:
 		if (UWorld* World = GetWorld())
 		{
 			FTransform SpawnTransform = FTransform::Identity;
-
-			// 지정된 클래스와 스폰 파라미터를 사용하여 액터를 스폰 (지연 방식)
-			if (T* NewAction = World->SpawnActorDeferred<T>(T::StaticClass(),
-			                                                SpawnTransform,
-			                                                nullptr,
-			                                                nullptr,
-			                                                CollisionHandlingMethod,
-			                                                ScaleMethod))
+			if (T* NewAction = World->SpawnActorDeferred<T>(T::StaticClass(), SpawnTransform,
+			                                                nullptr, nullptr,
+			                                                CollisionHandlingMethod, ScaleMethod))
 			{
-				// InitFunction을 사용하여 액션의 변수를 설정
 				InitFunction(NewAction);
 
-				// 액터 스포닝 완료
+				FString ActionName = FString::Printf(TEXT("%s__%d"), *T::StaticClass()->GetName(), GetCurrentIndex());
+				NewAction->Rename(*ActionName, nullptr, REN_None);
+
 				NewAction->FinishSpawning(SpawnTransform);
 
-				// 액션을 큐에 추가
 				QueueAction(NewAction);
 
 				return NewAction;
@@ -90,17 +82,15 @@ public:
 			FTransform SpawnTransform = FTransform::Identity;
 
 			// 지정된 클래스를 사용하여 액터를 스폰 (지연 방식)
-			if (T* NewAction = Cast<T>(World->SpawnActorDeferred<AActor>(ActionClass,
-			                                                             SpawnTransform,
-			                                                             nullptr,
-			                                                             nullptr,
-			                                                             CollisionHandlingMethod,
-			                                                             ScaleMethod)))
+			if (T* NewAction = Cast<T>(World->SpawnActorDeferred<AActor>(ActionClass, SpawnTransform,
+			                                                             nullptr, nullptr,
+			                                                             CollisionHandlingMethod, ScaleMethod)))
 			{
-				// InitFunction을 사용하여 액션의 변수를 설정
 				InitFunction(NewAction);
 
-				// 액터 스포닝 완료
+				FString ActionName = FString::Printf(TEXT("%s_%d"), *ActionClass->GetName(), GetCurrentIndex());
+				NewAction->Rename(*ActionName, nullptr, REN_None);
+
 				NewAction->FinishSpawning(SpawnTransform);
 
 				// 액션을 큐에 추가
@@ -127,9 +117,17 @@ public:
 	// });
 
 private:
+	int32 GetCurrentIndex();
+
+	//델리게이트 함수 호출들
+	bool OnShouldProceedToNextAction();
+	void OnAttemptLoopProgress(int32 Index);
+	void OnNextPlayAction();
+
+private:
 	/** 액션 진행 상태 */
 	UPROPERTY(BlueprintReadWrite, Category="Action Manager SubSystem", meta=(AllowPrivateAccess="true"))
-	bool bIsActionInProgress;
+	bool bIsActionInProgress = false;
 
 	/** 현재 틱에서 실행된 액션 수 */
 	UPROPERTY(BlueprintReadWrite, Category="Action Manager SubSystem", meta=(AllowPrivateAccess="true"))
@@ -146,7 +144,9 @@ private:
 	/** 액션 큐 */
 	TQueue<UObject*> ActionQueue;
 
-	/** 액션 실행을 지연시키기 위한 타이머 */
-	UPROPERTY(BlueprintReadWrite, Category="Action Manager SubSystem", meta=(AllowPrivateAccess="true"))
-	FTimerHandle ActionTimerHandle;
+private:
+	int32 CurrentSpawnIndex = 0;
+
+	UPROPERTY()
+	UDelayHelper* PlayNextActionDelayHelper;
 };

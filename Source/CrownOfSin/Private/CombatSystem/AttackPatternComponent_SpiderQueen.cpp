@@ -1,10 +1,9 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "CombatSystem/AttackPatternComponent_SpiderQueen.h"
+
+#include "Core/MinionBase.h"
+#include "Core/MinionTrack.h"
 
 
-#include "CombatSystem/AttackPatternComponent_SpiderQueen.h"
-
-
-// Sets default values for this component's properties
 UAttackPatternComponent_SpiderQueen::UAttackPatternComponent_SpiderQueen()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -14,22 +13,22 @@ UAttackPatternComponent_SpiderQueen::UAttackPatternComponent_SpiderQueen()
 	// ...
 }
 
-
-// Called when the game starts
 void UAttackPatternComponent_SpiderQueen::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-
-// Called every frame
-void UAttackPatternComponent_SpiderQueen::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+ACardBase* UAttackPatternComponent_SpiderQueen::GetNextCard()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	AMinionBase* MinionOwner = Cast<AMinionBase>(GetOwner());
+	if (!MinionOwner) return nullptr;
 
-	// ...
+	if (MinionOwner->MinionTrack->Minions.Num() == 1 && PatternIndex > 1)
+	{
+		PatternIndex = -1;
+	}
+
+	return Super::GetNextCard();
 }
-

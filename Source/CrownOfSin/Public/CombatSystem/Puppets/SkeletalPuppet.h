@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "Core/CosEnumStruct.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/Interface_CardPuppet.h"
 #include "SkeletalPuppet.generated.h"

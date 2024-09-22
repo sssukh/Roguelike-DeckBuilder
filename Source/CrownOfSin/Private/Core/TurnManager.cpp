@@ -15,6 +15,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Libraries/FunctionLibrary_Card.h"
 #include "StatusSystem/Status_Health.h"
+#include "Utilities/CosLog.h"
 
 ATurnManager::ATurnManager()
 {
@@ -46,31 +47,18 @@ void ATurnManager::BeginPlay()
 	// 딜레이 처리를 위한 DelayHelper 생성
 	BeginDelayHelper = NewObject<UDelayHelper>(this);
 
-	// 이니셔티브 배열에 액터가 추가되었는지 확인하는 조건 함수
-	auto IsInitiativeListReady = [this]() -> bool
-	{
-		return InitiativeSortedActors.Num() > 0;
-	};
+	// 델리게이트 생성 및 바인딩
+	FConditionDelegate ConditionDelegate;
+	ConditionDelegate.BindUObject(this, &ATurnManager::IsInitiativeListReady);
 
-	// 딜레이 중간에 반복 호출될 함수 (현재 로직에선 사용하지 않음)
-	auto OnLoopProgress = [](int32 LoopIndex)
-	{
-		// 추가 로직 필요 시 구현
-	};
+	FOnLoopDelegate OnLoopDelegate;
+	OnLoopDelegate.BindUObject(this, &ATurnManager::LogLoopProgress);
 
-	// 이니셔티브 배열이 준비되었을 때 호출되는 완료 함수
-	auto OnInitiativeReady = [this]()
-	{
-		// 다음 틱에 게임 시작 이벤트 호출 및 첫 번째 라운드 시작
-		GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
-		{
-			UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_GameStart, this);
-			StartNewRound();
-		});
-	};
+	FOnCompleteDelegate OnCompleteDelegate;
+	OnCompleteDelegate.BindUObject(this, &ATurnManager::OnInitiativeReady);
 
-	// 이니셔티브가 준비될 때까지 0초 딜레이로 반복 확인
-	BeginDelayHelper->DelayWhile(IsInitiativeListReady, OnLoopProgress, OnInitiativeReady, 0.0f);
+	// DelayWhile 함수 호출: 0초 딜레이로 조건을 반복 확인
+	BeginDelayHelper->DelayWhile(ConditionDelegate, OnLoopDelegate, OnCompleteDelegate, 0.0f);
 }
 
 void ATurnManager::StartNewRound()
@@ -93,14 +81,10 @@ void ATurnManager::StartNextObjectTurn()
 	// 가장 높은 이니셔티브를 가진 액터를 찾아서 ActiveActor에 할당
 	if (GetRemainingActorWithHighestInitiative(ActiveActor))
 	{
-		// 해당 액터의 DispatcherHubLocalComponent를 찾음
-		UDispatcherHubLocalComponent* DispatcherHubLocal = ActiveActor->FindComponentByClass<UDispatcherHubLocalComponent>();
-
-		// 컴포넌트가 없으면 함수 종료
-		if (!DispatcherHubLocal) return;
-
-		// 해당 액터의 턴을 시작하는 이벤트 호출
-		DispatcherHubLocal->CallEvent(CosGameTags::Event_TurnStart, ActiveActor);
+		if (UDispatcherHubLocalComponent* DispatcherHubLocal = ActiveActor->FindComponentByClass<UDispatcherHubLocalComponent>())
+		{
+			DispatcherHubLocal->CallEvent(CosGameTags::Event_TurnStart, ActiveActor); // 해당 액터의 턴을 시작하는 이벤트 호출
+		}
 	}
 	else
 	{
@@ -389,6 +373,30 @@ void ATurnManager::RemoveActorIfDestroyed(AActor* DestroyedActor)
 
 	// 이니셔티브 정렬 목록에서도 파괴된 액터를 제거
 	InitiativeSortedActors.Remove(DestroyedActor);
+}
+
+bool ATurnManager::IsInitiativeListReady()
+{
+	return InitiativeSortedActors.Num() == 0;;
+}
+
+void ATurnManager::LogLoopProgress(int32 LoopIndex)
+{
+}
+
+void ATurnManager::OnInitiativeReady()
+{
+	COS_LOG_SCREEN(TEXT("TurnManager Delay OnComplete"))
+
+	// 다음 틱에 게임 시작 이벤트 호출 및 첫 번째 라운드 시작
+	GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
+	{
+		UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_GameStart, this);
+		StartNewRound();
+	});
+
+	// BeginDelayHelper를 nullptr로 설정하여 더 이상 참조하지 않도록 함
+	BeginDelayHelper = nullptr;
 }
 
 void ATurnManager::RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags)

@@ -264,7 +264,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Card|Event")
 	void Exhaust();
 
-	/*ResetInHandModifications 함수는 카드의 Hand 상태를 초기화합니다.*/
+	/*카드의 Hand 상태를 초기화합니다.*/
 	UFUNCTION(BlueprintCallable, Category = "Card|Event")
 	void ResetInHandModifications();
 

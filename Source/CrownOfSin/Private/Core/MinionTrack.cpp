@@ -33,15 +33,11 @@ AMinionTrack::AMinionTrack()
 	GameplayTagComponent = CreateDefaultSubobject<UGameplayTagComponent>(TEXT("GameplayTagComponent"));
 }
 
-// Called when the game starts or when spawned
 void AMinionTrack::BeginPlay()
 {
 	Super::BeginPlay();
 
 	GameplayTagComponent->GameplayTags = InitialGameplayTags;
-
-	// 타임라인 컴포넌트를 블루프린트에서 참조
-	SlideTimeline = FindComponentByClass<UTimelineComponent>();
 }
 
 AMinionBase* AMinionTrack::AddMinionToTrack(int32 Index, const FMinion& InMinionData, bool bSpawnedDuringGameplay)
@@ -83,14 +79,23 @@ AMinionBase* AMinionTrack::AddMinionToTrack(int32 Index, const FMinion& InMinion
 	// 트랙에 미니언 추가 (중간 삽입 또는 끝에 추가)
 	if (Minions.Num() > 0)
 	{
-		// 주어진 인덱스가 현재 미니언 배열 내에 있는지 확인
-		if (Minions.IsValidIndex(Index) && IsValid(Minions[Index]))
+		if (Index < Minions.Num() - 1)
 		{
-			Minions.Insert(NewMinion, Index); // 인덱스 위치에 삽입
+			if (IsValid(Minions[Index]))
+			{
+				Minions.Insert(NewMinion, Index);
+			}
+			else
+			{
+				// 선택사항: 필요한 경우 유효하지 않은 Minions[Index]를 처리합니다.
+				Minions[Index] = NewMinion;
+			}
 		}
 		else
 		{
-			Minions[Index] = NewMinion; // 인덱스가 비어있으면 대체
+			// Index가 현재 배열 크기보다 크거나 같은 경우, 배열 크기를 조정 후 추가
+			Minions.SetNum(Index + 1, false); // false는 기존 요소들을 유지함을 의미
+			Minions[Index] = NewMinion;
 		}
 	}
 	else
@@ -108,18 +113,6 @@ void AMinionTrack::BindTargetRemoval(AActor* InTarget)
 	InTarget->OnDestroyed.AddDynamic(this, &AMinionTrack::RemoveActorIfDestroyed);
 }
 
-void AMinionTrack::SlideMinionsToPositions(float InStartDelay)
-{
-	// 라탠트 액션 정보 설정
-	FLatentActionInfo LatentInfo;
-	LatentInfo.CallbackTarget = this; // 이 액터를 콜백 타겟으로 설정
-	LatentInfo.UUID = __LINE__; // 고유 UUID 생성 (일반적으로 라인 번호를 UUID로 사용 가능)
-	LatentInfo.Linkage = 0; // 후속 액션 정보 (사용되지 않음)
-	LatentInfo.ExecutionFunction = FName("OnSlideMinionsComplete"); // 완료 후 호출될 함수
-
-	// 지연 작업을 등록하고 지연 시간(InStartDelay)을 설정합니다.
-	UKismetSystemLibrary::RetriggerableDelay(this, InStartDelay, LatentInfo);
-}
 
 bool AMinionTrack::GetFrontMinion(AActor*& OutFoundTarget, int32& OutTargetIndex)
 {
@@ -203,22 +196,4 @@ void AMinionTrack::RemoveActorIfDestroyed(AActor* DestroyedActor)
 			UpdateTrackAction->EndDelay = -1.0f;
 		}, ESpawnActorCollisionHandlingMethod::Undefined);
 	}
-}
-
-void AMinionTrack::OnSlideMinionsComplete()
-{
-	PuppetLocationsPreSlide.Empty();
-	for (AMinionBase* Minion : Minions)
-	{
-		if (IsValid(Minion))
-		{
-			PuppetLocationsPreSlide.Emplace(Minion->GetActorLocation());
-		}
-		else
-		{
-			PuppetLocationsPreSlide.Emplace(FVector(0, 0, 0));
-		}
-	}
-
-	SlideTimeline->PlayFromStart();
 }

@@ -245,15 +245,16 @@ void ASkeletalPuppet::InitializePuppet_Implementation(AMinionBase* InMinion, boo
 
 void ASkeletalPuppet::AnimatePuppet_Implementation(FGameplayTag InAnimationTag)
 {
-	if (SkeletalMeshComponent->GetAnimInstance()->Implements<UInterface_CardPuppet>())
+	UAnimInstance* AnimInstance = SkeletalMeshComponent->GetAnimInstance();
+	if (AnimInstance->Implements<UInterface_CardPuppet>())
 	{
-		Execute_AnimatePuppet(SkeletalMeshComponent->GetAnimInstance(), InAnimationTag);
+		IInterface_CardPuppet::Execute_AnimatePuppet(AnimInstance, InAnimationTag);
 	}
 }
 
-void ASkeletalPuppet::SignalAnimEvent_Implementation(FGameplayTag InAnimationTag,FName InNotify)
+void ASkeletalPuppet::SignalAnimEvent_Implementation(FGameplayTag InAnimationTag, FName InNotify)
 {
-	if (PuppetComponent->OnAnimationEnd.IsBound())
+	if (PuppetComponent->OnAnimationEvent.IsBound())
 		PuppetComponent->OnAnimationEvent.Broadcast(this, InAnimationTag);
 }
 
