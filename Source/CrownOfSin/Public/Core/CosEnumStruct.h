@@ -232,6 +232,17 @@ struct FToolTipValue
 	FToolTipValue(): bValued(false)
 	{
 	};
+
+	FToolTipValue& operator=(const FToolTipValue& Other)
+	{
+		if(this!=&Other)
+		{
+			ToolTipTable = Other.ToolTipTable;
+			bValued = Other.bValued;
+		}
+		
+		return *this;
+	}
 };
 
 USTRUCT(BlueprintType, Blueprintable)

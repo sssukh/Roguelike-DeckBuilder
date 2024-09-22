@@ -144,6 +144,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category="Status Component")
 	bool bCanBeZero = false;
 
+	UPROPERTY(BlueprintReadWrite, Category="Status Component")
+	bool bArtifact = false;
+	
 	/** 상태가 인터럽트되었는지 여부를 나타냅니다. */
 	UPROPERTY(BlueprintReadWrite, Category="Status Component")
 	bool bInterrupt = false;

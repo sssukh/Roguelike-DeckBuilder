@@ -7,6 +7,8 @@
 #include "Status_Artifact_Coins.generated.h"
 
 
+class ACardPlayer;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UStatus_Artifact_Coins : public UStatus_Artifact
 {
@@ -16,11 +18,6 @@ public:
 	// Sets default values for this component's properties
 	UStatus_Artifact_Coins();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+UPROPERTY(EditAnywhere, BlueprintReadWrite,Category = "Status Artifact Coins")
+	TObjectPtr<ACardPlayer> CardPlayerRef;
 };

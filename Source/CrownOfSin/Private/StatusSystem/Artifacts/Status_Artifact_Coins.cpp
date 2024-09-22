@@ -3,33 +3,53 @@
 
 #include "StatusSystem/Artifacts/Status_Artifact_Coins.h"
 
+#include "Libraries/AssetPath.h"
+#include "Utilities/CosLog.h"
+
 
 // Sets default values for this component's properties
 UStatus_Artifact_Coins::UStatus_Artifact_Coins()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	StatusValue = 0;
+	SlotType = EStatusSlot::Currency;
+	static ConstructorHelpers::FObjectFinder<UTexture2D> T_Coins(*AssetPath::Texture::T_Coins);
+	if(T_Coins.Succeeded())
+	{
+		Icon = T_Coins.Object;
+	}
+	else
+	{
+		COS_SCREEN(TEXT("T_Coins를 로드할 수 없습니다."));
+	}
+	Tint = FLinearColor::Yellow;
+	TextAlignment = EStatusTextAlignment::BottomRight;
+	Priority = 0.0f;
+	bCanBeZero = true;
+	IncomingStatusChange = 0;
+	FToolTipValue ToolTipValue;
+	ToolTipValue.bValued=true;
 
-	// ...
-}
-
-
-// Called when the game starts
-void UStatus_Artifact_Coins::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_Tooltips_Artifacts(*AssetPath::DataTable::DT_Tooltips_Artifacts);
+	if(DT_Tooltips_Artifacts.Succeeded())
+	{
+		ToolTipValue.ToolTipTable.DataTable = DT_Tooltips_Artifacts.Object;
+	}
+	else
+	{
+		COS_SCREEN(TEXT("DT_Tooltips_Artifacts를 로드할 수 없습니다."));
+	}
 	
+	ToolTipValue.ToolTipTable.RowName = TEXT("Coins");
+	Tooltips.Add(ToolTipValue);
+	FriendlyName = FText::FromString(TEXT("Lollipop"));
+	bShowImmediately = false;
+	MaxTriggersPerTick=10;
+	CurrentTriggersThisTick=0;
+	bMaxAble=false;
+	MaxValue=0;
+	bArtifact = true;
+	bInterrupt = false;
 }
 
 
-// Called every frame
-void UStatus_Artifact_Coins::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
 
