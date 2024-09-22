@@ -10,6 +10,7 @@
 #include "UI/UW_RewardScreen.h"
 #include "UI/UW_ScreenFade.h"
 #include "Utilities/CosLog.h"
+#include "UI/UW_StatusBar.h"
 
 
 UUW_Layout_Cos::UUW_Layout_Cos(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer),
@@ -17,6 +18,7 @@ UUW_Layout_Cos::UUW_Layout_Cos(const FObjectInitializer& ObjectInitializer) : Su
                                                                               WBP_ScreenFade(nullptr),
                                                                               WBP_Shop(nullptr)
 {
+	
 }
 
 void UUW_Layout_Cos::NativeConstruct()
@@ -105,4 +107,26 @@ void UUW_Layout_Cos::InitializeStoryEncounter_Implementation(FDataTableRowHandle
 		return;
 	}
 	Execute_InitializeStoryEncounter(NewStoryEncounterWidget, EncounterData, bIsFirstScreen);
+}
+
+UObject* UUW_Layout_Cos::AddStatusIndicator_Implementation(UStatusComponent* Status, bool bShowImmediately)
+{
+	UObject* InterfaceTarget = nullptr;
+	if(Status->SlotType == EStatusSlot::Currency)
+	{
+		InterfaceTarget = WBP_CurrencyBar;
+	}
+	else if(Status->SlotType == EStatusSlot::Artifact)
+	{
+		InterfaceTarget = WBP_ArtifactBar;
+	}
+
+	if(InterfaceTarget&&InterfaceTarget->GetClass()->ImplementsInterface(UInterface_StatusWidget::StaticClass()))
+	{
+		return IInterface_StatusWidget::Execute_AddStatusIndicator(InterfaceTarget,Status,false);
+	}
+	else
+	{
+		return nullptr;
+	}
 }

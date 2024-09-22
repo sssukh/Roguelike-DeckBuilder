@@ -233,9 +233,16 @@ struct FToolTipValue
 	{
 	};
 
-	FToolTipValue(const FDataTableRowHandle& NewToolTipTable, bool NewValued): ToolTipTable(NewToolTipTable), bValued(NewValued)
+	FToolTipValue& operator=(const FToolTipValue& Other)
 	{
-	};
+		if(this!=&Other)
+		{
+			ToolTipTable = Other.ToolTipTable;
+			bValued = Other.bValued;
+		}
+		
+		return *this;
+	}
 };
 
 USTRUCT(BlueprintType, Blueprintable)

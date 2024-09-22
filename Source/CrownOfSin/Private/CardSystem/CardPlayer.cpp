@@ -156,14 +156,20 @@ UStatusComponent* ACardPlayer::CreateNewStatusComponent(TSubclassOf<UStatusCompo
 	FName UniqueName = MakeUniqueObjectName(this, InStatusClass, FName(*BaseName));
 
 	UStatusComponent* NewStatusComponent = NewObject<UStatusComponent>(this, InStatusClass, UniqueName);
-	NewStatusComponent->RegisterComponent();
+	if(NewStatusComponent)
+	{
+		// NewStatusComponent->RegisterComponent();
 
-	NewStatusComponent->StatusValue = 0;
-	NewStatusComponent->OwnerUiRef = PlayerUI;
-	NewStatusComponent->bShowImmediately = false;
-	NewStatusComponent->GameplayTags = FGameplayTagContainer();
-	AddInstanceComponent(NewStatusComponent);
+		NewStatusComponent->StatusValue = 0;
+		NewStatusComponent->OwnerUiRef = PlayerUI;
+		NewStatusComponent->bShowImmediately = false;
+		NewStatusComponent->GameplayTags = FGameplayTagContainer();
 
+		// 바뀐 위치
+		NewStatusComponent->RegisterComponent();
+		
+		AddInstanceComponent(NewStatusComponent);
+	}
 	return NewStatusComponent;
 }
 

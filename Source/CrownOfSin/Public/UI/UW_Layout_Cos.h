@@ -5,8 +5,10 @@
 #include "Blueprint/UserWidget.h"
 #include "Interfaces/Interface_EventHolder.h"
 #include "Interfaces/Interface_StoryEncounter.h"
+#include "Interfaces/Widget/Interface_StatusWidget.h"
 #include "UW_Layout_Cos.generated.h"
 
+class UUW_StatusBar;
 class UUW_CardRewardScreen;
 class UUW_CardSelectorList;
 class UUW_ArtifactRewardScreen;
@@ -22,7 +24,7 @@ class UUW_RewardScreen;
  * 
  */
 UCLASS()
-class CROWNOFSIN_API UUW_Layout_Cos : public UUserWidget, public IInterface_StoryEncounter, public IInterface_EventHolder
+class CROWNOFSIN_API UUW_Layout_Cos : public UUserWidget, public IInterface_StoryEncounter, public IInterface_StatusWidget
 {
 	GENERATED_BODY()
 
@@ -70,6 +72,11 @@ public:
 	virtual void InitializeStoryEncounter_Implementation(FDataTableRowHandle EncounterData, bool bIsFirstScreen) override;
 
 	/*========================================================================================
+	*	Iinterface_StoryEncounter
+	=========================================================================================*/
+public:
+	virtual UObject* AddStatusIndicator_Implementation(UStatusComponent* Status, bool bShowImmediately) override;
+	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/
 public:
@@ -102,4 +109,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Layout Cos", meta=(BindWidget))
 	TObjectPtr<UUW_CardRewardScreen> WBP_CardRewardScreen;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Layout Cos", meta=(BindWidget))
+	TObjectPtr<UUW_StatusBar> WBP_ArtifactBar;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Layout Cos", meta=(BindWidget))
+	TObjectPtr<UUW_StatusBar> WBP_CurrencyBar;
 };

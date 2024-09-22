@@ -30,6 +30,7 @@ namespace AssetPath
 		const FString T_RandomDice = TEXT("Texture2D'/Game/RLDB/Demo/Textures/NodeMap/T_RandomDice.T_RandomDice'");
 		const FString T_CrossMark = TEXT("Texture2D'/Game/RLDB/Demo/Textures/NodeMap/T_CrossMark.T_CrossMark'");
 		const FString T_Transparent = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Card/T_Transparent.T_Transparent'");
+		const FString T_Coins = TEXT("Texture2D'/Game/RLDB/Demo/Textures/UI/T_Coins.T_Coins'");
 	}
 
 	namespace DataTable
@@ -39,6 +40,7 @@ namespace AssetPath
 		const FString DT_Artifacts = TEXT("DataTable'/Game/CrownOfSin/Data/DT_Artifacts.DT_Artifacts'");
 		const FString DT_Tooltips_Statuses = TEXT("DataTable'/Game/CrownOfSin/Data/ToolTips/DT_Tooltips_Statuses.DT_Tooltips_Statuses'");
 		const FString DT_RarityWeights = TEXT("DataTable'/Game/CrownOfSin/Data/DT_RarityWeights.DT_RarityWeights'");
+		const FString DT_Tooltips_Artifacts = TEXT("DataTable'/Game/CrownOfSin/Data/DT_Tooltips_Artifacts.DT_Tooltips_Artifacts'");
 	}
 
 	namespace Meshes
