@@ -416,11 +416,14 @@ void UCosGameInstance::AddDoneStoryEncounterToInstance_Implementation(FDataTable
 bool UCosGameInstance::UpdateHeroPersistentHealth_Implementation(const FString& HeroUniqueID, int32 NewHealth)
 {
 	int32 ArrayIndex;
+
 	FMinion Hero;
 	if (Execute_GetHeroWithIdFromInstance(this, HeroUniqueID, Hero, ArrayIndex))
 	{
 		Hero.StartingStatuses[UStatus_Health::StaticClass()] = NewHealth;
 
+		PersistentHeroes[ArrayIndex] = Hero;
+		
 		if (Execute_CheckIfAllHeroesAreDead(this))
 		{
 			UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_GameOver, this);

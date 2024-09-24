@@ -183,7 +183,7 @@ void UStatusComponent::ApplyStatusChange(int32 InAmount, bool bShowSplashNumber,
 void UStatusComponent::SpawnModifyStatusAction(int32 InAmount, bool bShowSplashNumber, bool bShowSplashIcon, bool bRefreshAppearance)
 {
 	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-	ActionManagerSubsystem->CreateAndQueueAction<AAction_ModifyStatus>([&](AAction_ModifyStatus* Action_ModifyStatus)
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_ModifyStatus>(this,[&](AAction_ModifyStatus* Action_ModifyStatus)
 	{
 		// 시각적 효과 설정
 		Action_ModifyStatus->StatusReference = this;

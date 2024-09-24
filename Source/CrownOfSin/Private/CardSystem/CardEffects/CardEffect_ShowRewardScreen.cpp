@@ -24,7 +24,7 @@ void UCardEffect_ShowRewardScreen::BeginPlay()
 bool UCardEffect_ShowRewardScreen::ResolveCardEffect(AActor* TargetActor)
 {
 	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-	ActionManagerSubsystem->CreateAndQueueAction<AAction_RewardScreen>([](AAction_RewardScreen* Action_RewardScreen)
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_RewardScreen>(this,[](AAction_RewardScreen* Action_RewardScreen)
 	{
 		Action_RewardScreen->EndDelay = -1.0f;
 	});

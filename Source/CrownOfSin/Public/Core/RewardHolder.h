@@ -31,6 +31,12 @@ public:
 	virtual void RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags) override;
 
 	/*========================================================================================
+	*	Interface_CardTarget
+	=========================================================================================*/
+public:
+	virtual int32 AddToStatus_Implementation(TSubclassOf<UStatusComponent> InStatusClass, int32 InAmount, bool bIsShowSplash, UObject* InPayLoad) override;
+	
+	/*========================================================================================
 	*	Field Members
 	=========================================================================================*/
 public:

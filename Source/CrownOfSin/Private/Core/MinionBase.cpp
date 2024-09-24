@@ -90,7 +90,7 @@ void AMinionBase::RemoveFromGame()
 	Execute_UnMarkTarget(this);
 
 	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-	ActionManagerSubsystem->CreateAndQueueAction<AAction_Appear>([this](AAction_Appear* AAction_Appear)
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_Appear>(this,[this](AAction_Appear* AAction_Appear)
 	{
 		AAction_Appear->FadeSpeed = 1.0f;
 		AAction_Appear->Puppet = Puppet;

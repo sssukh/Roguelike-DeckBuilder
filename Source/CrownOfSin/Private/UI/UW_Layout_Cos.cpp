@@ -7,6 +7,7 @@
 #include "Interfaces/Interface_StoryEncounter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Libraries/FunctionLibrary_Singletons.h"
+#include "StatusSystem/StatusComponent.h"
 #include "UI/UW_RewardScreen.h"
 #include "UI/UW_ScreenFade.h"
 #include "Utilities/CosLog.h"

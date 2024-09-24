@@ -169,7 +169,7 @@ void APaperPuppet::InitializePuppet_Implementation(AMinionBase* InMinion, bool b
 
 		// 페이드 인 액션 생성
 		UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-		ActionManagerSubsystem->CreateAndQueueAction<AAction_Appear>([this](AAction_Appear* AAction_Appear)
+		ActionManagerSubsystem->CreateAndQueueAction<AAction_Appear>(this,[this](AAction_Appear* AAction_Appear)
 		{
 			AAction_Appear->bDisappear = false;
 			AAction_Appear->FadeSpeed = 1.0f;
@@ -178,7 +178,7 @@ void APaperPuppet::InitializePuppet_Implementation(AMinionBase* InMinion, bool b
 		});
 
 		// 스폰 애니메이션 액션 생성
-		ActionManagerSubsystem->CreateAndQueueAction<AAction_AdvAnim>([this](AAction_AdvAnim* Action_AdvAnim)
+		ActionManagerSubsystem->CreateAndQueueAction<AAction_AdvAnim>(this,[this](AAction_AdvAnim* Action_AdvAnim)
 		{
 			Action_AdvAnim->Animation = CosGameTags::Anim_Spawn;
 			Action_AdvAnim->Puppet = this;

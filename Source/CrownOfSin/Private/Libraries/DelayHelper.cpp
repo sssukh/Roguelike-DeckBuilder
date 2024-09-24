@@ -2,7 +2,7 @@
 #include "Utilities/CosLog.h"
 
 
-UDelayHelper::UDelayHelper(): LoopIndex(0), CachedWorld(nullptr), Interval(0)
+UDelayHelper::UDelayHelper(): Interval(0), LoopIndex(0), CachedWorld(nullptr)
 {
 }
 

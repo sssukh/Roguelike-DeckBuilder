@@ -233,6 +233,10 @@ struct FToolTipValue
 	{
 	};
 
+	FToolTipValue(const FDataTableRowHandle& NewToolTipTable, bool NewValue): ToolTipTable(NewToolTipTable), bValued(NewValue)
+	{
+	};
+
 	FToolTipValue& operator=(const FToolTipValue& Other)
 	{
 		if(this!=&Other)

@@ -184,8 +184,8 @@ bool UDispatcherHubComponent::ResolveCallEvent(FGameplayTag EventTag, UObject* C
 void UDispatcherHubComponent::QueueEvent(FGameplayTag Event, UObject* CallingObject, UObject* CallSpecificObject, float EndDelay, UObject* PayLoad, FGameplayTagContainer CallTags)
 {
 	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-	ActionManagerSubsystem->CreateAndQueueAction<AAction_DispatcherEvent>(
-		[this,Event,CallingObject,CallSpecificObject,EndDelay,PayLoad,CallTags](AAction_DispatcherEvent* Action_DispatcherEvent)
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_DispatcherEvent>(this,
+		[&](AAction_DispatcherEvent* Action_DispatcherEvent)
 		{
 			// 생성된 액터에 이벤트와 관련된 속성들을 설정.
 			Action_DispatcherEvent->Event = Event;
@@ -203,7 +203,7 @@ void UDispatcherHubComponent::QueueEventWithPayloadAndCallTags(FGameplayTag Even
                                                                FGameplayTagContainer CallTags)
 {
 	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-	ActionManagerSubsystem->CreateAndQueueAction<AAction_DispatcherEvent>([&](AAction_DispatcherEvent* NewDispatcherEvent)
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_DispatcherEvent>(this,[&](AAction_DispatcherEvent* NewDispatcherEvent)
 	{
 		// 생성된 액터에 이벤트와 관련된 속성들을 설정.
 		NewDispatcherEvent->Event = Event;

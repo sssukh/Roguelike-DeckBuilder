@@ -48,7 +48,7 @@ AMinionBase* AMinionTrack::AddMinionToTrack(int32 Index, const FMinion& InMinion
 	// 게임플레이 중에 스폰된 경우 액션을 큐에 추가
 	if (bSpawnedDuringGameplay)
 	{
-		ActionManager->CreateAndQueueAction<AAction_UpdateTrack>([this](AAction_UpdateTrack* UpdateTrackAction)
+		ActionManager->CreateAndQueueAction<AAction_UpdateTrack>(this,[this](AAction_UpdateTrack* UpdateTrackAction)
 		{
 			UpdateTrackAction->StartDelay = 0.0f;
 			UpdateTrackAction->Track = this;
@@ -189,7 +189,7 @@ void AMinionTrack::RemoveActorIfDestroyed(AActor* DestroyedActor)
 		UActionManagerSubsystem* ActionManager = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
 
 		// 트랙 업데이트 작업을 큐에 추가
-		ActionManager->CreateAndQueueAction<AAction_UpdateTrack>([this](AAction_UpdateTrack* UpdateTrackAction)
+		ActionManager->CreateAndQueueAction<AAction_UpdateTrack>(this,[this](AAction_UpdateTrack* UpdateTrackAction)
 		{
 			UpdateTrackAction->StartDelay = 0.0f;
 			UpdateTrackAction->Track = this;

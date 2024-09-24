@@ -3,6 +3,8 @@
 
 #include "CombatSystem/TargetSystem/TargetingComponent_Discover.h"
 
+#include "ActionSystem/ActionManagerSubsystem.h"
+#include "ActionSystem/Action_CardRewardScreen.h"
 #include "CardSystem/CardBase.h"
 #include "CardSystem/CardPlayer.h"
 #include "CardSystem/ChanceManagerComponent.h"
@@ -75,6 +77,17 @@ bool UTargetingComponent_Discover::FindValidTargets(TArray<AActor*>& SpecifiedTa
 	// TODO : Action Card RewardScreen
 	// AAction_CardRewardScreen
 
+	
+	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_CardRewardScreen>(this,[&](AAction_CardRewardScreen* Action_CardRewardScreen)
+	{
+		Action_CardRewardScreen->CardOptions = CurrentCardOption;
+
+		Action_CardRewardScreen->ScreenText = CardEffect.GameplayTags.HasTagExact(CosGameTags::Flag_Specific)? FText::FromString(TEXT("Card Granted")) : FText::FromString(TEXT("Choose a Card"));
+
+		Action_CardRewardScreen->bAllowSkip = CardEffect.GameplayTags.HasTagExact(CosGameTags::Flag_Skippable);
+	});
+	
 	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 	BindToCardConfirm(CardPlayer->PlayerUI->WBP_CardRewardScreen);
 

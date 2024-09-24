@@ -210,7 +210,7 @@ void ATurnManager::ExitCombat()
 
 	//액션 로드맵 생성
 	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-	AAction_LoadMap* NewAction_LoadMap = ActionManagerSubsystem->CreateAndQueueAction<AAction_LoadMap>([CurrentNodeMap](AAction_LoadMap* Action_LoadMap)
+	AAction_LoadMap* NewAction_LoadMap = ActionManagerSubsystem->CreateAndQueueAction<AAction_LoadMap>(this,[CurrentNodeMap](AAction_LoadMap* Action_LoadMap)
 	{
 		Action_LoadMap->Level = CurrentNodeMap;
 		Action_LoadMap->EndDelay = -1.0f;

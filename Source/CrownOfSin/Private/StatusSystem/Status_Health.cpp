@@ -45,9 +45,9 @@ int32 UStatus_Health::AddStatusValue(int32 InAmount, bool bShowSplashNumber, boo
 	}
 
 	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-	 ActionManagerSubsystem->CreateAndQueueAction<AAction_SimpleAnim>([&](AAction_SimpleAnim* Action_ModifyStatus)
+	 ActionManagerSubsystem->CreateAndQueueAction<AAction_SimpleAnim>(this,[&](AAction_SimpleAnim* Action_SimpleAnim)
 	{
-		Action_ModifyStatus->Puppet = OwnerMinion->Puppet;
+		Action_SimpleAnim->Puppet = OwnerMinion->Puppet;
 
 		FGameplayTag InAnimTag;
 		
@@ -67,7 +67,7 @@ int32 UStatus_Health::AddStatusValue(int32 InAmount, bool bShowSplashNumber, boo
 			}
 		}
 
-		Action_ModifyStatus->Animation = InAnimTag;
+		Action_SimpleAnim->Animation = InAnimTag;
 	});
 
 	if(InAmount<0)

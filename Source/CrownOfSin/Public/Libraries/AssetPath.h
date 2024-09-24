@@ -22,6 +22,8 @@ namespace AssetPath
 		const FString WBP_TargetingBezierPoint_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_TargetingBezierPoint.WBP_TargetingBezierPoint_C'");
 
 		const FString WBP_MinionUiTop = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_MinionUiTop.WBP_MinionUiTop_C'");
+
+		const FString WBP_CardVisual = TEXT("/Game/CrownOfSin/BluePrints/Widgets/WBP_CardVisual.WBP_CardVisual_C");
 	}
 
 	namespace Texture
@@ -31,6 +33,7 @@ namespace AssetPath
 		const FString T_CrossMark = TEXT("Texture2D'/Game/RLDB/Demo/Textures/NodeMap/T_CrossMark.T_CrossMark'");
 		const FString T_Transparent = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Card/T_Transparent.T_Transparent'");
 		const FString T_Coins = TEXT("Texture2D'/Game/RLDB/Demo/Textures/UI/T_Coins.T_Coins'");
+		const FString T_LuchadorMask = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_LuchadorMask.T_LuchadorMask'");
 	}
 
 	namespace DataTable

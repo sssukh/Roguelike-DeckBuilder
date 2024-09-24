@@ -2,11 +2,22 @@
 #include "CardSystem/CardBase.h"
 #include "Components/SizeBox.h"
 #include "Interfaces/Widget/Interface_CardWidget.h"
+#include "Libraries/AssetPath.h"
 #include "UI/UW_CardVisual.h"
 #include "UI/UW_ToolTipList.h"
+#include "Utilities/CosLog.h"
 
 UUW_CardListCard::UUW_CardListCard(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), bBlockHoverAnim(false)
 {
+	static ConstructorHelpers::FClassFinder<UUW_CardVisual> WBP_CardVisual (*AssetPath::Blueprint::WBP_CardVisual);
+	if(WBP_CardVisual.Succeeded())
+	{
+		CardVisualClass = WBP_CardVisual.Class;
+	}
+	else
+	{
+		COS_SCREEN(TEXT("WBP_CardVisual 을 로드할 수 없습니다."));
+	}
 }
 
 void UUW_CardListCard::NativePreConstruct()

@@ -45,7 +45,7 @@ public:
 
 public:
 	template <typename T>
-	T* CreateAndQueueAction(TFunction<void(T*)> InitFunction,
+	T* CreateAndQueueAction(UObject* Outer,TFunction<void(T*)> InitFunction,
 	                        ESpawnActorCollisionHandlingMethod CollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn,
 	                        ESpawnActorScaleMethod ScaleMethod = ESpawnActorScaleMethod::OverrideRootScale)
 	{
@@ -58,10 +58,10 @@ public:
 			{
 				InitFunction(NewAction);
 
-				FString ActionName = FString::Printf(TEXT("%s__%d"), *T::StaticClass()->GetName(), GetCurrentIndex());
-				NewAction->Rename(*ActionName, nullptr, REN_None);
-
 				NewAction->FinishSpawning(SpawnTransform);
+
+				// FString ActionName = FString::Printf(TEXT("%s__%d"), *T::StaticClass()->GetName(), GetCurrentIndex());
+				// NewAction->Rename(*ActionName, Outer, REN_None);
 
 				QueueAction(NewAction);
 
@@ -72,7 +72,7 @@ public:
 	}
 
 	template <typename T>
-	T* CreateAndQueueActionWithClass(UClass* ActionClass,
+	T* CreateAndQueueActionWithClass(UObject* Outer,UClass* ActionClass,
 	                                 TFunction<void(T*)> InitFunction,
 	                                 ESpawnActorCollisionHandlingMethod CollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn,
 	                                 ESpawnActorScaleMethod ScaleMethod = ESpawnActorScaleMethod::OverrideRootScale)
@@ -88,8 +88,8 @@ public:
 			{
 				InitFunction(NewAction);
 
-				FString ActionName = FString::Printf(TEXT("%s_%d"), *ActionClass->GetName(), GetCurrentIndex());
-				NewAction->Rename(*ActionName, nullptr, REN_None);
+				// FString ActionName = FString::Printf(TEXT("%s_%d"), *ActionClass->GetName(), GetCurrentIndex());
+				// NewAction->Rename(*ActionName, Outer, REN_None);
 
 				NewAction->FinishSpawning(SpawnTransform);
 

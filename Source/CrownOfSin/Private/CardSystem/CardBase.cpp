@@ -767,7 +767,7 @@ void ACardBase::QueueCardEffectAction(AActor* TargetActor, AActor* SourcePuppet,
 
 	// 3. AAction_Effect 액터를 생성합니다.
 	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-	ActionManagerSubsystem->CreateAndQueueActionWithClass<AAction_Effect>(CardEffect->EffectActionClass, [this,TargetActor,SourcePuppet,CardEffect,bAnimateSourcePuppet](AAction_Effect* Action_Effect)
+	ActionManagerSubsystem->CreateAndQueueActionWithClass<AAction_Effect>(this,CardEffect->EffectActionClass, [this,TargetActor,SourcePuppet,CardEffect,bAnimateSourcePuppet](AAction_Effect* Action_Effect)
 	{
 		Action_Effect->Target = TargetActor;
 		Action_Effect->SourcePuppet = SourcePuppet;
