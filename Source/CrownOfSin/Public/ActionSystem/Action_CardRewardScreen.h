@@ -6,6 +6,8 @@
 #include "ActionBase.h"
 #include "Action_CardRewardScreen.generated.h"
 
+class ACardBase;
+
 UCLASS()
 class CROWNOFSIN_API AAction_CardRewardScreen : public AActionBase
 {

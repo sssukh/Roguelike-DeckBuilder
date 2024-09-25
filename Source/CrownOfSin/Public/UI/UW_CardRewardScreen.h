@@ -61,6 +61,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene", Transient, meta = (BindWidgetAnim))
 	TObjectPtr<UWidgetAnimation> FadeIn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene")
+	TSubclassOf<UUW_CardListCard> CardListCardClass;
 public:
 	// Delegate
 	UPROPERTY(BlueprintAssignable,BlueprintCallable, Category = "CardRewardScene", meta = (BindWidget))

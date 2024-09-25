@@ -33,9 +33,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool ResolveUseConsequence(FUseRule UseRuleData);
 
-	//ToDo:구현해야합니다.
 	UFUNCTION(BlueprintCallable)
-	void InitializeUseRule(){};
+	void InitializeUseRule();
 
 	/*========================================================================================
 	*	Field Members

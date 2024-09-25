@@ -23,10 +23,14 @@ class CROWNOFSIN_API UUW_ArtifactRewardScreen : public UUserWidget
 public:
 	UUW_ArtifactRewardScreen(const FObjectInitializer& ObjectInitializer);
 
-
+	
 public:
 	UFUNCTION(BlueprintCallable, Category = "ArtifactRewardScreen")
 	void UpdateReward(UStatusComponent* Status);
+
+
+	// Member Variable
+public:
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Artifact", meta = (BindWidget))
 	TObjectPtr<UButton> ArtifactButton;

@@ -3,6 +3,7 @@
 
 #include "CardSystem/CardUseRules/UseRuleComponent.h"
 
+#include "CardSystem/CardBase.h"
 #include "Core/CosEnumStruct.h"
 
 
@@ -43,5 +44,10 @@ bool UUseRuleComponent::CheckIfUseAllowed(FUseRule UseRuleData, FString& FailMes
 bool UUseRuleComponent::ResolveUseConsequence(FUseRule UseRuleData)
 {
 	return true;
+}
+
+void UUseRuleComponent::InitializeUseRule()
+{
+	ParentCard = Cast<ACardBase>(GetOwner());
 }
 

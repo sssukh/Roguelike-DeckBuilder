@@ -26,7 +26,7 @@ void AAction_CardRewardScreen::PlayAction_Implementation()
 
 void AAction_CardRewardScreen::ContinueActionOnCardSelect(bool bSkipped, ACardBase* InCard)
 {
-	EndAction();
+	Execute_EndAction(this);
 }
 
 

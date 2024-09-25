@@ -24,6 +24,7 @@ namespace AssetPath
 		const FString WBP_MinionUiTop = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_MinionUiTop.WBP_MinionUiTop_C'");
 
 		const FString WBP_CardVisual = TEXT("/Game/CrownOfSin/BluePrints/Widgets/WBP_CardVisual.WBP_CardVisual_C");
+		const FString WBP_CardListCard = TEXT("/Game/CrownOfSin/BluePrints/Widgets/WBP_CardListCard.WBP_CardListCard_C");
 	}
 
 	namespace Texture

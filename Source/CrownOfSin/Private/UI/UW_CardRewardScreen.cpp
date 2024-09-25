@@ -7,10 +7,21 @@
 #include "Components/HorizontalBox.h"
 #include "Components/Overlay.h"
 #include "Components/TextBlock.h"
+#include "Libraries/AssetPath.h"
 #include "UI/UW_CardListCard.h"
+#include "Utilities/CosLog.h"
 
 UUW_CardRewardScreen::UUW_CardRewardScreen(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
+	static ConstructorHelpers::FClassFinder<UUW_CardListCard> WBP_CardListCard(*AssetPath::Blueprint::WBP_CardListCard);
+	if(WBP_CardListCard.Succeeded())
+	{
+		CardListCardClass = WBP_CardListCard.Class;
+	}
+	else
+	{
+		COS_SCREEN(TEXT("WBP_CardListCard를 로드하는데 실패했습니다."));
+	}
 }
 
 void UUW_CardRewardScreen::UpdateRewardScreen(TArray<ACardBase*>& Cards, const FText& InTitle, bool bAllowSkip)
@@ -34,7 +45,7 @@ void UUW_CardRewardScreen::UpdateRewardScreen(TArray<ACardBase*>& Cards, const F
 	{
 		if(idx<RewardOptionCount)
 		{
-			UUW_CardListCard* NewCardListCardWidget = Cast<UUW_CardListCard>(CreateWidget(GetWorld(),UUW_CardListCard::StaticClass()));
+			UUW_CardListCard* NewCardListCardWidget = Cast<UUW_CardListCard>(CreateWidget(GetWorld(),CardListCardClass));
 
 			if(NewCardListCardWidget)
 			{
