@@ -6,6 +6,7 @@
 #include "CardSystem/Piles/PileDrawComponent.h"
 #include "Core/DispatcherHubLocalComponent.h"
 #include "Libraries/FunctionLibrary_ArrayUtils.h"
+#include "Utilities/CosLog.h"
 
 
 UPileHandComponent::UPileHandComponent(): DrawnCard(nullptr)
@@ -30,16 +31,41 @@ void UPileHandComponent::BeginPlay()
 
 void UPileHandComponent::AttemptDraw()
 {
-	// 손에 든 카드의 수가 더미의 최대 허용 크기보다 작은지 확인합니다.
-	if (MaxPileSize > Cards.Num())
+	// 손에 든 카드의 수가 최대 허용 크기보다 작은지 확인합니다.
+	if (Cards.Num() >= MaxPileSize)
 	{
-		// 뽑은 카드를 저장할 포인터 변수를 선언합니다. 현재는 특정 카드를 지정하지 않으므로 nullptr을 전달합니다.
-		ACardBase* NewlyDrawnCard = nullptr;
-
-		// 카드 더미에서 새로운 카드를 뽑기 위해 DrawCard 함수를 호출합니다.
-		// nullptr을 전달하여 특정 카드를 요청하지 않으며, 카드는 UPileDrawComponent 클래스에서 뽑힙니다.
-		DrawCard(nullptr, UPileDrawComponent::StaticClass(), NewlyDrawnCard);
+		// 카드 수가 최대값에 도달하면 경고 로그를 출력하고 종료합니다.
+		COS_LOG_SCREEN_ERROR(TEXT("카드를 더 이상 뽑을 수 없습니다. 현재 손에 있는 카드 수가 최대 허용량을 초과했습니다."));
+		return;
 	}
+
+	// 뽑은 카드를 저장할 포인터 변수입니다. 초기값은 nullptr로 설정합니다.
+	ACardBase* AttemptDrawnCard = nullptr;
+
+	// 카드를 뽑기 위해 DrawCard 함수를 호출합니다.
+	bool bSuccess = DrawCard(nullptr, UPileDrawComponent::StaticClass(), AttemptDrawnCard);
+
+	// 카드 뽑기에 실패했을 경우 경고 로그를 출력합니다.
+	if (!bSuccess || !AttemptDrawnCard)
+	{
+		COS_LOG_SCREEN_ERROR(TEXT("카드를 뽑는 데 실패했습니다."));
+		return;
+	}
+
+	// 성공적으로 카드를 뽑았을 때 추가적인 처리가 필요하면 여기서 처리 가능합니다.
+
+	//
+	//
+	// // 손에 든 카드의 수가 더미의 최대 허용 크기보다 작은지 확인합니다.
+	// if (MaxPileSize > Cards.Num())
+	// {
+	// 	// 뽑은 카드를 저장할 포인터 변수를 선언합니다. 현재는 특정 카드를 지정하지 않으므로 nullptr을 전달합니다.
+	// 	ACardBase* NewlyDrawnCard = nullptr;
+	//
+	// 	// 카드 더미에서 새로운 카드를 뽑기 위해 DrawCard 함수를 호출합니다.
+	// 	// nullptr을 전달하여 특정 카드를 요청하지 않으며, 카드는 UPileDrawComponent 클래스에서 뽑힙니다.
+	// 	DrawCard(nullptr, UPileDrawComponent::StaticClass(), NewlyDrawnCard);
+	// }
 }
 
 bool UPileHandComponent::DrawCard(ACardBase* SpecifiedCard, TSubclassOf<UPileHandComponent> SourcePile, ACardBase*& OutDrawnCard)

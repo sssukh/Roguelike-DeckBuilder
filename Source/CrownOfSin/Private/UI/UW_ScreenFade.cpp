@@ -1,4 +1,3 @@
-
 #include "UI/UW_ScreenFade.h"
 
 UUW_ScreenFade::UUW_ScreenFade(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -8,6 +7,4 @@ UUW_ScreenFade::UUW_ScreenFade(const FObjectInitializer& ObjectInitializer) : Su
 void UUW_ScreenFade::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
-	
 }

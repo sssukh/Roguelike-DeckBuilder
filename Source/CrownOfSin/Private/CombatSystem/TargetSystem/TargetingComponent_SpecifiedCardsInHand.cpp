@@ -63,7 +63,7 @@ bool UTargetingComponent_SpecifiedCardsInHand::FindValidTargets(TArray<AActor*>&
 	{
 		UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(CosGameTags::Event_CardSelectionMode,Card);
 
-		UUW_CardHand* CardhandWidget = CardPlayer->PlayerUI->WBP_Hand;
+		UUW_CardHand* CardhandWidget = CardPlayer->PlayerUI->WBP_CardHand;
 
 		BindToCardConfirm(CardhandWidget);
 
@@ -96,14 +96,14 @@ void UTargetingComponent_SpecifiedCardsInHand::BindToCardConfirm(UUW_CardHand* H
 	
 	BoundHand = Hand;
 
-	BoundHand->ReturnSelectedCards.AddDynamic(this,&UTargetingComponent_SpecifiedCardsInHand::ValidateAndTransferSelectedCards);
+	BoundHand->OnReturnSelectedCards.AddDynamic(this,&UTargetingComponent_SpecifiedCardsInHand::ValidateAndTransferSelectedCards);
 }
 
-void UTargetingComponent_SpecifiedCardsInHand::ValidateAndTransferSelectedCards(TArray<ACardBase*>& Cards)
+void UTargetingComponent_SpecifiedCardsInHand::ValidateAndTransferSelectedCards(const TArray<ACardBase*>& Cards)
 {
 	if(BoundHand)
 	{
-		BoundHand->ReturnSelectedCards.RemoveDynamic(this,&UTargetingComponent_SpecifiedCardsInHand::ValidateAndTransferSelectedCards);
+		BoundHand->OnReturnSelectedCards.RemoveDynamic(this,&UTargetingComponent_SpecifiedCardsInHand::ValidateAndTransferSelectedCards);
 	}
 	TArray<AActor*> SelectedCards;
 	for (ACardBase* Card : Cards)

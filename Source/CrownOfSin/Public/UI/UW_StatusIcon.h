@@ -110,6 +110,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Status Icon")
 	FStatusAppearance StatusAppearance;
-
-
 };

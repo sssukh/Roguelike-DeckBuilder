@@ -117,7 +117,7 @@ void UTargetingComponent_Discover::ValidateAndTransferSelectedCard(bool bSkipped
 	{
 		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 
-		CardPlayer->PlayerUI->WBP_Hand->bSelectionMode = false;
+		CardPlayer->PlayerUI->WBP_CardHand->bSelectionMode = false;
 
 		TArray<AActor*> InputTarget;
 

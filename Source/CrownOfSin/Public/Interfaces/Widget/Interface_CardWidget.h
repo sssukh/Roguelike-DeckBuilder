@@ -32,7 +32,7 @@ public:
 	void RequestDesiredTransformUpdate(FWidgetTransform DesiredTransform, bool bEnableMovement);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
-	void ToggleCardGlow(bool bEnable, FColor Color);
+	void ToggleCardGlow(bool bEnable, FLinearColor Color);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
 	void SetCardState(ECardState InCardState);
@@ -41,7 +41,7 @@ public:
 	void AnimateAutoPlay();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
-	void AnimateCardNotify();
+	void AnimateCardNotify(EUMGSequencePlayMode::Type PlayMode);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Widget")
 	void AnimateCardExhaust(EUMGSequencePlayMode::Type PlayMode);

@@ -31,9 +31,7 @@ protected:
 
 public:
 	/**
- 	 * AttemptDraw 함수는 현재 손에 든 카드의 수가 최대 허용 수(MaxPileSize)보다 적을 경우,
- 	 * 카드 더미에서 새로운 카드를 뽑는 기능을 수행합니다.
- 	 * 만약 카드를 성공적으로 뽑으면 DrawCard 함수가 호출되어 손에 추가됩니다.
+ 	 * @brief 손 패에서 카드를 뽑으려 시도합니다. 현재 손에 있는 카드 수가 최대 허용량을 초과하지 않을 경우 새로운 카드를 뽑습니다.
  	 */
 	UFUNCTION(BlueprintCallable, Category="Pile Hand Component Event")
 	void AttemptDraw();

@@ -10,8 +10,5 @@
 
 
 
-
-
-
 //CardBase의 InitializeFromData 구현해야함
 // RuleComponent 컴포넌트 구현해야함

@@ -377,7 +377,7 @@ void ATurnManager::RemoveActorIfDestroyed(AActor* DestroyedActor)
 
 bool ATurnManager::IsInitiativeListReady()
 {
-	return InitiativeSortedActors.Num() == 0;;
+	return InitiativeSortedActors.Num() == 0;
 }
 
 void ATurnManager::LogLoopProgress(int32 LoopIndex)
@@ -395,7 +395,6 @@ void ATurnManager::OnInitiativeReady()
 		StartNewRound();
 	});
 
-	// BeginDelayHelper를 nullptr로 설정하여 더 이상 참조하지 않도록 함
 	BeginDelayHelper = nullptr;
 }
 

@@ -17,6 +17,7 @@ void UUW_RewardScreen::NativeConstruct()
 	Super::NativeConstruct();
 
 	TakeAllButton->OnClicked.AddDynamic(this, &UUW_RewardScreen::OnClicked_TakeAllButton);
+
 	SkipButton->OnClicked.AddDynamic(this, &UUW_RewardScreen::OnClicked_SkipButton);
 }
 
@@ -60,4 +61,9 @@ void UUW_RewardScreen::OnClicked_SkipButton()
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 	UFunctionLibrary_Event::CallEventInGlobalDispatcherHub(CosGameTags::Event_CloseRewardScreen, this, nullptr);
 	WBP_ArtifactBar->ClearAllStatuses();
+}
+
+UObject* UUW_RewardScreen::AddStatusIndicator_Implementation(UStatusComponent* Status, bool bShowImmediately)
+{
+	return IInterface_StatusWidget::Execute_AddStatusIndicator(WBP_ArtifactBar, Status, bShowImmediately);
 }

@@ -107,4 +107,9 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	FEncounterData GetCurrentEncounterFromInstance();
+
+
+	//ToDo:Cos
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
+	FString GetInstanceSaveId();
 };

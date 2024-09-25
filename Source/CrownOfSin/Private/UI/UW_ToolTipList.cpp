@@ -7,10 +7,10 @@
 
 UUW_ToolTipList::UUW_ToolTipList(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), ToolTipBox(nullptr)
 {
-	static ConstructorHelpers::FClassFinder<UUW_ToolTip> WBP_ToolTip(*AssetPath::Blueprint::WBP_ToolTip_C);
-	if (WBP_ToolTip.Succeeded())
+	static ConstructorHelpers::FClassFinder<UUW_ToolTip> WBP_ToolTip_C(*AssetPath::Blueprint::WBP_ToolTip_C);
+	if (WBP_ToolTip_C.Succeeded())
 	{
-		WBP_ToolTipClass = WBP_ToolTip.Class;
+		WBP_ToolTipClass = WBP_ToolTip_C.Class;
 	}
 	else
 	{
@@ -20,6 +20,8 @@ UUW_ToolTipList::UUW_ToolTipList(const FObjectInitializer& ObjectInitializer) : 
 
 void UUW_ToolTipList::AddToolTipFromData(const FDataTableRowHandle& ToolTipData, int32 Value)
 {
+	COS_IF_CHECK(WBP_ToolTipClass, TEXT("UUW_ToolTipList에서 WBP_ToolTipClass를 설정해주세요."))
+
 	if (UUW_ToolTip* NewToolTip = CreateWidget<UUW_ToolTip>(GetWorld(), WBP_ToolTipClass))
 	{
 		ToolTipBox->AddChild(NewToolTip);

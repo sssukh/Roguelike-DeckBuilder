@@ -1,71 +1,76 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "UW_CardRewardScreen.generated.h"
 
+class ACardBase;
 class UButton;
 class UImage;
 class UUW_CardListCard;
 class UTextBlock;
 class UHorizontalBox;
 class UOverlay;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnReturnSelectedCardInRewardScreen, bool, bSkipped, ACardBase*, Card);
+
 /**
  * 
  */
-UCLASS(Blueprintable,BlueprintType)
+UCLASS(Blueprintable, BlueprintType)
 class CROWNOFSIN_API UUW_CardRewardScreen : public UUserWidget
 {
 	GENERATED_BODY()
+
 public:
 	UUW_CardRewardScreen(const FObjectInitializer& ObjectInitializer);
 
-	// OnClicked(SkipButton) 블루프린트 구현 필요
-	
-	UFUNCTION(BlueprintCallable, Category = "Card Reward Scene")
-	void UpdateRewardScreen(TArray<ACardBase*>& Cards, const FText& InTitle, bool bAllowSkip);
+	UFUNCTION(BlueprintCallable, Category = "UW Card Reward Scene")
+	void UpdateRewardScreen(const TArray<ACardBase*>& Cards, const FText& InTitle, bool bAllowSkip);
 
-	UFUNCTION(BlueprintCallable, Category = "Card Reward Scene")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "UW Card Reward Scene")
+	void ShowCardOptions();
+
+protected:
+	UFUNCTION(BlueprintCallable, Category = "UW Card Reward Scene")
 	void ReturnReward(UUW_CardListCard* CardListCard, ACardBase* CardActor);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Card Reward Scene")
-	void ShowCardOptions();
-	// Member Variables
+	/*========================================================================================
+	*	Field Members
+	=========================================================================================*/
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene", meta = (BindWidget))
-	TObjectPtr<UImage> Image_81;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Reward Scene", meta = (BindWidget))
+	UImage* Image_81;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene", meta = (BindWidget))
-	TObjectPtr<UHorizontalBox> RewardBox;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Reward Scene", meta = (BindWidget))
+	UHorizontalBox* RewardBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene", meta = (BindWidget))
-	TObjectPtr<UButton> SkipButton;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Reward Scene", meta = (BindWidget))
+	UButton* SkipButton;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene", meta = (BindWidget))
-	TObjectPtr<UOverlay> SkipOverlay;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Reward Scene", meta = (BindWidget))
+	UOverlay* SkipOverlay;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene", meta = (BindWidget))
-	TObjectPtr<UTextBlock> Title;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Reward Scene", meta = (BindWidget))
+	UTextBlock* Title;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Reward Scene", Transient, meta = (BindWidgetAnim))
+	UWidgetAnimation* FadeIn;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Reward Scene|Config|Setup")
+	TSubclassOf<UUW_CardListCard> WBP_CardListCardClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Reward Scene")
 	int32 LoopIndex;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene", meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Reward Scene", meta = (BindWidget))
 	float AnimDelay = 0.15f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene", meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Reward Scene", meta = (BindWidget))
 	int32 RewardOptionCount = 3;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene", Transient, meta = (BindWidgetAnim))
-	TObjectPtr<UWidgetAnimation> FadeIn;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardRewardScene")
-	TSubclassOf<UUW_CardListCard> CardListCardClass;
 public:
-	// Delegate
-	UPROPERTY(BlueprintAssignable,BlueprintCallable, Category = "CardRewardScene", meta = (BindWidget))
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "UW Card Reward Scene|Delegate")
 	FOnReturnSelectedCardInRewardScreen OnReturnSelectedCardInRewardScreen;
 };

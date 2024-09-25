@@ -26,13 +26,14 @@ namespace CosGameTags
 	UE_DEFINE_GAMEPLAY_TAG(Event_Action_WinGame,TEXT("Event.Action.WinGame"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Action_ModifyStatusMax,TEXT("Event.Action.ModifyStatusMax"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Action_ReturnCardToHand,TEXT("Event.Action.ReturnCardToHand"));
+	UE_DEFINE_GAMEPLAY_TAG(Event_Action_Reshuffle,TEXT("Event.Action.Reshuffle"));
 
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Draw, TEXT("Event.Card.Draw"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Discard, TEXT("Event.Card.Discard"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Exhaust, TEXT("Event.Card.Exhaust"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Grab, TEXT("Event.Card.Grab"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_GenerateCard, TEXT("Event.Card.Generate"));
-	UE_DEFINE_GAMEPLAY_TAG(Event_Card_DropCard, TEXT("Event.Card.Drop"));
+	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Drop, TEXT("Event.Card.Drop"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Void, TEXT("Event.Card.Void"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_Destroy, TEXT("Event.Card.Destroy"));
 	UE_DEFINE_GAMEPLAY_TAG(Event_Card_PrePlay, TEXT("Event.Card.PrePlay"));

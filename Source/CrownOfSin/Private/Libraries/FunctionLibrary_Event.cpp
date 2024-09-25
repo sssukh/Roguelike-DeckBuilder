@@ -83,6 +83,6 @@ void UFunctionLibrary_Event::BindMultipleEventsToGlobalDispatcherHub(UObject* Ev
 			GlobalDispatcherHub->DispatcherHubComponent->BindEventToHub(EventHolder, EventTag);
 		}
 	}
-
-	COS_LOG_SCREEN_ERROR(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
+	else
+		COS_LOG_SCREEN_ERROR(TEXT("레벨에 GlobalDispatcherHub가 존재하지 않습니다"));
 }

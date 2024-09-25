@@ -30,8 +30,7 @@ ACardBase::ACardBase()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = false;
-
-
+	
 	GameplayTagComponent = CreateDefaultSubobject<UGameplayTagComponent>(TEXT("GameplayTagComponent"));
 	DispatcherHubLocal = CreateDefaultSubobject<UDispatcherHubLocalComponent>(TEXT("DispatcherHubLocal"));
 
@@ -337,7 +336,7 @@ void ACardBase::ContinueToNextEffect()
 
 		// 7. 타겟 입력이 필요한 경우 처리합니다.
 		if (CurrentTargetingComponent->bRequiresInput)
-		{			
+		{
 			// 타겟 입력을 받기 위한 델리게이트를 추가합니다.
 			CurrentTargetingComponent->OnInputTargetsReceived.AddUniqueDynamic(this, &ACardBase::ProceedOnInputTargetsReceived);
 
@@ -609,9 +608,14 @@ UTexture2D* ACardBase::GetCardPortrait(ECardDataType InCardType)
 	return GetCardByCardDataType(InCardType).Portrait;
 }
 
-FGameplayTagContainer ACardBase::GetCardTags(ECardDataType Type)
+FGameplayTagContainer ACardBase::GetCardTags(ECardDataType InCardType)
 {
-	return GetCardByCardDataType(Type).CardTags;
+	return GetCardByCardDataType(InCardType).CardTags;
+}
+
+bool ACardBase::GetCardTargeted(ECardDataType InCardType)
+{
+	return GetCardByCardDataType(InCardType).bTargeted;
 }
 
 TArray<FStatusData> ACardBase::GetCardStartingStatuses(ECardDataType InCardType)

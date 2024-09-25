@@ -10,8 +10,18 @@ class URichTextBlock;
 class UTextBlock;
 class UImage;
 class UBorder;
+
 /**
+ * UUW_CardVisual 클래스는 카드의 시각적 정보를 UI에서 표시하는 위젯입니다.
+ * 이 위젯은 카드의 이미지, 마나 코스트, 카드 이름, 설명 등을 화면에 나타내며, 카드의 상태에 따라
+ * 다양한 애니메이션을 재생할 수 있는 기능을 제공합니다. 또한, 카드의 상태(예: Glow)와 같은 
+ * 시각적 효과를 활성화하거나 비활성화할 수 있습니다.
  * 
+ * 주요 기능:
+ * - 카드의 이미지, 텍스트, 마나 코스트 등의 정보를 표시
+ * - 카드가 특정 상황에서 강조(Glow)될 수 있는 기능 제공
+ * - 카드의 등장, 알림, 소모 등의 애니메이션을 지원
+ * - 카드의 설명을 실시간으로 갱신하며, 카드의 효과 값도 표시 가능
  */
 UCLASS()
 class CROWNOFSIN_API UUW_CardVisual : public UUserWidget, public IInterface_CardWidget
@@ -24,92 +34,107 @@ public:
 	virtual void NativeConstruct() override;
 
 public:
+	// 카드의 효과 값을 대체하여 설명 텍스트를 업데이트하는 함수
+	UFUNCTION(BlueprintCallable,Category="UW Card Visual")
 	void ReplacePowerValues();
-	
+
+	// 마나 크리스탈 정보를 업데이트하는 함수
+	UFUNCTION(BlueprintCallable,Category="UW Card Visual")
 	void UpdateManaCrystal();
-	
+
 	/*========================================================================================
 	 *	IInterface_CardWidget
 	 =========================================================================================*/
 public:
-	virtual void ToggleCardGlow_Implementation(bool bEnable, FColor Color) override;
-	
+	// 카드의 Glow 효과를 활성화하거나 비활성화하는 함수
+	virtual void ToggleCardGlow_Implementation(bool bEnable, FLinearColor Color) override;
+
+	// 카드 위젯을 카드 데이터를 기반으로 업데이트하는 함수
 	virtual void UpdateCardWidget_Implementation(ACardBase* InCardActor) override;
 
+	// 카드 등장 애니메이션을 재생하는 함수
 	virtual void AnimateCardAppear_Implementation(EUMGSequencePlayMode::Type PlayMode) override;
 
-	virtual void AnimateCardNotify_Implementation() override;
+	// 카드 알림 애니메이션을 재생하는 함수
+	virtual void AnimateCardNotify_Implementation(EUMGSequencePlayMode::Type PlayMode) override;
 
+	// 카드 소모(Exhaust) 애니메이션을 재생하는 함수
 	virtual void AnimateCardExhaust_Implementation(EUMGSequencePlayMode::Type PlayMode) override;
+
 	
-
-
-	// Member Variables
+	/*========================================================================================
+	 *	Field Members
+	 =========================================================================================*/
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", meta = (BindWidget))
 	UOverlay* ManaCrystalOverlay;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", meta = (BindWidget))
+
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", meta = (BindWidget))
 	UBorder* GlowBorder;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", meta = (BindWidget))
 	UImage* TypeBanner;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", meta = (BindWidget))
+
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", meta = (BindWidget))
 	UImage* RarityGem;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", meta = (BindWidget))
 	UImage* ManaCrystalFrame;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", meta = (BindWidget))
+
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", meta = (BindWidget))
 	UImage* GemShadow;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", meta = (BindWidget))
 	UImage* FrameImage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", meta = (BindWidget))
 	UImage* CardImage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", meta = (BindWidget))
 	UTextBlock* CardName;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", meta = (BindWidget))
+
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", meta = (BindWidget))
 	UTextBlock* ManaCost;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", meta = (BindWidget))
 	UTextBlock* TypeText;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", meta = (BindWidget))
 	URichTextBlock* RichDescription;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", Transient, meta = (BindWidgetAnim))
+
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", Transient, meta = (BindWidgetAnim))
 	TObjectPtr<UWidgetAnimation> GlowPulse;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", Transient, meta = (BindWidgetAnim))
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", Transient, meta = (BindWidgetAnim))
 	TObjectPtr<UWidgetAnimation> HideGlow;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", Transient, meta = (BindWidgetAnim))
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", Transient, meta = (BindWidgetAnim))
 	TObjectPtr<UWidgetAnimation> Notify;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", Transient, meta = (BindWidgetAnim))
+
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", Transient, meta = (BindWidgetAnim))
 	TObjectPtr<UWidgetAnimation> Appear;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Visual|Designer", Transient, meta = (BindWidgetAnim))
+
+	UPROPERTY(BlueprintReadWrite, Category = "UW Card Visual|Designer", Transient, meta = (BindWidgetAnim))
 	TObjectPtr<UWidgetAnimation> ExhaustUp;
 
 public:
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Card Visual|Config|Setup")
+	// 카드의 타입 이름과 매칭되는 텍스트 맵
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Card Visual|Config|Setup")
 	TMap<FGameplayTag, FText> TypeNames;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Card Visual|Config|Setup")
+	// 희귀성 보석과 매칭되는 텍스처 맵
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Card Visual|Config|Setup")
 	TMap<FGameplayTag, UTexture2D*> RarityGems;
-	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Card Visual|Config|Setup")
-	 UTexture2D* DefaultRarityGemTexture;
 
-	UPROPERTY(BlueprintReadWrite, Category="Card Visual")
+	// 기본 희귀성 보석 텍스처
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Card Visual|Config|Setup")
+	UTexture2D* DefaultRarityGemTexture;
+
+	// Glow 효과의 속도
+	UPROPERTY(BlueprintReadWrite, Category="UW Card Visual")
 	float GlowPulseSpeed = 0.8f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Card Visual", meta=(ExposeOnSpawn="true"))
+	// 카드와 연관된 카드 액터 참조
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Card Visual", meta=(ExposeOnSpawn="true"))
 	ACardBase* CardActor;
 };

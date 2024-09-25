@@ -20,13 +20,7 @@ public:
 	static void SendScreenLogMessage(const UObject* WorldContextObject, FText Message, FColor Color);
 
 	UFUNCTION(BlueprintCallable, Category="COS|FunctionLibrary|Utility", meta=(WorldContext="WorldContextObject"))
-	static FVector2D LerpVector2D(const FVector2D& A, const FVector2D& B, float Alpha)
-	{
-		return FVector2D(
-			FMath::Lerp(A.X, B.X, Alpha), // X 좌표의 선형 보간
-			FMath::Lerp(A.Y, B.Y, Alpha) // Y 좌표의 선형 보간
-		);
-	}
+	static FVector2D LerpVector2D(const FVector2D& A, const FVector2D& B, float Alpha);
 
 	UFUNCTION(BlueprintCallable, Category="COS|FunctionLibrary|Utility", meta=(WorldContext="WorldContextObject"))
 	static FName GenerateUniqueObjectName(UObject* Outer, UClass* ObjectClass, const FString& Suffix = TEXT("Object"));
@@ -40,5 +34,14 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable, Category="COS|FunctionLibrary|Utility", meta=(WorldContext="WorldContextObject"))
 	static bool CheckObjectImplementsInterface(const UObject* WorldContextObject, UObject* Object, TSubclassOf<UInterface> InterfaceClass);
+
+	/*뷰포트에서 위젯의 현재 위치를 가져옵니다.*/
+	UFUNCTION(BlueprintCallable, Category="COS|FunctionLibrary|Utility", meta=(WorldContext="WorldContextObject"))
+	static FVector2D GetWidgetTickSpacePosition(UObject* WorldContextObject, UUserWidget* Widget);
+
+	/*세 위젯 사이의 2D 베지어를 계산하고 지정된 알파 포인트(0 = 시작, 1 = 끝)에서 위치와 각도를 반환합니다.*/
+	UFUNCTION(BlueprintCallable, Category="COS|FunctionLibrary|Utility", meta=(WorldContext="WorldContextObject"))
+	static FVector2D GetPositionAndAngleAtBezierAlphaBetweenWidgets(UObject* WorldContextObject, float Alpha, UUserWidget* StartWidget, UUserWidget* MidWidget, UUserWidget* EndWidget,
+																	float& OutAngle);
 	
 };

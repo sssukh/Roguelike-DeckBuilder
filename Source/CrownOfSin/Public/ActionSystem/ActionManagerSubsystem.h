@@ -58,6 +58,9 @@ public:
 			{
 				InitFunction(NewAction);
 
+				// FString ActionName = FString::Printf(TEXT("%s__%d"), *T::StaticClass()->GetName(), GetCurrentIndex());
+				// NewAction->Rename(*ActionName, nullptr, REN_None);
+
 				NewAction->FinishSpawning(SpawnTransform);
 
 				// FString ActionName = FString::Printf(TEXT("%s__%d"), *T::StaticClass()->GetName(), GetCurrentIndex());
@@ -89,7 +92,7 @@ public:
 				InitFunction(NewAction);
 
 				// FString ActionName = FString::Printf(TEXT("%s_%d"), *ActionClass->GetName(), GetCurrentIndex());
-				// NewAction->Rename(*ActionName, Outer, REN_None);
+				// NewAction->Rename(*ActionName, nullptr, REN_None);
 
 				NewAction->FinishSpawning(SpawnTransform);
 

@@ -2,6 +2,7 @@
 
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
+#include "CardSystem/CardTransferComponent.h"
 #include "CardSystem/ChanceManagerComponent.h"
 #include "CardSystem/Piles/PileComponent.h"
 #include "CardSystem/Piles/PileDeckComponent.h"
@@ -61,7 +62,10 @@ ACardPlayer::ACardPlayer(): ChanceManagerComponent(nullptr)
 		PileDeckComponent = CreateDefaultSubobject<UPileDeckComponent>(TEXT("PileDeckComponent"));
 		PileDiscardComponent = CreateDefaultSubobject<UPileDiscardComponent>(TEXT("PileDiscardComponent"));
 		PileExhaustComponent = CreateDefaultSubobject<UPileExhaustComponent>(TEXT("PileExhaustComponent"));
+		
 		PileHandComponent = CreateDefaultSubobject<UPileHandComponent>(TEXT("PileHandComponent"));
+		PileHandComponent->MaxPileSize = 12;
+
 		PileVoidComponent = CreateDefaultSubobject<UPileVoidComponent>(TEXT("PileVoidComponent"));
 	}
 
@@ -69,6 +73,8 @@ ACardPlayer::ACardPlayer(): ChanceManagerComponent(nullptr)
 	PayloadHolderComponent = CreateDefaultSubobject<UPayloadHolderComponent>(TEXT("PayloadHolderComponent"));
 
 	GameplayTagComponent = CreateDefaultSubobject<UGameplayTagComponent>(TEXT("GameplayTagComponent"));
+
+	CardTransferComponent = CreateDefaultSubobject<UCardTransferComponent>(TEXT("CardTransferComponent"));
 }
 
 void ACardPlayer::BeginPlay()
@@ -156,7 +162,7 @@ UStatusComponent* ACardPlayer::CreateNewStatusComponent(TSubclassOf<UStatusCompo
 	FName UniqueName = MakeUniqueObjectName(this, InStatusClass, FName(*BaseName));
 
 	UStatusComponent* NewStatusComponent = NewObject<UStatusComponent>(this, InStatusClass, UniqueName);
-	if(NewStatusComponent)
+	if (NewStatusComponent)
 	{
 		// NewStatusComponent->RegisterComponent();
 
@@ -167,7 +173,7 @@ UStatusComponent* ACardPlayer::CreateNewStatusComponent(TSubclassOf<UStatusCompo
 
 		// 바뀐 위치
 		NewStatusComponent->RegisterComponent();
-		
+
 		AddInstanceComponent(NewStatusComponent);
 	}
 	return NewStatusComponent;

@@ -28,7 +28,7 @@ public:
 	void BindToCardConfirm(UUW_CardHand* Hand);
 
 	UFUNCTION(BlueprintCallable, Category = "TargetSystem SpecifiedCardsInHand")
-	void ValidateAndTransferSelectedCards(TArray<ACardBase*>& Cards);
+	void ValidateAndTransferSelectedCards(const  TArray<ACardBase*>& Cards);
 
 	// Member Variables
 public:
