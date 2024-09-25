@@ -52,7 +52,6 @@ enum class EStatusTextAlignment : uint8
 	BottomLeft
 };
 
-
 UENUM(BlueprintType)
 enum class ECardState : uint8
 {
@@ -233,14 +232,19 @@ struct FToolTipValue
 	{
 	};
 
+
+	FToolTipValue(const FDataTableRowHandle& ToolTipTable, bool NewValued): ToolTipTable(ToolTipTable), bValued(NewValued)
+	{
+	};
+
 	FToolTipValue& operator=(const FToolTipValue& Other)
 	{
-		if(this!=&Other)
+		if (this != &Other)
 		{
 			ToolTipTable = Other.ToolTipTable;
 			bValued = Other.bValued;
 		}
-		
+
 		return *this;
 	}
 };
@@ -292,7 +296,6 @@ struct FStatusData : public FTableRowBase
 	// == 연산자 오버로딩 (동등성 비교)
 	bool operator==(const FStatusData& Other) const;
 };
-
 
 USTRUCT(BlueprintType)
 struct FStatusAppearance
@@ -664,7 +667,6 @@ struct FCardPattern : public FTableRowBase
 	}
 };
 
-
 USTRUCT(BlueprintType)
 struct FHeroDeck
 {
@@ -696,4 +698,42 @@ struct FRarityWeights : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Rarity Weights")
 	TMap<FGameplayTag, float> RarityWeights;
+};
+
+USTRUCT(BlueprintType)
+struct FTransferAnim
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Transfer Anim")
+	UUserWidget* StartWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Transfer Anim")
+	UUserWidget* MidWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Transfer Anim")
+	UUserWidget* EndWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Transfer Anim")
+	float Duration;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Transfer Anim")
+	UCurveFloat* SpeedCurve;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Transfer Anim")
+	UCurveFloat* ScaleCurve;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Transfer Anim")
+	float ScaleModifier = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Transfer Anim")
+	float AngleModifier;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Transfer Anim")
+	FVector2D Offset;
+
+	FTransferAnim(): StartWidget(nullptr), MidWidget(nullptr), EndWidget(nullptr), Duration(0), SpeedCurve(nullptr), ScaleCurve(nullptr), AngleModifier(0)
+	{
+		Offset = FVector2D::Zero();
+	}
 };

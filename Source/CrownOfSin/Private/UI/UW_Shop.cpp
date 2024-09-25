@@ -4,14 +4,23 @@
 #include "CardSystem/Piles/PileShopComponent.h"
 #include "Components/Button.h"
 #include "Components/UniformGridPanel.h"
+#include "Libraries/AssetPath.h"
 #include "Libraries/FunctionLibrary_Singletons.h"
 #include "StatusSystem/Artifacts/Status_Artifact.h"
 #include "UI/UW_ShopCard.h"
+#include "Utilities/CosLog.h"
 
 UUW_Shop::UUW_Shop(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), CardPanel(nullptr), OutsideButton(nullptr), ExitButton(nullptr)
 {
-	//설정해야합니다
-	// WBP_ShopCardClass
+	static ConstructorHelpers::FClassFinder<UUW_ShopCard> WBP_ShopCard_C(*AssetPath::Blueprint::WBP_ShopCard_C);
+	if(WBP_ShopCard_C.Succeeded())
+	{
+		WBP_ShopCardClass=WBP_ShopCard_C.Class;
+	}
+	else
+	{
+		COS_LOG_ERROR(TEXT("WBP_ShopCardClass를 찾지 못했습니다."));
+	}
 }
 
 void UUW_Shop::NativePreConstruct()

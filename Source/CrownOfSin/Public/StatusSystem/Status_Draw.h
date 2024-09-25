@@ -1,5 +1,4 @@
-﻿
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "StatusComponent.h"
@@ -28,8 +27,6 @@ public:
 	virtual void RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags) override;
 
 protected:
-	UPROPERTY(BlueprintReadWrite,Category="Status Draw")
+	UPROPERTY(BlueprintReadWrite, Category="Status Draw")
 	UPileHandComponent* PileHandReference;
-
-
 };

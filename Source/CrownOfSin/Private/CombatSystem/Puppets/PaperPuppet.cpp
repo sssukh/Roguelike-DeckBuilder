@@ -61,7 +61,7 @@ APaperPuppet::APaperPuppet()
 
 
 		// 위젯 클래스 설정 (WBP_MinionUI의 클래스를 찾아서 설정) 
-		static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClassFinder(*AssetPath::Blueprint::WBP_MinionUiTop);
+		static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClassFinder(*AssetPath::Blueprint::WBP_MinionUiTop_C);
 		if (WidgetClassFinder.Succeeded())
 		{
 			MinionUI->SetWidgetClass(WidgetClassFinder.Class);

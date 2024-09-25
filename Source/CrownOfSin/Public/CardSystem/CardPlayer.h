@@ -9,6 +9,7 @@
 #include "Interfaces/Interface_StoryEncounter.h"
 #include "CardPlayer.generated.h"
 
+class UCardTransferComponent;
 class UStatus_Draw;
 class UStatus_ManaGain;
 class UStatus_Mana;
@@ -163,6 +164,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
 	UPayloadHolderComponent* PayloadHolderComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Card Player|Component")
+	UCardTransferComponent* CardTransferComponent;
 
 public:
 	UPROPERTY(BlueprintReadWrite, Category="Card Player")

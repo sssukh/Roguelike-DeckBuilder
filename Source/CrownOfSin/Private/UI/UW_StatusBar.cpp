@@ -40,9 +40,13 @@ bool UUW_StatusBar::GetNumberOfVisibleRewards(int32& OutVisibleRewardCount)
 	{
 		TArray<UWidget*> ChildrenWidgets;
 		if (bVertical)
+		{
 			ChildrenWidgets = StatusBoxVertical->GetAllChildren();
+		}
 		else
+		{
 			ChildrenWidgets = StatusBoxHorizontal->GetAllChildren();
+		}
 
 		int32 VisibleRewardCount = 0;
 		for (UWidget* ChildrenWidget : ChildrenWidgets)
@@ -76,12 +80,11 @@ void UUW_StatusBar::InteractWithAllStatuses()
 	for (UWidget* ChildrenWidget : ChildrenWidgets)
 	{
 		UUW_StatusIcon* UW_StatusIcon = Cast<UUW_StatusIcon>(ChildrenWidget);
-		if (!UW_StatusIcon)
-			continue;
+		if (!UW_StatusIcon)			continue;
 
 		if (UW_StatusIcon->IsVisible())
 		{
-			IInterface_Utility::Execute_Interact(UW_StatusIcon->StatusComponent,FGameplayTagContainer(StatusBarTag));
+			IInterface_Utility::Execute_Interact(UW_StatusIcon->StatusComponent, FGameplayTagContainer(StatusBarTag));
 		}
 	}
 }

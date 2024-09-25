@@ -2,14 +2,12 @@
 #include "Utilities/CosLog.h"
 
 
-UDelayHelper::UDelayHelper(): LoopIndex(0), CachedWorld(nullptr), Interval(0)
+UDelayHelper::UDelayHelper(): Interval(0), LoopIndex(0), CachedWorld(nullptr)
 {
 }
 
 void UDelayHelper::DelayWhile(const FConditionDelegate& Condition, const FOnLoopDelegate& OnLoop, const FOnCompleteDelegate& OnComplete, float CheckInterval, bool bAuToDestroy)
 {
-	COS_LOG_WARNING(TEXT("DelayHelper::DelayWhile called"));
-
 	CachedWorld = GetWorld();
 	if (!CachedWorld)
 	{
@@ -31,7 +29,6 @@ void UDelayHelper::DelayWhile(const FConditionDelegate& Condition, const FOnLoop
 
 	// 타이머 설정
 	CachedWorld->GetTimerManager().SetTimer(LoopTimerHandle, this, &UDelayHelper::OnTick, Interval, true);
-	COS_LOG_WARNING(TEXT("DelayWhile: Timer set with Interval %f"), Interval);
 }
 
 void UDelayHelper::Reset()
@@ -42,11 +39,6 @@ void UDelayHelper::Reset()
 	if (GetWorld()->GetTimerManager().IsTimerActive(LoopTimerHandle))
 	{
 		GetWorld()->GetTimerManager().ClearTimer(LoopTimerHandle);
-		COS_LOG_WARNING(TEXT("DelayHelper 재설정: 타이머가 지워졌습니다."));
-	}
-	else
-	{
-		COS_LOG_SCREEN_ERROR(TEXT("DelayHelper 재설정: 타이머가 활성화되어 있지 않아서 지울 필요가 없습니다."));
 	}
 
 	// 델리게이트 초기화

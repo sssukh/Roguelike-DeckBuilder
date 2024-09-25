@@ -138,6 +138,7 @@ protected:
 	/*카드 효과 액션을 실행하는 함수.*/
 	void ExecuteEffectAction();
 
+public:
 	/*주어진 타겟 액터가 UInterface_CardTarget 인터페이스를 구현하는지 확인하고, 해당 퍼펫을 반환하는 함수.*/
 	AActor* GetValidTargetPuppet(AActor* TargetActor) const;
 
@@ -181,7 +182,10 @@ public:
 
 	/*카드의 게임플레이 태그 컨테이너를 반환합니다.*/
 	UFUNCTION(BlueprintPure, Category = "Card|Data")
-	FGameplayTagContainer GetCardTags(ECardDataType Type);
+	FGameplayTagContainer GetCardTags(ECardDataType InCardType);
+	
+	UFUNCTION(BlueprintPure, Category = "Card|Data")
+	bool GetCardTargeted(ECardDataType InCardType);
 
 	/*카드의 시작 상태 데이터를 반환합니다.*/
 	UFUNCTION(BlueprintPure, Category = "Card|Data")

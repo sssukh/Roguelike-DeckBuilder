@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -13,55 +11,70 @@ class UUW_CardListCard;
 class UOverlay;
 class UUniformGridPanel;
 class UTextBlock;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReturnSelectedCardInSelectorList, ACardBase*, Card);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReturnSelectedCard, ACardBase*, Card);
+
 /**
  * 
  */
-UCLASS(BlueprintType,Blueprintable)
+UCLASS(BlueprintType, Blueprintable)
 class CROWNOFSIN_API UUW_CardSelectorList : public UUserWidget
 {
 	GENERATED_BODY()
+
 public:
-	
 	UUW_CardSelectorList(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativePreConstruct() override;
 	
+	virtual void NativeConstruct() override;
+public:
+
 	UFUNCTION(BlueprintCallable, Category = "CardSelector")
-	void UpdateCardList(TArray<ACardBase*>& Cards, const FText& Title);
+	void UpdateCardList(const TArray<ACardBase*>& Cards, const FText& Title);
 
 	UFUNCTION(BlueprintCallable, Category = "CardSelector")
 	void ReturnCardWhenClicked(UUW_CardListCard* CardListCard, ACardBase* CardActor);
 
+protected:
+	UFUNCTION()
+	void OnClicked_VisibilityButton();
+
+
 	
-	
-	// Member Variables
+	 /*========================================================================================
+	  *	Field Members
+	  =========================================================================================*/
 public:
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector", meta = (BindWidget))
-	TObjectPtr<UUniformGridPanel> CardPanel;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Seletor List|Designer", meta = (BindWidget))
+	UUniformGridPanel* CardPanel;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector", meta = (BindWidget))
-	TObjectPtr<UOverlay> ListOverlay;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Seletor List|Designer", meta = (BindWidget))
+	UOverlay* ListOverlay;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Seletor List|Designer", meta = (BindWidget))
+	UTextBlock* PileName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Seletor List|Designer", meta = (BindWidget))
+	UButton* VisibilityButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Seletor List|Designer", meta = (BindWidget))
+	UTextBlock* VisibilityButtonText;
 	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector", meta = (BindWidget))
-	TObjectPtr<UTextBlock> PileName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Seletor List|Designer", meta = (BindWidgetAnim),Transient)
+	UWidgetAnimation* Attention;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector", meta = (BindWidget))
-	TObjectPtr<UButton> VisibilityButton;
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Seletor List|Config|Setup")
+	TSubclassOf<UUW_CardListCard> CardListClass;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector", meta = (BindWidget))
-	TObjectPtr<UTextBlock> VisibilityButtonText;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Seletor List")
 	int32 RowLength = 4;
-	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector")
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UW Card Seletor List")
 	bool bDebugMode;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "CardSelector | Config")
-	TSubclassOf<UUW_CardListCard> CardListClass;
-	// Delegate
 public:
-	UPROPERTY(BlueprintAssignable,BlueprintCallable, Category = "CardSelector")
-	FOnReturnSelectedCardInSelectorList OnReturnSelectedCardInSelectorList;
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "UW Card Seletor List|Delegate")
+	FOnReturnSelectedCard OnReturnSelectedCard;
 };

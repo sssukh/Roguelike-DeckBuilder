@@ -1,4 +1,5 @@
-﻿#include "UI/UW_CardVisual.h"
+﻿
+#include "UI/UW_CardVisual.h"
 
 #include "CardSystem/CardBase.h"
 #include "Components/Border.h"
@@ -26,7 +27,7 @@ UUW_CardVisual::UUW_CardVisual(const FObjectInitializer& ObjectInitializer) : Su
 	TypeNames.Add(CosGameTags::Effect_Curse, FText::FromString(FString(TEXT("Curse"))));
 
 	static ConstructorHelpers::FObjectFinder<UTexture2D> T_Transparent(*AssetPath::Texture::T_Transparent);
-	if(T_Transparent.Succeeded())
+	if (T_Transparent.Succeeded())
 	{
 		DefaultRarityGemTexture = T_Transparent.Object;
 	}
@@ -112,7 +113,7 @@ void UUW_CardVisual::UpdateManaCrystal()
 	}
 }
 
-void UUW_CardVisual::ToggleCardGlow_Implementation(bool bEnable, FColor Color)
+void UUW_CardVisual::ToggleCardGlow_Implementation(bool bEnable, FLinearColor Color)
 {
 	if (bEnable)
 	{
@@ -131,9 +132,9 @@ void UUW_CardVisual::AnimateCardAppear_Implementation(EUMGSequencePlayMode::Type
 	PlayAnimation(Appear, 0.0, 1, PlayMode);
 }
 
-void UUW_CardVisual::AnimateCardNotify_Implementation()
+void UUW_CardVisual::AnimateCardNotify_Implementation(EUMGSequencePlayMode::Type PlayMode)
 {
-	PlayAnimation(Notify);
+	PlayAnimation(Notify, PlayMode);
 }
 
 void UUW_CardVisual::AnimateCardExhaust_Implementation(EUMGSequencePlayMode::Type PlayMode)
@@ -147,11 +148,11 @@ void UUW_CardVisual::UpdateCardWidget_Implementation(ACardBase* InCardActor)
 	UpdateManaCrystal();
 
 	const FSlateColor& CardFrameTint = CardActor->GetCardFrameTint(ECardDataType::Hand);
-	
+
 	TypeBanner->SetBrushTintColor(CardFrameTint);
-	
+
 	ManaCrystalFrame->SetBrushTintColor(CardFrameTint);
-	
+
 	FrameImage->SetBrushTintColor(CardFrameTint);
 	FrameImage->SetBrushFromTexture(CardActor->GetCardFrame(ECardDataType::Hand));
 

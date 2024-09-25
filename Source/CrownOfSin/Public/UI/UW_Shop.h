@@ -9,13 +9,22 @@ class UPileComponent;
 class UUniformGridPanel;
 class UUW_ShopCard;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPileRefSet, UPileComponent*, InPile);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPileRefSet_Shop, UPileComponent*, InPile);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOutsideClicked);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOutsideClicked_Shop);
+
 
 /**
- * UUW_Shop 클래스는 게임 내 상점 UI 위젯을 관리합니다.
- * 상점 카드의 업데이트, 버튼 클릭 처리, 카드의 가시성 제어 등의 기능을 제공합니다.
+ * UUW_Shop 클래스는 게임 내 상점 UI를 관리하는 위젯입니다.
+ * 이 클래스는 플레이어가 상점에서 카드를 구매하거나 상점을 닫을 수 있도록 합니다.
+ * 상점의 카드들은 그리드 패널에 배치되며, 플레이어의 코인 상태에 따라 구매 가능 여부가 업데이트됩니다.
+ * 또한, 상점 외부를 클릭하거나 'Exit' 버튼을 클릭하면 상점을 닫을 수 있습니다.
+ * 
+ * 주요 기능:
+ * - 상점 카드 목록을 표시하고 그리드 형식으로 배열
+ * - 플레이어의 코인 수에 따라 카드의 구매 가능 여부 업데이트
+ * - 'Exit' 버튼이나 상점 외부 클릭 시 상점 닫기
+ * - 상점이 표시되면 실시간으로 카드 구매 가능 여부를 업데이트
  */
 UCLASS()
 class CROWNOFSIN_API UUW_Shop : public UUserWidget
@@ -28,6 +37,7 @@ public:
 	virtual void NativePreConstruct() override;
 
 	virtual void NativeConstruct() override;
+
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 public:
@@ -56,25 +66,13 @@ protected:
 	*	Field Members
 	=========================================================================================*/
 public:
-	/** 
-	 * 상점 카드들이 배치되는 그리드 패널
-	 * 상점 카드들이 그리드 형식으로 배열되는 UI 구성 요소
-	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Shop|Designer", meta=(BindWidget))
+	UPROPERTY(BlueprintReadWrite, Category="UW Shop|Designer", meta=(BindWidget))
 	UUniformGridPanel* CardPanel;
 
-	/** 
-	 * 외부 영역을 클릭했을 때 상점을 닫기 위한 버튼
-	 * 상점 외부의 빈 공간을 클릭하면 상점이 닫힙니다.
-	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Shop|Designer", meta=(BindWidget))
+	UPROPERTY(BlueprintReadWrite, Category="UW Shop|Designer", meta=(BindWidget))
 	UButton* OutsideButton;
 
-	/** 
-	 * 상점 종료 버튼
-	 * 이 버튼을 클릭하면 상점이 닫힙니다.
-	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Shop|Designer", meta=(BindWidget))
+	UPROPERTY(BlueprintReadWrite, Category="UW Shop|Designer", meta=(BindWidget))
 	UButton* ExitButton;
 
 public:
@@ -103,7 +101,7 @@ public:
 	 * 상점 카드 그리드의 열 길이
 	 * 상점 카드가 몇 개의 열로 배치될지를 결정합니다.
 	 */
-	UPROPERTY(BlueprintReadWrite, Category="UW Shop")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="UW Shop")
 	int32 RowLength = 4;
 
 public:
@@ -112,12 +110,12 @@ public:
 	 * 상점과 관련된 Pile 설정 시 바인딩된 함수가 호출됩니다.
 	 */
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category="UW Shop|Delegate")
-	FOnPileRefSet OnPileRefSet;
+	FOnPileRefSet_Shop OnPileRefSet;
 
 	/**
 	 * 외부 버튼이 클릭되었을 때 호출되는 델리게이트
 	 * 상점 외부를 클릭하면 이 델리게이트가 실행됩니다.
 	 */
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category="UW Shop|Delegate")
-	FOnOutsideClicked OnOutsideClicked;
+	FOnOutsideClicked_Shop OnOutsideClicked;
 };

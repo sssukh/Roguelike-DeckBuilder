@@ -1,7 +1,10 @@
 ﻿#include "Libraries/FunctionLibrary_Utility.h"
 
+#include "Blueprint/SlateBlueprintLibrary.h"
+#include "Blueprint/UserWidget.h"
 #include "CardSystem/CardPlayer.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Utilities/CosLog.h"
 
 void UFunctionLibrary_Utility::DisplayWarningIfMultipleSingletons(const UObject* WorldContextObject, TSubclassOf<AActor> InClass)
@@ -20,6 +23,12 @@ void UFunctionLibrary_Utility::SendScreenLogMessage(const UObject* WorldContextO
 {
 	if (ACardPlayer* CardPlayer = Cast<ACardPlayer>(UGameplayStatics::GetActorOfClass(WorldContextObject, ACardPlayer::StaticClass())))
 		CardPlayer->DisplayScreenLogMessage(Message, Color);
+}
+
+FVector2D UFunctionLibrary_Utility::LerpVector2D(const FVector2D& A, const FVector2D& B, float Alpha)
+{
+	return FVector2D(FMath::Lerp(A.X, B.X, Alpha), // X 좌표의 선형 보간
+	                 FMath::Lerp(A.Y, B.Y, Alpha)); // Y 좌표의 선형 보간
 }
 
 FName UFunctionLibrary_Utility::GenerateUniqueObjectName(UObject* Outer, UClass* ObjectClass, const FString& Suffix)
@@ -54,4 +63,42 @@ bool UFunctionLibrary_Utility::CheckObjectImplementsInterface(const UObject* Wor
 	FString InterfaceName = InterfaceClass->GetName();
 	COS_LOG_SCREEN_ERROR(TEXT("%s가 %s를 상속받지 못했습니다."), *ObjectName, *InterfaceName);
 	return false;
+}
+
+
+FVector2D UFunctionLibrary_Utility::GetWidgetTickSpacePosition(UObject* WorldContextObject, UUserWidget* Widget)
+{
+	// 위젯의 픽셀 및 뷰포트 위치 계산
+	FVector2D PixelPosition, ViewportPosition;
+	USlateBlueprintLibrary::LocalToViewport(WorldContextObject, Widget->GetTickSpaceGeometry(), Widget->GetRenderTransform().Translation, PixelPosition, ViewportPosition);
+	return ViewportPosition;
+}
+
+FVector2D UFunctionLibrary_Utility::GetPositionAndAngleAtBezierAlphaBetweenWidgets(UObject* WorldContextObject, float Alpha, UUserWidget* StartWidget, UUserWidget* MidWidget,
+                                                                                   UUserWidget* EndWidget, float& OutAngle)
+{
+	// 각 위젯의 뷰포트 상 위치 계산
+	FVector2D StartPosition = GetWidgetTickSpacePosition(WorldContextObject, StartWidget);
+	FVector2D MidPosition = GetWidgetTickSpacePosition(WorldContextObject, MidWidget);
+	FVector2D EndPosition = GetWidgetTickSpacePosition(WorldContextObject, EndWidget);
+
+
+	// 베지어 곡선의 첫 번째 보간 단계
+	FVector2D StartMidLerp = LerpVector2D(StartPosition, MidPosition, Alpha);
+	FVector2D MidEndLerp = LerpVector2D(MidPosition, EndPosition, Alpha);
+	FVector2D BezierPoint = LerpVector2D(StartMidLerp, MidEndLerp, Alpha);
+
+
+
+	// LookAt 계산을 위한 현재 및 타겟 위치 계산
+	FVector CurrentVector = FVector(BezierPoint, 0);
+	FVector2D TargetStartMidLerp = LerpVector2D(StartPosition, MidPosition, Alpha + 0.001f);
+	FVector2D TargetMidEndLerp = LerpVector2D(MidPosition, EndPosition, Alpha + 0.001f);
+	FVector2D TargetBezierPoint = LerpVector2D(TargetStartMidLerp, TargetMidEndLerp, Alpha + 0.001f);
+	FVector TargetVector = FVector(TargetBezierPoint, 0);
+
+	// LookAt 각도 계산
+	OutAngle = UKismetMathLibrary::FindLookAtRotation(CurrentVector, TargetVector).Yaw;
+
+	return BezierPoint;
 }

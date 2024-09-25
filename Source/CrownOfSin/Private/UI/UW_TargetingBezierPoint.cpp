@@ -21,7 +21,8 @@ void UUW_TargetingBezierPoint::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
-	PointImage->SetBrushFromTexture(Texture);
+	if (Texture)
+		PointImage->SetBrushFromTexture(Texture);
 }
 
 void UUW_TargetingBezierPoint::FocusTargetArrow_Implementation()

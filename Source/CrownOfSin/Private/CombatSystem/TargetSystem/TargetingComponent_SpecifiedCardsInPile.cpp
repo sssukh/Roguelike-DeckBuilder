@@ -27,7 +27,7 @@ bool UTargetingComponent_SpecifiedCardsInPile::FindValidTargets(TArray<AActor*>&
 	UPileComponent* PileComponent = Cast<UPileComponent>(CardPlayer->GetComponentByClass(CardEffect.TargetComponent));
 	if (PileComponent->Cards.IsEmpty()) return false;
 
-	CardPlayer->PlayerUI->WBP_Hand->bSelectionMode = true;
+	CardPlayer->PlayerUI->WBP_CardHand->bSelectionMode = true;
 
 	BindToCardConfirm(CardPlayer->PlayerUI->WBP_CardSelectorList);
 
@@ -40,16 +40,16 @@ bool UTargetingComponent_SpecifiedCardsInPile::FindValidTargets(TArray<AActor*>&
 void UTargetingComponent_SpecifiedCardsInPile::BindToCardConfirm(UUW_CardSelectorList* CardList)
 {
 	CardSelectorList = CardList;
-	CardList->OnReturnSelectedCardInSelectorList.AddDynamic(this, &UTargetingComponent_SpecifiedCardsInPile::ValidateAndTransferSelectedCard);
+	CardList->OnReturnSelectedCard.AddDynamic(this, &UTargetingComponent_SpecifiedCardsInPile::ValidateAndTransferSelectedCard);
 }
 
 void UTargetingComponent_SpecifiedCardsInPile::ValidateAndTransferSelectedCard(ACardBase* Card)
 {
-	CardSelectorList->OnReturnSelectedCardInSelectorList.RemoveDynamic(this, &UTargetingComponent_SpecifiedCardsInPile::ValidateAndTransferSelectedCard);
+	CardSelectorList->OnReturnSelectedCard.RemoveDynamic(this, &UTargetingComponent_SpecifiedCardsInPile::ValidateAndTransferSelectedCard);
 
 	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 
-	CardPlayer->PlayerUI->WBP_Hand->bSelectionMode = false;
+	CardPlayer->PlayerUI->WBP_CardHand->bSelectionMode = false;
 
 	TArray<AActor*> Cards;
 	Cards.Add(Card);

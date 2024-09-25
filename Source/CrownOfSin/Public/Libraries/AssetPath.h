@@ -15,13 +15,19 @@ namespace AssetPath
 		const FString BP_IconSplash_C = TEXT("Blueprint'/Game/CrownOfSin/BluePrints/UI/BP_IconSplash.BP_IconSplash_C'");
 		const FString BP_TextSplash_C = TEXT("Blueprint'/Game/CrownOfSin/BluePrints/UI/BP_TextSplash.BP_TextSplash_C'");
 
+		const FString WBP_COS_Layout_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_COS_Layout.WBP_COS_Layout_C'");
 		const FString WBP_ToolTip_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_Tooltip.WBP_Tooltip_C'");
 		const FString WBP_ToolTipList_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_TooltipList.WBP_TooltipList_C'");
+
 		const FString WBP_ScreenFade_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_ScreenFade.WBP_ScreenFade_C'");
 		const FString WBP_StatusIcon_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_StatusIcon.WBP_StatusIcon_C'");
 		const FString WBP_TargetingBezierPoint_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_TargetingBezierPoint.WBP_TargetingBezierPoint_C'");
+		const FString WBP_MinionUiTop_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_MinionUiTop.WBP_MinionUiTop_C'");
 
-		const FString WBP_MinionUiTop = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_MinionUiTop.WBP_MinionUiTop_C'");
+		const FString WBP_CardListCard_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_CardListCard.WBP_CardListCard_C'");
+		const FString WBP_ShopCard_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_ShopCard.WBP_ShopCard_C'");
+
+		const FString WBP_CardList_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_CardList.WBP_CardList_C'");
 	}
 
 	namespace Texture
@@ -31,6 +37,7 @@ namespace AssetPath
 		const FString T_CrossMark = TEXT("Texture2D'/Game/RLDB/Demo/Textures/NodeMap/T_CrossMark.T_CrossMark'");
 		const FString T_Transparent = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Card/T_Transparent.T_Transparent'");
 		const FString T_Coins = TEXT("Texture2D'/Game/RLDB/Demo/Textures/UI/T_Coins.T_Coins'");
+		const FString T_Dagger = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Dagger.T_Dagger'");
 	}
 
 	namespace DataTable

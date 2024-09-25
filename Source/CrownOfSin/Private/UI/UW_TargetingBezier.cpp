@@ -15,10 +15,6 @@ UUW_TargetingBezier::UUW_TargetingBezier(const FObjectInitializer& ObjectInitial
                                                                                         ControlPoint_3(nullptr),
                                                                                         BezierPointTexture(nullptr)
 {
-	ControlPoint1 = FVector2D(860.0f, 928.0f);
-	ControlPoint2 = FVector2D(880.0f, 436.0f);
-	ControlPoint3 = FVector2D(1345.0f, 394.0f);
-	
 	static ConstructorHelpers::FClassFinder<UUserWidget> WBP_TargetingBezierPoint(*AssetPath::Blueprint::WBP_TargetingBezierPoint_C);
 	if (WBP_TargetingBezierPoint.Succeeded())
 	{
@@ -29,8 +25,6 @@ UUW_TargetingBezier::UUW_TargetingBezier(const FObjectInitializer& ObjectInitial
 		COS_LOG_ERROR(TEXT("WBP_TargetingBezierPoint를 로드하지 못했습니다."));
 	}
 
-
-	const TCHAR* sd = *AssetPath::Texture::T_TargetArrow;
 	static ConstructorHelpers::FObjectFinder<UTexture2D> T_TargetArrow(*AssetPath::Texture::T_TargetArrow);
 	if (T_TargetArrow.Succeeded())
 	{
@@ -40,21 +34,20 @@ UUW_TargetingBezier::UUW_TargetingBezier(const FObjectInitializer& ObjectInitial
 	{
 		COS_LOG_ERROR(TEXT("T_TargetArrow를 로드하지 못했습니다."));
 	}
+
+	ControlPoint1 = FVector2D(860.0f, 928.0f);
+	ControlPoint2 = FVector2D(880.0f, 436.0f);
+	ControlPoint3 = FVector2D(1345.0f, 394.0f);
 }
 
 void UUW_TargetingBezier::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
+	COS_IF_CHECK(WBP_TargetingBezierPointClass, TEXT("UUW_TargetingBezier 에서 WBP_TargetingBezierPointClass를 설정해주세요"));
+
 	// 기존의 BezierPoints 배열을 비웁니다.
 	BezierPoints.Empty();
-
-	if (!WBP_TargetingBezierPointClass)
-	{
-		COS_LOG_SCREEN_ERROR(TEXT("UUW_TargetingBezier 에서 WBP_TargetingBezierPointClass를 설정해주세요"));
-		return;
-	}
-
 
 	// NumBezierPoints 수만큼 새로운 Bezier 포인트 위젯을 생성하고 설정
 	for (int32 PointIndex = 0; PointIndex < NumBezierPoints; ++PointIndex)
