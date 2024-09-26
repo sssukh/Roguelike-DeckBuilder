@@ -45,7 +45,7 @@ public:
 
 public:
 	template <typename T>
-	T* CreateAndQueueAction(UObject* Outer,TFunction<void(T*)> InitFunction,
+	T* CreateAndQueueAction(TFunction<void(T*)> InitFunction,
 	                        ESpawnActorCollisionHandlingMethod CollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn,
 	                        ESpawnActorScaleMethod ScaleMethod = ESpawnActorScaleMethod::OverrideRootScale)
 	{
@@ -75,7 +75,7 @@ public:
 	}
 
 	template <typename T>
-	T* CreateAndQueueActionWithClass(UObject* Outer,UClass* ActionClass,
+	T* CreateAndQueueActionWithClass(UClass* ActionClass,
 	                                 TFunction<void(T*)> InitFunction,
 	                                 ESpawnActorCollisionHandlingMethod CollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn,
 	                                 ESpawnActorScaleMethod ScaleMethod = ESpawnActorScaleMethod::OverrideRootScale)

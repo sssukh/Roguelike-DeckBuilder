@@ -96,7 +96,7 @@ void UStatus_AttackPattern::HandleRunEvent()
 
 		// 상태 수정 액션을 생성하고 큐에 추가
 		UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-		ActionManagerSubsystem->CreateAndQueueAction<AAction_ModifyStatus>(this,[&](AAction_ModifyStatus* ModifyStatusAction)
+		ActionManagerSubsystem->CreateAndQueueAction<AAction_ModifyStatus>([&](AAction_ModifyStatus* ModifyStatusAction)
 		{
 			ModifyStatusAction->NewValue = StatusValue;
 			ModifyStatusAction->bShowSplashIcon = false;
