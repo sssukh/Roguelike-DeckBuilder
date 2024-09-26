@@ -3,6 +3,7 @@
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Interfaces/Interface_CardGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
 #include "Utilities/CosLog.h"
 #include "StatusSystem/Artifacts/Status_Artifact.h"
 #include "UI/UW_HeroAddBox.h"
@@ -20,15 +21,11 @@ void UUW_MainMenu::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(this);
-	if (!GameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
-	{
-		COS_SCREEN(TEXT("Game Instacne에서 UInterface_CardGameInstance를 상속시켜 재정의 해주세요."));
-		return;
-	}
+	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetCardGameInstance(this);
+	COS_IF_CHECK(CardGameInstance, TEXT("Game Instacne에서 UInterface_CardGameInstance를 상속시켜 재정의 해주세요."));
 
 	// 저장된 게임 데이터를 로드하려고 시도합니다.
-	const bool bLoadSuccess = IInterface_CardGameInstance::Execute_AttemptLoadGame(GameInstance, CurrentRunName, false);
+	const bool bLoadSuccess = IInterface_CardGameInstance::Execute_AttemptLoadGame(CardGameInstance, CurrentRunName, false);
 
 	// 로드에 성공한 경우
 	if (bLoadSuccess)
@@ -103,14 +100,7 @@ void UUW_MainMenu::OnQuitButtonClicked()
 UGameInstance* UUW_MainMenu::ValidateAndResetGameInstance()
 {
 	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(this);
-
-	// 게임 인스턴스가 Interface_CardGameInstance를 상속받고 있는지 확인
-	if (!GameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
-	{
-		COS_SCREEN(TEXT("Game Instance가 Interface_CardGameInstance 인터페이스를 상속받지 않았습니다."));
-		return nullptr;
-	}
-
+	
 	// 게임 인스턴스를 리셋
 	IInterface_CardGameInstance::Execute_ResetGame(GameInstance);
 

@@ -62,7 +62,7 @@ ACardPlayer::ACardPlayer(): ChanceManagerComponent(nullptr)
 		PileDeckComponent = CreateDefaultSubobject<UPileDeckComponent>(TEXT("PileDeckComponent"));
 		PileDiscardComponent = CreateDefaultSubobject<UPileDiscardComponent>(TEXT("PileDiscardComponent"));
 		PileExhaustComponent = CreateDefaultSubobject<UPileExhaustComponent>(TEXT("PileExhaustComponent"));
-		
+
 		PileHandComponent = CreateDefaultSubobject<UPileHandComponent>(TEXT("PileHandComponent"));
 		PileHandComponent->MaxPileSize = 12;
 
@@ -81,19 +81,11 @@ void ACardPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!DefaultIMC)
-	{
-		COS_SCREEN(TEXT("Card Player의 Default IMC를 설정해주세요!!"));
-		return;
-	}
 
-	if (!WBP_LayoutClass)
-	{
-		COS_SCREEN(TEXT("WBP Layout CLass를 설정해주세요!!!!!"));
-		return;
-	}
-
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	COS_IF_CHECK(DefaultIMC, TEXT("Card Player의 Default IMC를 설정해주세요!!"));
+	COS_IF_CHECK(WBP_LayoutClass, TEXT("Card Player의 WBP Layout CLass를 설정해주세요!!!!!"));
+	
+	 APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	UEnhancedInputLocalPlayerSubsystem* InputSubsystem = PlayerController->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 	InputSubsystem->AddMappingContext(DefaultIMC, 0);
 

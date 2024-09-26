@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "UW_ToolTip.h"
 #include "Blueprint/UserWidget.h"
 #include "UW_ToolTipList.generated.h"
 
@@ -30,5 +31,5 @@ public:
 	UVerticalBox* ToolTipBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UW Tool Tip List|Config|Setup")
-	TSubclassOf<UUW_ToolTipList> WBP_ToolTipClass;
+	TSubclassOf<UUW_ToolTip> WBP_ToolTipClass;
 };

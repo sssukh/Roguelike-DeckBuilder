@@ -17,6 +17,7 @@ namespace AssetPath
 
 		const FString WBP_COS_Layout_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_COS_Layout.WBP_COS_Layout_C'");
 		const FString WBP_ToolTip_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_Tooltip.WBP_Tooltip_C'");
+		
 		const FString WBP_ToolTipList_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_TooltipList.WBP_TooltipList_C'");
 
 		const FString WBP_ScreenFade_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_ScreenFade.WBP_ScreenFade_C'");
@@ -26,7 +27,7 @@ namespace AssetPath
 		
 		const FString WBP_MinionUiTop = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_MinionUiTop.WBP_MinionUiTop_C'");
 
-		const FString WBP_CardVisual_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_CardVisual.WBP_CardVisual_C'");
+		const FString WBP_CardVisual_C = TEXT("/Game/CrownOfSin/BluePrints/Widgets/WBP_CardVisual.WBP_CardVisual_C");
 		const FString WBP_CardListCard_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_CardListCard.WBP_CardListCard_C'");
 		const FString WBP_ShopCard_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_ShopCard.WBP_ShopCard_C'");
 		const FString WBP_CardList_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_CardList.WBP_CardList_C'");
@@ -62,6 +63,13 @@ namespace AssetPath
 	namespace Material
 	{
 		const FString M_Node = TEXT("Material'/Game/RLDB/Demo/Materials/M_Node.M_Node'");
+	}
+
+	namespace Curve
+	{
+		const FString Curve_Decelerate_Float = TEXT("CurveFloat'/Game/RLDB/Blueprints/Curves/Curve_Decelerate_Float.Curve_Decelerate_Float'");
+		const FString Curve_Parabel_Float = TEXT("CurveFloat'/Game/RLDB/Blueprints/Curves/Curve_Parabel_Float.Curve_Parabel_Float'");
+		
 	}
 
 	// 필요한 다른 에셋 경로도 유사하게 추가
