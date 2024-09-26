@@ -16,7 +16,7 @@ UUW_CardListCard::UUW_CardListCard(const FObjectInitializer& ObjectInitializer) 
                                                                                   PairedWidget(nullptr),
                                                                                   CardVisual(nullptr)
 {
-	static ConstructorHelpers::FClassFinder<UUW_CardVisual> WBP_CardVisual (*AssetPath::Blueprint::WBP_CardVisual);
+	static ConstructorHelpers::FClassFinder<UUW_CardVisual> WBP_CardVisual (*AssetPath::Blueprint::WBP_CardVisual_C);
 	if(WBP_CardVisual.Succeeded())
 	{
 		CardVisualClass = WBP_CardVisual.Class;

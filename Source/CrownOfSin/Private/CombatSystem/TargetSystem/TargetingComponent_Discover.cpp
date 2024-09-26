@@ -79,7 +79,7 @@ bool UTargetingComponent_Discover::FindValidTargets(TArray<AActor*>& SpecifiedTa
 
 	
 	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-	ActionManagerSubsystem->CreateAndQueueAction<AAction_CardRewardScreen>(this,[&](AAction_CardRewardScreen* Action_CardRewardScreen)
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_CardRewardScreen>([&](AAction_CardRewardScreen* Action_CardRewardScreen)
 	{
 		Action_CardRewardScreen->CardOptions = CurrentCardOption;
 

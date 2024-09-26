@@ -328,7 +328,7 @@ void UUW_Layout_Cos::InitializeStoryEncounter_Implementation(FDataTableRowHandle
 	UUserWidget* NewStoryEncounter = CreateWidget<UUserWidget>(StoryEncounterBox, StoryEncounter->EncounterWidget);
 	StoryEncounterBox->AddChild(NewStoryEncounter);
 
-	COS_IF_CHECK(!NewStoryEncounter->GetClass()->ImplementsInterface(UInterface_StoryEncounter::StaticClass()), TEXT("StoryWidget이 UInterface_StoryEncounter를 상속받지 않았습니다"));
+	COS_IF_CHECK(NewStoryEncounter->GetClass()->ImplementsInterface(UInterface_StoryEncounter::StaticClass()), TEXT("StoryWidget이 UInterface_StoryEncounter를 상속받지 않았습니다"));
 
 	// 스토리 인카운터 초기화 함수 호출
 	IInterface_StoryEncounter::Execute_InitializeStoryEncounter(NewStoryEncounter, EncounterData, bIsFirstScreen);

@@ -61,7 +61,7 @@ void UActionManagerSubsystem::QueueAction(UObject* Action)
 
 void UActionManagerSubsystem::QueueDelay(float InDelay)
 {
-	CreateAndQueueAction<AAction_Delay>(this,[InDelay](AAction_Delay* Action_Delay)
+	CreateAndQueueAction<AAction_Delay>([InDelay](AAction_Delay* Action_Delay)
 	{
 		Action_Delay->EndDelay = InDelay;
 	});

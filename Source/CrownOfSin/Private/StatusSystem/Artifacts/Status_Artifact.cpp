@@ -86,7 +86,7 @@ bool UStatus_Artifact::Interact_Implementation(const FGameplayTagContainer& Tags
 		IInterface_CardTarget::Execute_AddToStatus(CardPlayer, GetClass(), StatusValue, true, nullptr);
 
 		UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-		AAction_ModifyStatus* NewAction = ActionManagerSubsystem->CreateAndQueueAction<AAction_ModifyStatus>(this,[](AAction_ModifyStatus* Action_ModifyStatus)
+		AAction_ModifyStatus* NewAction = ActionManagerSubsystem->CreateAndQueueAction<AAction_ModifyStatus>([](AAction_ModifyStatus* Action_ModifyStatus)
 		{
 			Action_ModifyStatus->NewValue = 0;
 			Action_ModifyStatus->bShowSplashIcon = false;

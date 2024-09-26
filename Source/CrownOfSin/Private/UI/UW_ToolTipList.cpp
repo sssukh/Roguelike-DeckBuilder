@@ -24,6 +24,9 @@ void UUW_ToolTipList::AddToolTipFromData(const FDataTableRowHandle& ToolTipData,
 
 	if (UUW_ToolTip* NewToolTip = CreateWidget<UUW_ToolTip>(GetWorld(), WBP_ToolTipClass))
 	{
+		NewToolTip->ToolTipData = ToolTipData;
+		NewToolTip->Value = Value;
+		NewToolTip->TextOverride = FText();
 		ToolTipBox->AddChild(NewToolTip);
 	}
 }

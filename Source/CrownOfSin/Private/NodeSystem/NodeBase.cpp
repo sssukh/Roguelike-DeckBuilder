@@ -4,7 +4,6 @@
 #include "Components/SplineComponent.h"
 #include "Components/SplineMeshComponent.h"
 #include "Interfaces/Interface_CardGameInstance.h"
-#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Libraries/AssetPath.h"
 #include "Libraries/FunctionLibrary_Singletons.h"
@@ -75,7 +74,7 @@ void ANodeBase::BeginPlay()
 		COS_SCREEN(TEXT("MapEventClass를 설정해주세요!"));
 		return;
 	}
-	
+
 	MapEventRef = NewObject<UMapEventComponent>(this, MapEventClass);
 	MapEventRef->RegisterComponent();
 	AddInstanceComponent(MapEventRef);
@@ -98,8 +97,6 @@ void ANodeBase::OnConstruction(const FTransform& Transform)
 	{
 		NodeMaterial->SetTextureParameterValue(FName(TEXT("Texture")), MapEventData->Icon);
 	}
-
-	
 }
 
 void ANodeBase::Tick(float DeltaSeconds)

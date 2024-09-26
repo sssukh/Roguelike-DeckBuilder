@@ -47,7 +47,7 @@ bool UCardEffect_Attack::ResolveCardEffect(AActor* TargetActor)
 
 	// 액션 매니저 서브시스템에서 화면 흔들림 액션을 생성하고 큐에 추가
 	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-	ActionManagerSubsystem->CreateAndQueueAction<AAction_ScreenShake>(this,[this](AAction_ScreenShake* ScreenShakeAction)
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_ScreenShake>([this](AAction_ScreenShake* ScreenShakeAction)
 	{
 		ScreenShakeAction->Scale = FMath::Abs(EffectValue) * DamageScaleFactor; // 화면 흔들림의 스케일을 설정
 	}, ESpawnActorCollisionHandlingMethod::Undefined);
