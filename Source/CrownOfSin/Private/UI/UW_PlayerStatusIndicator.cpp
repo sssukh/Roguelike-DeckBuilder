@@ -46,7 +46,7 @@ void UUW_PlayerStatusIndicator::UpdateTooltipFromStatus(UStatusComponent* InStat
 
 	if (ToolTipsNum == 0) return;
 
-	COS_IF_CHECK(WBP_ToolTipClass, TEXT("WBP_ToolTipClass를 설정해주세요"));
+	COS_IF_CHECK_VOID(WBP_ToolTipClass, TEXT("WBP_ToolTipClass를 설정해주세요"));
 	if (ToolTipsNum == 1)
 	{
 		UUW_ToolTip* NewToolTip = CreateWidget<UUW_ToolTip>(GetWorld(), WBP_ToolTipClass);
@@ -58,7 +58,7 @@ void UUW_PlayerStatusIndicator::UpdateTooltipFromStatus(UStatusComponent* InStat
 	}
 
 	//ToolTipNum >1
-	COS_IF_CHECK(WBP_ToolTipListClass, TEXT("WBP_ToolTipListClass를 설정해주세요"));
+	COS_IF_CHECK_VOID(WBP_ToolTipListClass, TEXT("WBP_ToolTipListClass를 설정해주세요"));
 	UUW_ToolTipList* NewToolTipList = CreateWidget<UUW_ToolTipList>(GetWorld(), WBP_ToolTipListClass);
 	SetToolTip(NewToolTipList);
 	for (const FToolTipValue& Tooltip : InStatus->Tooltips)

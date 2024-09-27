@@ -48,10 +48,10 @@ FName UFunctionLibrary_Utility::GenerateUniqueObjectName(UObject* Outer, UClass*
 bool UFunctionLibrary_Utility::CheckObjectImplementsInterface(const UObject* WorldContextObject, UObject* Object, TSubclassOf<UInterface> InterfaceClass)
 {
 	// 객체가 nullptr인지 확인
-	COS_IF_CHECK(Object != nullptr, TEXT("객체가 nullptr입니다."), false);
+	COS_IF_CHECK_RETURN(Object != nullptr, TEXT("객체가 nullptr입니다."), false);
 
 	// 인터페이스 클래스가 nullptr인지 확인
-	COS_IF_CHECK(InterfaceClass != nullptr, TEXT("인터페이스 클래스가 nullptr입니다."), false);
+	COS_IF_CHECK_RETURN(InterfaceClass != nullptr, TEXT("인터페이스 클래스가 nullptr입니다."), false);
 
 	// 객체가 인터페이스를 구현하고 있는지 확인
 	if (Object->GetClass()->ImplementsInterface(InterfaceClass))

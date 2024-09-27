@@ -44,7 +44,7 @@ void UUW_TargetingBezier::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
-	COS_IF_CHECK(WBP_TargetingBezierPointClass, TEXT("UUW_TargetingBezier 에서 WBP_TargetingBezierPointClass를 설정해주세요"));
+	COS_IF_CHECK_VOID(WBP_TargetingBezierPointClass, TEXT("UUW_TargetingBezier 에서 WBP_TargetingBezierPointClass를 설정해주세요"));
 
 	// 기존의 BezierPoints 배열을 비웁니다.
 	BezierPoints.Empty();

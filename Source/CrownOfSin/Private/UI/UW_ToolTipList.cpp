@@ -20,7 +20,7 @@ UUW_ToolTipList::UUW_ToolTipList(const FObjectInitializer& ObjectInitializer) : 
 
 void UUW_ToolTipList::AddToolTipFromData(const FDataTableRowHandle& ToolTipData, int32 Value)
 {
-	COS_IF_CHECK(WBP_ToolTipClass, TEXT("UUW_ToolTipList에서 WBP_ToolTipClass를 설정해주세요."))
+	COS_IF_CHECK_VOID(WBP_ToolTipClass, TEXT("UUW_ToolTipList에서 WBP_ToolTipClass를 설정해주세요."))
 
 	if (UUW_ToolTip* NewToolTip = CreateWidget<UUW_ToolTip>(GetWorld(), WBP_ToolTipClass))
 	{

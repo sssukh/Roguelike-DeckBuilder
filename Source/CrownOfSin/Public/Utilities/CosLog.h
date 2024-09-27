@@ -20,7 +20,6 @@ CROWNOFSIN_API DECLARE_LOG_CATEGORY_EXTERN(COS_LOG, Log, All); //추가
 #define	COS_SCREEN_T(Time, Format, ...) GEngine->AddOnScreenDebugMessage(-1, Time, FColor::Red, FString::Printf(TEXT(Format), ##__VA_ARGS__))
 
 
-
 #define COS_LOG_SCREEN(Format, ...) \
 { \
 GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(Format, ##__VA_ARGS__)); \
@@ -36,4 +35,24 @@ COS_LOG_ERROR(Format, ##__VA_ARGS__); \
 
 
 #define COS_CHECK(Expr, ...) {if(!(Expr)) {LOG(Error, TEXT("ASSERTION : %s"), TEXT("'"#Expr"'")); return __VA_ARGS__;}}
-#define COS_IF_CHECK(Expr, ErrorMsg, ...) {if(!(Expr)) {COS_LOG_SCREEN_ERROR(ErrorMsg); return __VA_ARGS__;}}
+// #define COS_IF_CHECK(Expr, ErrorMsg, ...) {if(!(Expr)) {COS_LOG_SCREEN_ERROR(ErrorMsg); return __VA_ARGS__;}}
+
+
+#define COS_IF_CHECK_RETURN(Expr, ErrorMsg, ReturnValue, ...) \
+{ \
+if (!(Expr)) \
+{ \
+COS_LOG_SCREEN_ERROR(ErrorMsg, ##__VA_ARGS__); \
+return ReturnValue; \
+} \
+}
+
+
+#define COS_IF_CHECK_VOID(Expr, ErrorMsg, ...) \
+{ \
+if (!(Expr)) \
+{ \
+COS_LOG_SCREEN_ERROR(ErrorMsg, ##__VA_ARGS__); \
+return; \
+} \
+}

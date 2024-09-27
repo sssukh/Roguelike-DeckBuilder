@@ -34,7 +34,7 @@ void UUW_Card::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
-	COS_IF_CHECK(CardVisualClass, TEXT("UW Card에서 CardVisualClass를 설정해주세요."));
+	COS_IF_CHECK_VOID(CardVisualClass, TEXT("UW Card에서 CardVisualClass를 설정해주세요."));
 
 	if (IsValid(CardActor))
 	{
@@ -53,7 +53,7 @@ void UUW_Card::NativeConstruct()
 	Super::NativeConstruct();
 
 	// CardActor가 유효하지 않으면 초기화 작업을 중단
-	COS_IF_CHECK(CardActor, TEXT("CardActor가 유효하지 않습니다."));
+	COS_IF_CHECK_VOID(CardActor, TEXT("CardActor가 유효하지 않습니다."));
 
 	// 카드 UI 위젯 업데이트
 	IInterface_CardWidget::Execute_UpdateCardWidget(CardVisual, CardActor);
@@ -175,79 +175,78 @@ void UUW_Card::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 
 FReply UUW_Card::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	 return FReply::Handled();
-	// // 카드 잡기 이벤트 브로드캐스트
-	// if (OnCardWidgetEvent.IsBound())
-	// {
-	// 	OnCardWidgetEvent.Broadcast(CosGameTags::Event_Card_Grab, this);
-	// }
-	//
-	// // 카드가 마우스 오버 상태이고, 선택 모드가 아닌 경우
-	// if (CardState == ECardState::MouseOver && !HandReference->bSelectionMode && HandReference->bEnabled)
-	// {
-	// 	ATurnManager* TurnManager = Cast<ATurnManager>(UGameplayStatics::GetActorOfClass(this, ATurnManager::StaticClass()));
-	//
-	// 	// 전투가 종료된 경우 카드 내려놓기 이벤트 처리
-	// 	if (TurnManager->bCombatOver)
-	// 	{
-	// 		if (OnCardWidgetEvent.IsBound())
-	// 		{
-	// 			OnCardWidgetEvent.Broadcast(CosGameTags::Event_Card_Drop, this);
-	// 		}
-	// 		return FReply::Handled();
-	// 	}
-	//
-	// 	// 마우스 릴리스 이벤트 바인딩
-	// 	BindToMouseRelease();
-	// 	HandReference->HeldCard = this;
-	// 	bHovering = false;
-	//
-	// 	// 카드의 Z-Order 설정
-	// 	if (UCanvasPanelSlot* CanvasPanelSlot = Cast<UCanvasPanelSlot>(Slot))
-	// 	{
-	// 		CanvasPanelSlot->SetZOrder(HoverZOrder);
-	// 	}
-	//
-	// 	WBP_TooltipList->SetVisibility(ESlateVisibility::Collapsed);
-	//
-	// 	// 카드가 타겟팅 상태가 아니라면
-	// 	if (!CardActor->GetCardTargeted(ECardDataType::Hand))
-	// 	{
-	// 		// 카드 상태를 마우스 추적 모드로 전환
-	// 		CardState = ECardState::FollowMouse;
-	// 		return FReply::Handled();
-	// 	}
-	//
-	// 	FString FailMessage;
-	// 	bool bPlayable = CardActor->CheckIfPlayable(FailMessage);
-	//
-	// 	// 카드가 손에 있고 플레이 가능할 경우 타겟팅 모드 활성화
-	// 	if (CardActor->IsInHand() && bPlayable)
-	// 	{
-	// 		CardState = ECardState::Targeting;
-	// 		FVector2D SourcePoint = GetRenderTransform().Translation + FVector2D(0, -170.0f);
-	// 		IInterface_TargetArrow::Execute_UpdateTargetArrow(TargetArrowReference, true, FLinearColor::White, true, SourcePoint, false);
-	// 		return FReply::Handled();
-	// 	}
-	//
-	// 	// 실패 메시지와 함께 카드 내려놓기 이벤트 처리
-	// 	UFunctionLibrary_Utility::SendScreenLogMessage(this, FText::FromString(FailMessage), FColor(1, 0, 0));
-	// 	if (OnCardWidgetEvent.IsBound())
-	// 	{
-	// 		OnCardWidgetEvent.Broadcast(CosGameTags::Event_Card_Drop, this);
-	// 	}
-	//
-	// 	ReturnCardToHand();
-	// 	return FReply::Handled();
-	// }
-	//
-	//
-	// // 그 외의 경우 카드 내려놓기 이벤트 처리
-	// if (OnCardWidgetEvent.IsBound())
-	// {
-	// 	OnCardWidgetEvent.Broadcast(CosGameTags::Event_Card_Drop, this);
-	// }
-	// return FReply::Handled();
+	// 카드 잡기 이벤트 브로드캐스트
+	if (OnCardWidgetEvent.IsBound())
+	{
+		OnCardWidgetEvent.Broadcast(CosGameTags::Event_Card_Grab, this);
+	}
+	
+	// 카드가 마우스 오버 상태이고, 선택 모드가 아닌 경우
+	if (CardState == ECardState::MouseOver && !HandReference->bSelectionMode && HandReference->bEnabled)
+	{
+		ATurnManager* TurnManager = Cast<ATurnManager>(UGameplayStatics::GetActorOfClass(this, ATurnManager::StaticClass()));
+	
+		// 전투가 종료된 경우 카드 내려놓기 이벤트 처리
+		if (TurnManager->bCombatOver)
+		{
+			if (OnCardWidgetEvent.IsBound())
+			{
+				OnCardWidgetEvent.Broadcast(CosGameTags::Event_Card_Drop, this);
+			}
+			return FReply::Handled();
+		}
+	
+		// 마우스 릴리스 이벤트 바인딩
+		BindToMouseRelease();
+		HandReference->HeldCard = this;
+		bHovering = false;
+	
+		// 카드의 Z-Order 설정
+		if (UCanvasPanelSlot* CanvasPanelSlot = Cast<UCanvasPanelSlot>(Slot))
+		{
+			CanvasPanelSlot->SetZOrder(HoverZOrder);
+		}
+	
+		WBP_TooltipList->SetVisibility(ESlateVisibility::Collapsed);
+	
+		// 카드가 타겟팅 상태가 아니라면
+		if (!CardActor->GetCardTargeted(ECardDataType::Hand))
+		{
+			// 카드 상태를 마우스 추적 모드로 전환
+			CardState = ECardState::FollowMouse;
+			return FReply::Handled();
+		}
+	
+		FString FailMessage;
+		bool bPlayable = CardActor->CheckIfPlayable(FailMessage);
+	
+		// 카드가 손에 있고 플레이 가능할 경우 타겟팅 모드 활성화
+		if (CardActor->IsInHand() && bPlayable)
+		{
+			CardState = ECardState::Targeting;
+			FVector2D SourcePoint = GetRenderTransform().Translation + FVector2D(0, -170.0f);
+			IInterface_TargetArrow::Execute_UpdateTargetArrow(TargetArrowReference, true, FLinearColor::White, true, SourcePoint, false);
+			return FReply::Handled();
+		}
+	
+		// 실패 메시지와 함께 카드 내려놓기 이벤트 처리
+		UFunctionLibrary_Utility::SendScreenLogMessage(this, FText::FromString(FailMessage), FColor(1, 0, 0));
+		if (OnCardWidgetEvent.IsBound())
+		{
+			OnCardWidgetEvent.Broadcast(CosGameTags::Event_Card_Drop, this);
+		}
+	
+		ReturnCardToHand();
+		return FReply::Handled();
+	}
+	
+	
+	// 그 외의 경우 카드 내려놓기 이벤트 처리
+	if (OnCardWidgetEvent.IsBound())
+	{
+		OnCardWidgetEvent.Broadcast(CosGameTags::Event_Card_Drop, this);
+	}
+	return FReply::Handled();
 }
 
 void UUW_Card::MoveOnMouseOver()

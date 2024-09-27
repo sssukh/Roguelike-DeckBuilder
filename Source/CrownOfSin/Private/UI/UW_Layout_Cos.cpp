@@ -83,7 +83,7 @@ void UUW_Layout_Cos::NativeConstruct()
 
 		// 카드 플레이어 찾기 및 유효성 검사
 		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
-		COS_IF_CHECK(CardPlayer, TEXT("CardPlayer를 월드에서 찾지 못했습니다."));
+		COS_IF_CHECK_VOID(CardPlayer, TEXT("CardPlayer를 월드에서 찾지 못했습니다."));
 
 		// 플레이어 상태 표시 위젯들 초기화
 		TArray<UUserWidget*> StatusWidgets;
@@ -245,7 +245,7 @@ void UUW_Layout_Cos::OnClicked_EndTurnButton()
 
 	// 카드 플레이어를 가져와 유효성 검사 후 턴 종료 이벤트 호출
 	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
-	COS_IF_CHECK(CardPlayer, TEXT("CardPlayer를 찾을 수 없습니다."));
+	COS_IF_CHECK_VOID(CardPlayer, TEXT("CardPlayer를 찾을 수 없습니다."));
 
 	// 턴 종료 이벤트 호출
 	CardPlayer->DispatcherHubLocalComponent->CallEvent(CosGameTags::Event_TurnEnd, CardPlayer);
@@ -309,7 +309,7 @@ void UUW_Layout_Cos::InitializeStoryEncounter_Implementation(FDataTableRowHandle
 
 	// 게임 인스턴스 유효성 검사 및 가져오기
 	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetCardGameInstance(this);
-	COS_IF_CHECK(CardGameInstance, TEXT("GameInstance는 UInterface_CardGameInstance를 상속받지 않았습니다"));
+	COS_IF_CHECK_VOID(CardGameInstance, TEXT("GameInstance는 UInterface_CardGameInstance를 상속받지 않았습니다"));
 	
 	if (!IsValid(EncounterData.DataTable))
 	{
@@ -328,7 +328,7 @@ void UUW_Layout_Cos::InitializeStoryEncounter_Implementation(FDataTableRowHandle
 	UUserWidget* NewStoryEncounter = CreateWidget<UUserWidget>(StoryEncounterBox, StoryEncounter->EncounterWidget);
 	StoryEncounterBox->AddChild(NewStoryEncounter);
 
-	COS_IF_CHECK(NewStoryEncounter->GetClass()->ImplementsInterface(UInterface_StoryEncounter::StaticClass()), TEXT("StoryWidget이 UInterface_StoryEncounter를 상속받지 않았습니다"));
+	COS_IF_CHECK_VOID(NewStoryEncounter->GetClass()->ImplementsInterface(UInterface_StoryEncounter::StaticClass()), TEXT("StoryWidget이 UInterface_StoryEncounter를 상속받지 않았습니다"));
 
 	// 스토리 인카운터 초기화 함수 호출
 	IInterface_StoryEncounter::Execute_InitializeStoryEncounter(NewStoryEncounter, EncounterData, bIsFirstScreen);

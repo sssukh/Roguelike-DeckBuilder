@@ -62,22 +62,26 @@ void UStatus_AttackPattern::BeginPlay()
 
 void UStatus_AttackPattern::HandleRunEvent()
 {
+	if (!IsValid(NextCard))
+	{
+		return; // 카드가 유효하지 않으면 처리 종료
+	}
+
 	// 카드에 로컬 이벤트 발생
 	NextCard->CallLocalEventOnCard(CosGameTags::Event_Card_GenerateCard, ECallGlobal::CallAfter);
 
-	// 외형 변경 여부 확인
+	// 외형이 변경되었는지 확인
 	bAppearanceChanged = HasAppearanceChanged();
 
-	// 카드의 아이콘, 색상 틴트, 반복 횟수 업데이트
+	// 카드의 속성 업데이트
 	Icon = NextCard->GetCardPortrait(ECardDataType::Base);
 	Tint = NextCard->GetCardFrameTint(ECardDataType::Base).GetSpecifiedColor();
 	LastCardRepetitions = NextCard->GetCardRepetitions(ECardDataType::Hand);
 
-
-	// 툴팁 업데이트
+	// 툴팁 정보 업데이트
 	UpdateTooltipsFromCard(NextCard);
 
-	// 카드 타입이 공격이면 상태값과 텍스트 정렬 업데이트
+	// 카드가 공격 타입일 경우 상태 값과 텍스트 정렬을 업데이트
 	if (NextCard->CardType == CosGameTags::Effect_Attack)
 	{
 		NextCard->GetCardEffectValue(FGameplayTagContainer(), FGameplayTagContainer(CosGameTags::Effect_Attack), ECardDataType::Hand, StatusValue);
@@ -88,7 +92,7 @@ void UStatus_AttackPattern::HandleRunEvent()
 		TextAlignment = EStatusTextAlignment::None;
 	}
 
-	// 턴 시작, 상태값 변화, 또는 외형 변화 시 상태 수정 액션 큐에 추가
+	// 상태값이 변했거나 외형이 바뀌었을 경우 상태 수정 액션 큐에 추가
 	if (CurrentEventTag == CosGameTags::Event_TurnStart || StatusValue != LastDisplayedStatusValue || bAppearanceChanged)
 	{
 		// 지연 큐에 추가
@@ -99,6 +103,7 @@ void UStatus_AttackPattern::HandleRunEvent()
 		ActionManagerSubsystem->CreateAndQueueAction<AAction_ModifyStatus>([&](AAction_ModifyStatus* ModifyStatusAction)
 		{
 			ModifyStatusAction->NewValue = StatusValue;
+			ModifyStatusAction->StatusReference = this;
 			ModifyStatusAction->bShowSplashIcon = false;
 			ModifyStatusAction->bShowSplashNumber = false;
 			ModifyStatusAction->bRefreshAppearance = true;
@@ -106,21 +111,20 @@ void UStatus_AttackPattern::HandleRunEvent()
 			ModifyStatusAction->EndDelay = -1.0f;
 
 			// 상태값과 카드 반복 횟수를 텍스트로 변환
-			FString StatusString = FString::Printf(TEXT("%d"), StatusValue);
-			FString RepetitionString = FString::Printf(TEXT("%d"), LastCardRepetitions + 1);
+			FString StatusText = FString::Printf(TEXT("%d"), StatusValue);
+			FString RepetitionText = FString::Printf(TEXT("%d"), LastCardRepetitions + 1);
 
 			// "상태값 x 반복횟수" 형식의 텍스트 생성
-			FString CombinedText = FString::Printf(TEXT("%s x %s"), *StatusString, *RepetitionString);
-			FText TooltipText = FText::AsCultureInvariant(CombinedText);
+			FString CombinedText = FString::Printf(TEXT("%s x %s"), *StatusText, *RepetitionText);
+			FText FinalTooltipText = FText::AsCultureInvariant(CombinedText);
 
-			// 반복 횟수가 0보다 큰 경우에만 툴팁 텍스트 표시
-			FText FinalText = LastCardRepetitions > 0 ? TooltipText : FText::FromString(TEXT(""));
-
-			// 카드가 공격 타입일 때만 텍스트 오버라이드 설정
-			ModifyStatusAction->TextOverride = NextCard->CardType == CosGameTags::Effect_Attack ? FinalText : FText::FromString(TEXT(""));
+			// 반복 횟수가 0보다 큰 경우 툴팁 텍스트 표시, 그렇지 않으면 빈 문자열
+			ModifyStatusAction->TextOverride = (LastCardRepetitions > 0 && NextCard->CardType == CosGameTags::Effect_Attack)
+				                                   ? FinalTooltipText
+				                                   : FText::FromString(TEXT(""));
 		});
 
-		// 마지막으로 표시된 상태값 업데이트
+		// 마지막으로 표시된 상태 값을 업데이트
 		LastDisplayedStatusValue = StatusValue;
 	}
 }

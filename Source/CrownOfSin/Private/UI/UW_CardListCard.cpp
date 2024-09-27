@@ -48,7 +48,7 @@ void UUW_CardListCard::NativeConstruct()
 UUserWidget* UUW_CardListCard::SetCardVisualWidget(ACardBase* InCardActor)
 {
 	// 카드 시각적 위젯 클래스가 설정되지 않았을 경우 오류 처리
-	COS_IF_CHECK(CardVisualClass, TEXT("UUW_CardListCard에서 CardVisualClass를 설정해주세요"), nullptr);
+	COS_IF_CHECK_RETURN(CardVisualClass, TEXT("UUW_CardListCard에서 CardVisualClass를 설정해주세요"), nullptr);
 
 	// 입력받은 카드 액터를 멤버 변수에 저장
 	CardActor = InCardActor;

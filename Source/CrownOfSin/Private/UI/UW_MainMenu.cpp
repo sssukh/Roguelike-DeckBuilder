@@ -22,7 +22,7 @@ void UUW_MainMenu::NativeConstruct()
 	Super::NativeConstruct();
 
 	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetCardGameInstance(this);
-	COS_IF_CHECK(CardGameInstance, TEXT("Game Instacne에서 UInterface_CardGameInstance를 상속시켜 재정의 해주세요."));
+	COS_IF_CHECK_VOID(CardGameInstance, TEXT("Game Instacne에서 UInterface_CardGameInstance를 상속시켜 재정의 해주세요."));
 
 	// 저장된 게임 데이터를 로드하려고 시도합니다.
 	const bool bLoadSuccess = IInterface_CardGameInstance::Execute_AttemptLoadGame(CardGameInstance, CurrentRunName, false);

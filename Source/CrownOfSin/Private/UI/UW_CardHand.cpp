@@ -132,8 +132,8 @@ void UUW_CardHand::HideCardsInHand()
 UUW_Card* UUW_CardHand::CreateAndSetupCardWidget(ACardBase* CardActor, const FWidgetTransform& StartTransform, bool bAddToHand)
 {
 	// 카드 클래스와 카드 시각화 클래스가 설정되지 않은 경우 오류 처리
-	COS_IF_CHECK(WBP_CardClass, TEXT("UUW_CardHand에서 WBP_CardClass를 설정해주세요"), nullptr);
-	COS_IF_CHECK(WBP_CardVisualClass, TEXT("UUW_CardHand에서 WBP_CardVisualClass를 설정해주세요"), nullptr);
+	COS_IF_CHECK_RETURN(WBP_CardClass, TEXT("UUW_CardHand에서 WBP_CardClass를 설정해주세요"), nullptr);
+	COS_IF_CHECK_RETURN(WBP_CardVisualClass, TEXT("UUW_CardHand에서 WBP_CardVisualClass를 설정해주세요"), nullptr);
 
 	// 카드 위젯을 생성하고 초기화
 	UUW_Card* NewCardWidget = CreateWidget<UUW_Card>(GetWorld(), WBP_CardClass);

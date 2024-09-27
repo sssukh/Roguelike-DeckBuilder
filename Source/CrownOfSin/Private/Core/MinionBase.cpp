@@ -60,13 +60,14 @@ void AMinionBase::BeginPlay()
 		// 고유한 이름 생성 및 상태 컴포넌트 생성
 		FName UniqueName = UFunctionLibrary_Utility::GenerateUniqueObjectName(this, StartingStatusClass);
 		UStatusComponent* NewStatusComponent = NewObject<UStatusComponent>(this, StartingStatusClass, UniqueName);
-		NewStatusComponent->RegisterComponent();
 
 		// 컴포넌트의 초기 값 설정
 		NewStatusComponent->StatusValue = StatusValue;
 		NewStatusComponent->OwnerUiRef = AccessPuppetUI(StatusCDO->SlotType);
 		NewStatusComponent->GameplayTags = StatusCDO->GameplayTags;
 		NewStatusComponent->bShowImmediately = true;
+
+		NewStatusComponent->RegisterComponent();
 
 		// 컴포넌트를 액터에 등록
 		AddInstanceComponent(NewStatusComponent);
@@ -77,8 +78,8 @@ void AMinionBase::BeginPlay()
 	{
 		FName UniqueName = UFunctionLibrary_Utility::GenerateUniqueObjectName(this, MinionData.AttackPatternComponent);
 		UAttackPatternComponent* NewAttackPatternComponent = NewObject<UAttackPatternComponent>(this, MinionData.AttackPatternComponent, UniqueName);
-		NewAttackPatternComponent->RegisterComponent();
 		NewAttackPatternComponent->AttackPatternData = MinionData.AttackPatternData;
+		NewAttackPatternComponent->RegisterComponent();
 
 		// 공격 패턴 컴포넌트 액터에 등록
 		AddInstanceComponent(NewAttackPatternComponent);
@@ -191,13 +192,13 @@ int32 AMinionBase::AddToStatus_Implementation(TSubclassOf<UStatusComponent> InSt
 	{
 		FName UniqueName = UFunctionLibrary_Utility::GenerateUniqueObjectName(this, InStatusClass);
 		UStatusComponent* NewStatusComponent = NewObject<UStatusComponent>(this, InStatusClass, UniqueName);
-		NewStatusComponent->RegisterComponent();
 
 		NewStatusComponent->StatusValue = 0;
 		NewStatusComponent->OwnerUiRef = AccessPuppetUI(StatusClassCDO->SlotType);
 		NewStatusComponent->bShowImmediately = false;
 		NewStatusComponent->GameplayTags = FGameplayTagContainer();
 		AddInstanceComponent(NewStatusComponent);
+		NewStatusComponent->RegisterComponent();
 
 		return NewStatusComponent->AddStatusValue(InAmount, bIsShowSplash, bIsShowSplash, true, InPayLoad);
 	}

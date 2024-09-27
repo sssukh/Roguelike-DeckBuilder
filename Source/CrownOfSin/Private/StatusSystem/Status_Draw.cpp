@@ -52,7 +52,7 @@ void UStatus_Draw::BeginPlay()
 void UStatus_Draw::RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags)
 {
 	// 핸드 참조가 유효한지 확인
-	COS_IF_CHECK(PileHandReference, TEXT("PileHandReference가 유효하지 않습니다."));
+	COS_IF_CHECK_VOID(PileHandReference, TEXT("PileHandReference가 유효하지 않습니다."));
 
 	// 턴 시작 시 카드를 뽑음
 	if (EventTag == CosGameTags::Event_TurnStart)

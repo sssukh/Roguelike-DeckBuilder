@@ -40,7 +40,7 @@ void UUW_ArtifactRewardScreen::UpdateReward(UStatusComponent* InStatus)
 {
 	Artifact = InStatus;
 
-	COS_IF_CHECK(WBP_StatusIcon->GetClass()->ImplementsInterface(UInterface_StatusIcon::StaticClass()), TEXT("WBP_StatusIcon이 Interface_StatusIcon을 상속받지 않았습니다."));
+	COS_IF_CHECK_VOID(WBP_StatusIcon->GetClass()->ImplementsInterface(UInterface_StatusIcon::StaticClass()), TEXT("WBP_StatusIcon이 Interface_StatusIcon을 상속받지 않았습니다."));
 
 	IInterface_StatusIcon::Execute_InitStatusWidget(WBP_StatusIcon, Artifact, CosGameTags::StatusBar_RewardBar, true);
 

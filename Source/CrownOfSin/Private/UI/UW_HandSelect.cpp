@@ -23,7 +23,7 @@ void UUW_HandSelect::NativeConstruct()
 void UUW_HandSelect::InitializeEvent(int32 CardCount, UUW_CardHand* InSourceHand, const FGameplayTagContainer& InValidCardTags)
 {
 	// 카드 목록 위젯 클래스가 설정되어 있는지 확인
-	COS_IF_CHECK(WBP_CardListCardClass, TEXT("UUW_HandSelect클래스에서 WBP_CardListCardClass를 설정해주세요."));
+	COS_IF_CHECK_VOID(WBP_CardListCardClass, TEXT("UUW_HandSelect클래스에서 WBP_CardListCardClass를 설정해주세요."));
 
 	// 카드 수가 0 이하일 경우 함수를 종료
 	if (CardCount <= 0) return;

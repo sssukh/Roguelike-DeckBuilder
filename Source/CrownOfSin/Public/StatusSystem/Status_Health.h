@@ -1,5 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,7 +6,7 @@
 #include "Status_Health.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=("COS|Status"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UStatus_Health : public UStatusComponent
 {
 	GENERATED_BODY()

@@ -24,8 +24,9 @@ namespace AssetPath
 		const FString WBP_StatusIcon_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_StatusIcon.WBP_StatusIcon_C'");
 		const FString WBP_TargetingBezierPoint_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_TargetingBezierPoint.WBP_TargetingBezierPoint_C'");
 		const FString WBP_MinionUiTop_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_MinionUiTop.WBP_MinionUiTop_C'");
+		const FString WBP_MinionUI_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_MinionUI.WBP_MinionUI_C'");
 		
-		const FString WBP_MinionUiTop = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_MinionUiTop.WBP_MinionUiTop_C'");
+		
 
 		const FString WBP_CardVisual_C = TEXT("/Game/CrownOfSin/BluePrints/Widgets/WBP_CardVisual.WBP_CardVisual_C");
 		const FString WBP_CardListCard_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_CardListCard.WBP_CardListCard_C'");
@@ -42,6 +43,7 @@ namespace AssetPath
 		const FString T_Coins = TEXT("Texture2D'/Game/RLDB/Demo/Textures/UI/T_Coins.T_Coins'");
 		const FString T_LuchadorMask = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_LuchadorMask.T_LuchadorMask'");
 		const FString T_Dagger = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Dagger.T_Dagger'");
+		const FString T_Heart = TEXT("Texture2D'/Game/RLDB/Demo/Textures/UI/T_Heart.T_Heart'");
 	}
 
 	namespace DataTable

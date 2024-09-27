@@ -82,8 +82,8 @@ void ACardPlayer::BeginPlay()
 	Super::BeginPlay();
 
 
-	COS_IF_CHECK(DefaultIMC, TEXT("Card Player의 Default IMC를 설정해주세요!!"));
-	COS_IF_CHECK(WBP_LayoutClass, TEXT("Card Player의 WBP Layout CLass를 설정해주세요!!!!!"));
+	COS_IF_CHECK_VOID(DefaultIMC, TEXT("Card Player의 Default IMC를 설정해주세요!!"));
+	COS_IF_CHECK_VOID(WBP_LayoutClass, TEXT("Card Player의 WBP Layout CLass를 설정해주세요!!!!!"));
 	
 	 APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	UEnhancedInputLocalPlayerSubsystem* InputSubsystem = PlayerController->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();

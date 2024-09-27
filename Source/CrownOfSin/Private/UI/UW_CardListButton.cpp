@@ -91,7 +91,7 @@ void UUW_CardListButton::NativeConstruct()
 	Super::NativeConstruct();
 
 	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
-	COS_IF_CHECK(CardPlayer, TEXT("CardPlayer를 찾지 못했습니다."));
+	COS_IF_CHECK_VOID(CardPlayer, TEXT("CardPlayer를 찾지 못했습니다."));
 
 	PileReference = Cast<UPileComponent>(CardPlayer->GetComponentByClass(PileClass));
 

@@ -6,6 +6,7 @@
 #include "Interfaces/Interface_CardTarget.h"
 #include "Interfaces/Widget/Interface_StatusWidget.h"
 #include "Kismet/KismetStringLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetTextLibrary.h"
 #include "Libraries/AssetPath.h"
 #include "Libraries/FunctionLibrary_Event.h"
@@ -150,14 +151,21 @@ FStatusAppearance UStatusComponent::MakeAppearanceStruct()
 
 void UStatusComponent::GetAndSetMaxValues()
 {
-	if (!GetOwner()->Implements<UInterface_CardTarget>()) return;
+	AActor* OwnerReference = GetOwner();
+	FString OwnerName = UKismetSystemLibrary::GetDisplayName(OwnerReference);
 
-	MaxValue = StatusValue; // 상태 값을 최대 값으로 설정
+	// UInterface_CardTarget를 상속받지 않은 경우
+	COS_IF_CHECK_VOID(OwnerReference->Implements<UInterface_CardTarget>(), TEXT("%s 가 UInterface_CardTarget를 상속받지 않았습니다."), *OwnerName);
 
-	// 최대 값을 가져오는 데 실패한 경우 현재 상태 값을 최대 값으로 설정
-	if (!IInterface_CardTarget::Execute_GetStatusMax(GetOwner(), GetClass(), MaxValue))
+	int32 LocalMaxValue;
+	if (IInterface_CardTarget::Execute_GetStatusMax(OwnerReference, GetClass(), LocalMaxValue))
 	{
-		IInterface_CardTarget::Execute_SetStatusMax(GetOwner(), GetClass(), MaxValue); // 설정한 최대 값을 소유자에 반영
+		MaxValue = LocalMaxValue;
+	}
+	else
+	{
+		MaxValue = StatusValue;
+		IInterface_CardTarget::Execute_SetStatusMax(OwnerReference, GetClass(), MaxValue); // 설정한 최대 값을 소유자에 반영
 	}
 }
 
