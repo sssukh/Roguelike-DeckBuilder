@@ -20,11 +20,7 @@
 // Sets default values for this component's properties
 UTargetingComponent_Discover::UTargetingComponent_Discover()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	bRequiresInput = true;
 }
 
 bool UTargetingComponent_Discover::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)

@@ -61,12 +61,12 @@ void UUW_CardRewardScreen::ReturnReward(UUW_CardListCard* CardListCard, ACardBas
 	}
 
 	FTimerHandle DelayHandle;
-	GetWorld()->GetTimerManager().SetTimer(DelayHandle, FTimerDelegate::CreateLambda([&]()
+	GetWorld()->GetTimerManager().SetTimer(DelayHandle, FTimerDelegate::CreateLambda([&, CardActor]()
 	{
 		PlayAnimationReverse(FadeIn);
 
 		FTimerHandle DelayHandle2;
-		GetWorld()->GetTimerManager().SetTimer(DelayHandle2, FTimerDelegate::CreateLambda([&]()
+		GetWorld()->GetTimerManager().SetTimer(DelayHandle2, FTimerDelegate::CreateLambda([&, CardActor]()
 		{
 			SetVisibility(ESlateVisibility::Collapsed);
 			if (OnReturnSelectedCardInRewardScreen.IsBound())
@@ -76,5 +76,5 @@ void UUW_CardRewardScreen::ReturnReward(UUW_CardListCard* CardListCard, ACardBas
 		}), 0.1f, false);
 
 		GetWorld()->GetTimerManager().ClearTimer(DelayHandle);
-	}), 4.0f, false);
+	}), 0.4f, false);
 }

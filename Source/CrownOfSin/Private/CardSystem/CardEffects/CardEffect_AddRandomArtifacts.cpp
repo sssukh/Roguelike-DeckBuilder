@@ -39,7 +39,7 @@ bool UCardEffect_AddRandomArtifacts::ResolveCardEffect(AActor* TargetActor)
 
 	for (const FStatusData& PickedArtifact : PickedArtifacts)
 	{
-		IInterface_CardTarget::Execute_AddToStatus(CardPlayer, PickedArtifact.StatusClass, PickedArtifact.Value, true, this);
+		IInterface_CardTarget::Execute_AddToStatus(TargetActor, PickedArtifact.StatusClass, PickedArtifact.Value, true, this);
 	}
 
 	return true;

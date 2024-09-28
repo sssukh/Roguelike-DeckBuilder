@@ -18,7 +18,7 @@ UTargetingComponent_PayloadWithIdentifier::UTargetingComponent_PayloadWithIdenti
 bool UTargetingComponent_PayloadWithIdentifier::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
                                                                  const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
-	OutValidTargets.Reset();
+	TArray<AActor*> ValidTargets;
 	
 	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 
@@ -28,8 +28,9 @@ bool UTargetingComponent_PayloadWithIdentifier::FindValidTargets(TArray<AActor*>
 	{
 		if(AActor* Target = Cast<AActor>(Payload))
 		{
-			OutValidTargets.Add(Target);
+			ValidTargets.Add(Target);
 
+			OutValidTargets = ValidTargets;
 			return true;
 		}
 	}
