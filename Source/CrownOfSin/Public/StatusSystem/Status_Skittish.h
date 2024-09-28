@@ -1,26 +1,24 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "StatusComponent.h"
 #include "Status_Skittish.generated.h"
 
-
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+/*소유한 하수인은 매 턴마다 처음으로 피해를 입을 때 공포 중첩 1개를 얻습니다.*/
+UCLASS(ClassGroup=("COS|Status"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UStatus_Skittish : public UStatusComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UStatus_Skittish();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags) override;
+
+private:
+	bool bDoOnce = true;
 };

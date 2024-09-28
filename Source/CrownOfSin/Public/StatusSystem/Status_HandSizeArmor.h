@@ -1,23 +1,20 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
 #include "StatusComponent.h"
 #include "Status_HandSizeArmor.generated.h"
 
-
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+/*턴 종료 시 플레이어의 손에 남아 있는 카드 수만큼 소유자에게 방어구를 부여합니다.*/
+UCLASS(ClassGroup=("COS|Status"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UStatus_HandSizeArmor : public UStatusComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UStatus_HandSizeArmor();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 	
 public:

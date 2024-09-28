@@ -5,7 +5,7 @@
 #include "StatusComponent.h"
 #include "Status_Health.generated.h"
 
-
+/*0에 도달하면 소유자가 사망합니다.*/
 UCLASS(ClassGroup=("COS|Status"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UStatus_Health : public UStatusComponent
 {

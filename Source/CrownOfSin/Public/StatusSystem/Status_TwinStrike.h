@@ -1,26 +1,27 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
 #include "StatusComponent.h"
 #include "Status_TwinStrike.generated.h"
 
-/*ToDo:Cos*/
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+class ACardBase;
+/*다음에 사용되는 카드에 +X 반복을 추가합니다.*/
+UCLASS(ClassGroup=("COS|Status"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UStatus_TwinStrike : public UStatusComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UStatus_TwinStrike();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual  void RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags) override;
+
+public:
+	UPROPERTY(BlueprintReadWrite,Category="Status TwinStrike")
+	TObjectPtr<ACardBase> AffectedCard;
 };

@@ -1,26 +1,21 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "StatusComponent.h"
 #include "Status_DrawOnDiscard.generated.h"
 
-/*ToDo:Cos*/
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+/*플레이어가 적극적으로 카드를 버릴 때마다 카드 플레이어가 카드를 뽑게 만드는 상태입니다.*/
+UCLASS(ClassGroup=("COS|Status"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UStatus_DrawOnDiscard : public UStatusComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UStatus_DrawOnDiscard();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags) override;
 };

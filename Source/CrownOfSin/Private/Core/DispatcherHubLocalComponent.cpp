@@ -71,8 +71,7 @@ bool UDispatcherHubLocalComponent::ResolveCallEvent(FGameplayTag EventTag, UObje
 {
 	if (AlsoCallGlobal == ECallGlobal::OnlyLocal)
 	{
-		if (bEmpty)
-			return true;
+		if (bEmpty) return true;
 
 		return Super::ResolveCallEvent(EventTag, CallingObject, CallSpecificObject, AlsoCallGlobal, PayLoad, CallTags);
 	}
@@ -81,8 +80,7 @@ bool UDispatcherHubLocalComponent::ResolveCallEvent(FGameplayTag EventTag, UObje
 	{
 		GlobalDispatcherHubComponentRef->ResolveCallEvent(EventTag, CallingObject, CallSpecificObject, AlsoCallGlobal, PayLoad, CallTags);
 
-		if (bEmpty)
-			return true;
+		if (bEmpty) return true;
 
 		return Super::ResolveCallEvent(EventTag, CallingObject, CallSpecificObject, AlsoCallGlobal, PayLoad, CallTags);
 	}

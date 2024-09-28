@@ -41,14 +41,14 @@ public:
 
 	/* 상태 값(StatusValue)을 InAmount만큼 감소시키고, 시각적 효과를 처리합니다. */
 	UFUNCTION(BlueprintCallable, Category="Status Component|Status Management")
-	int32 SubtractStatusValue(int32 InAmount, bool bShowSplashNumber, bool bShowSplashIcon, UObject* Payload);
+	int32 SubtractStatusValue(int32 InAmount, bool bShowSplashNumber = false, bool bShowSplashIcon = false, UObject* Payload = nullptr);
 
 	/**
 	 * 상태 값을 InAmount로 설정하며, 현재 상태 값과 차이를 계산하여 그 차이만큼 상태 값을 변경합니다.
 	 * 시각적 효과가 필요할 경우 이를 처리합니다.
 	 */
 	UFUNCTION(BlueprintCallable, Category="Status Component|Status Management")
-	int32 SetStatusValue(int32 InAmount, bool bShowSplashNumber=false, bool bShowSplashIcon=false, UObject* Payload=nullptr);
+	int32 SetStatusValue(int32 InAmount, bool bShowSplashNumber = false, bool bShowSplashIcon = false, UObject* Payload = nullptr);
 
 	/**
 	 * 상태의 최대 값(MaxValue)을 설정하고, 현재 상태 값(StatusValue)을 새로운 최대 값에 맞춰 조정합니다.
@@ -146,7 +146,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category="Status Component")
 	bool bArtifact = false;
-	
+
 	/** 상태가 인터럽트되었는지 여부를 나타냅니다. */
 	UPROPERTY(BlueprintReadWrite, Category="Status Component")
 	bool bInterrupt = false;
@@ -218,7 +218,7 @@ public:
 	/** 상태 인디케이터 객체의 참조입니다. */
 	UPROPERTY(BlueprintReadWrite, Category="Status Component", meta=(ExposeOnSpawn="true"))
 	UObject* StatusIndicator;
-	
+
 
 	/** RetriggerAbleDelay 인스턴스입니다. 루프 가드를 위한 딜레이 처리를 담당합니다. */
 private:

@@ -30,7 +30,7 @@ ACardBase::ACardBase()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = false;
-	
+
 	GameplayTagComponent = CreateDefaultSubobject<UGameplayTagComponent>(TEXT("GameplayTagComponent"));
 	DispatcherHubLocal = CreateDefaultSubobject<UDispatcherHubLocalComponent>(TEXT("DispatcherHubLocal"));
 
@@ -858,6 +858,11 @@ FGameplayTag ACardBase::SetCardTypeFromTags()
 void ACardBase::SetCardEffects(ECardDataType InCardType, const TArray<FCardEffect>& NewCardEffects)
 {
 	GetCardByCardDataTypeRef(InCardType).CardEffects = NewCardEffects;
+}
+
+void ACardBase::SetCardRepetitions(ECardDataType InCardType, int32 NewRepetitions)
+{
+	GetCardByCardDataTypeRef(InCardType).Repetitions = NewRepetitions;
 }
 
 void ACardBase::SetCardUseRules(ECardDataType Pile, const TArray<FUseRule>& NewUseRules)

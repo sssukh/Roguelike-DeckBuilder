@@ -27,15 +27,13 @@ UStatus_AttackPattern::UStatus_AttackPattern(): LastCardRepetitions(0), LastDisp
 	bCanBeZero = true;
 
 	FriendlyName = FText::FromString(TEXT("Attack Nearest"));
-
-	//ToDo::COS
-	// Tooltips
-
+	
 	static ConstructorHelpers::FObjectFinder<UDataTable> DT_Tooltips_Statuses(*AssetPath::DataTable::DT_Tooltips_Statuses);
 	if (DT_Tooltips_Statuses.Succeeded())
 	{
 		FToolTipValue NewToolTip;
 		NewToolTip.ToolTipTable.DataTable = DT_Tooltips_Statuses.Object;
+		NewToolTip.ToolTipTable.RowName = FName(TEXT("Unknown"));
 		NewToolTip.bValued = true;
 		Tooltips.Add(NewToolTip);
 	}

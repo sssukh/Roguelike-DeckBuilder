@@ -16,7 +16,7 @@ UStatus_Mana::UStatus_Mana()
 	TextAlignment = EStatusTextAlignment::Center;
 	bCanBeZero = true;
 	FriendlyName = FText::FromString(TEXT("Mana"));
-	
+
 	// 툴팁 데이터 테이블 로딩
 	static ConstructorHelpers::FObjectFinder<UDataTable> DT_Tooltips_Statuses(*AssetPath::DataTable::DT_Tooltips_Statuses);
 	if (DT_Tooltips_Statuses.Succeeded())
@@ -24,13 +24,13 @@ UStatus_Mana::UStatus_Mana()
 		FToolTipValue NewToolTip;
 		NewToolTip.ToolTipTable.DataTable = DT_Tooltips_Statuses.Object;
 		NewToolTip.ToolTipTable.RowName = FName("Deck");
+		NewToolTip.bValued = false;
 		Tooltips.Add(NewToolTip);
 	}
 	else
 	{
 		COS_LOG_ERROR(TEXT("DT_Tooltips_Statuses 데이터 테이블을 로드하지 못했습니다."));
 	}
-
 }
 
 int32 UStatus_Mana::AddStatusValue(int32 InAmount, bool bShowSplashNumber, bool bShowSplashIcon, bool bRefreshAppearance, UObject* InPayload)

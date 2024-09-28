@@ -1,26 +1,23 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "StatusComponent.h"
 #include "Status_Barrier.generated.h"
 
-/*ToDo:Cos*/
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+
+/*소유한 미니언에 대한 공격으로 인한 피해를 무효화하고 보호막 효과 값을 1만큼 감소시킵니다.*/
+UCLASS(ClassGroup=("COS|Status"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UStatus_Barrier : public UStatusComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UStatus_Barrier();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags) override;
+
 };

@@ -1,26 +1,27 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
 #include "StatusComponent.h"
 #include "Status_Guarded.generated.h"
 
+class AMinionBase;
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+/*소유한 미니언은 같은 미니언 트랙에 다른 미니언이 남아 있는 한 절반의 피해를 입습니다.*/
+UCLASS(ClassGroup=("COS|Status"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UStatus_Guarded : public UStatusComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UStatus_Guarded();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags) override;
+public:
+	UPROPERTY(BlueprintReadWrite,Category="Status Guarded")
+	TObjectPtr<AMinionBase> OwningMinion;
 };

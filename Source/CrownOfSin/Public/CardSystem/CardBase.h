@@ -296,6 +296,9 @@ public:
 	/*카드의 특정 타입에 대해 새로운 카드 효과 리스트를 설정하는 함수.*/
 	UFUNCTION(BlueprintCallable, Category = "Card|Attributes")
 	void SetCardEffects(ECardDataType InCardType, const TArray<FCardEffect>& NewCardEffects);
+	
+	UFUNCTION(BlueprintCallable, Category = "Card|Attributes")
+	void SetCardRepetitions(ECardDataType InCardType, int32 NewRepetitions);
 
 	/*카드의 특정 더미에 대해 새로운 사용 규칙 리스트를 설정하는 함수.*/
 	UFUNCTION(BlueprintCallable, Category = "Card|Attributes")

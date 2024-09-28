@@ -15,9 +15,10 @@ namespace AssetPath
 		const FString BP_IconSplash_C = TEXT("Blueprint'/Game/CrownOfSin/BluePrints/UI/BP_IconSplash.BP_IconSplash_C'");
 		const FString BP_TextSplash_C = TEXT("Blueprint'/Game/CrownOfSin/BluePrints/UI/BP_TextSplash.BP_TextSplash_C'");
 
+
 		const FString WBP_COS_Layout_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_COS_Layout.WBP_COS_Layout_C'");
 		const FString WBP_ToolTip_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_Tooltip.WBP_Tooltip_C'");
-		
+
 		const FString WBP_ToolTipList_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_TooltipList.WBP_TooltipList_C'");
 
 		const FString WBP_ScreenFade_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_ScreenFade.WBP_ScreenFade_C'");
@@ -25,8 +26,7 @@ namespace AssetPath
 		const FString WBP_TargetingBezierPoint_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_TargetingBezierPoint.WBP_TargetingBezierPoint_C'");
 		const FString WBP_MinionUiTop_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_MinionUiTop.WBP_MinionUiTop_C'");
 		const FString WBP_MinionUI_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_MinionUI.WBP_MinionUI_C'");
-		
-		
+
 
 		const FString WBP_CardVisual_C = TEXT("/Game/CrownOfSin/BluePrints/Widgets/WBP_CardVisual.WBP_CardVisual_C");
 		const FString WBP_CardListCard_C = TEXT("WidgetBlueprint'/Game/CrownOfSin/BluePrints/Widgets/WBP_CardListCard.WBP_CardListCard_C'");
@@ -44,6 +44,23 @@ namespace AssetPath
 		const FString T_LuchadorMask = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_LuchadorMask.T_LuchadorMask'");
 		const FString T_Dagger = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Dagger.T_Dagger'");
 		const FString T_Heart = TEXT("Texture2D'/Game/RLDB/Demo/Textures/UI/T_Heart.T_Heart'");
+		const FString T_Shield_Metal = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Shield_Metal.T_Shield_Metal'");
+		const FString T_Barrier = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Barrier.T_Barrier'");
+		const FString T_Cursed = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Cursed.T_Cursed'");
+		const FString T_Owl = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Owl.T_Owl'");
+		const FString T_Fear = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Fear.T_Fear'");
+		const FString T_King = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_King.T_King'");
+
+		
+		const FString T_DiceShield = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_DiceShield.T_DiceShield'");
+		const FString T_Poison = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Poison.T_Poison'");		
+		const FString T_Skittish = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Skittish.T_Skittish'");
+		const FString T_Strength = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Strength.T_Strength'");
+		
+		const FString T_Venomous = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Venomous.T_Venomous'");
+	
+		
+		
 	}
 
 	namespace DataTable
@@ -71,9 +88,7 @@ namespace AssetPath
 	{
 		const FString Curve_Decelerate_Float = TEXT("CurveFloat'/Game/RLDB/Blueprints/Curves/Curve_Decelerate_Float.Curve_Decelerate_Float'");
 		const FString Curve_Parabel_Float = TEXT("CurveFloat'/Game/RLDB/Blueprints/Curves/Curve_Parabel_Float.Curve_Parabel_Float'");
-		
 	}
 
 	// 필요한 다른 에셋 경로도 유사하게 추가
 }
-

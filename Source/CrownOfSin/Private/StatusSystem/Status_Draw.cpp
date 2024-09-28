@@ -65,11 +65,6 @@ void UStatus_Draw::RunEvent_Implementation(const FGameplayTag& EventTag, UObject
 				PileHandReference->AttemptDraw();
 			}
 		}
-		else
-		{
-			// StatusValue가 0 이하일 경우 경고 로그 출력
-			COS_LOG_WARNING(TEXT("StatusValue가 0 이하입니다. 카드를 뽑을 수 없습니다."));
-		}
 	}
 	// 턴 종료 시 모든 카드를 버림
 	else if (EventTag == CosGameTags::Event_TurnEnd)
