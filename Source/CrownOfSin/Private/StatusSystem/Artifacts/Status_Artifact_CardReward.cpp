@@ -77,7 +77,7 @@ int32 UStatus_Artifact_CardReward::AddStatusValue(int32 InAmount, bool bShowSpla
 }
 
 bool UStatus_Artifact_CardReward::Interact_Implementation(const FGameplayTagContainer& Tags)
-{
+ {
 	// 'StatusBar_RewardBar' 태그를 가진 경우에만 실행
 	if (!Tags.HasTagExact(CosGameTags::StatusBar_RewardBar))
 		return false;

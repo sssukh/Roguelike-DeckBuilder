@@ -82,7 +82,8 @@ bool UUW_StatusBar::GetNumberOfVisibleRewards(int32& OutVisibleRewardCount)
 	OutVisibleRewardCount = NumVisibleRewards;
 
 	// 가시 상태의 아이콘이 하나라도 있으면 true를 반환, 아니면 false
-	return NumVisibleRewards > 0;
+	// return NumVisibleRewards > 0;
+	return true;
 }
 
 void UUW_StatusBar::InteractWithAllStatuses()

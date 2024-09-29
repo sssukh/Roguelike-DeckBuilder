@@ -132,7 +132,7 @@ void ACardBase::InitializeCardData()
 void ACardBase::SetupUseRuleComponents()
 {
 	// 1. 카드의 Hand 데이터 타입에서 사용 규칙을 가져옵니다.
-	TArray<FUseRule> UseRulesArray = GetCardUseRules(ECardDataType::Hand);
+	const TArray<FUseRule>& UseRulesArray = GetCardUseRules(ECardDataType::Hand);
 
 	// 2. 각 사용 규칙에 대해 컴포넌트를 생성하고 초기화합니다.
 	for (const FUseRule& UseRule : UseRulesArray)

@@ -83,13 +83,8 @@ void UMapEvent_Multi::RunRandomEvent(UMapEventComponent* MapEventComponent, cons
 	FDataTableRowHandle RandomEncounter;
 	MapEventComponent->ChooseRandomEncounter(MapEventStruct, RandomEncounter);
 
-	if (!RandomEncounter.IsNull())
-	{
+	
 		// 랜덤 이벤트 실행
 		MapEventComponent->RunMapEvent(RandomEncounter);
-	}
-	else
-	{
-		COS_LOG_ERROR(TEXT("무작위 만남 이벤트를 선택하지 못했습니다."));
-	}
+	
 }

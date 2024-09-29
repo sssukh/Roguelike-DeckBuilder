@@ -7,6 +7,7 @@
 #include "Core/GlobalDispatcherHub.h"
 #include "Interfaces/Interface_CardGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Libraries/AssetPath.h"
 #include "Libraries/FunctionLibrary_Card.h"
 #include "Libraries/FunctionLibrary_Event.h"
 #include "Libraries/FunctionLibrary_Utility.h"
@@ -19,15 +20,27 @@ UMapEvent_Treasure::UMapEvent_Treasure()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	
+
 	// ...
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_Cards_Rewards(*AssetPath::DataTable::DT_Cards_Rewards);
+	if (DT_Cards_Rewards.Succeeded())
+	{
+		RewardCardData.DataTable = DT_Cards_Rewards.Object;
+		RewardCardData.RowName = FName(TEXT("TreasureChest"));
+	}
+	else
+	{
+		COS_LOG_SCREEN_ERROR(TEXT("DT_Cards_Rewards 를 로드하지 못했습니다."));
+	}
 }
 
 FGameplayTagContainer UMapEvent_Treasure::GetEncounterTags(const FDataTableRowHandle& EncounterTags)
 {
-	FStoryEncounter* StoryEncounter = EncounterTags.DataTable->FindRow<FStoryEncounter>(EncounterTags.RowName,"FStoryEncounter in Treasure");
+	FStoryEncounter* StoryEncounter = EncounterTags.DataTable->FindRow<FStoryEncounter>(
+		EncounterTags.RowName, "FStoryEncounter in Treasure");
 
-	if(!StoryEncounter)
+	if (!StoryEncounter)
 	{
 		// 에러 처리
 		return FGameplayTagContainer();
@@ -37,54 +50,41 @@ FGameplayTagContainer UMapEvent_Treasure::GetEncounterTags(const FDataTableRowHa
 
 void UMapEvent_Treasure::RunMapEvent(FDataTableRowHandle EventData)
 {
-	// BP_Card 액터 생성
-	ACardBase* Card = GetWorld()->SpawnActorDeferred<ACardBase>(ACardBase::StaticClass(),FTransform::Identity,nullptr,nullptr,ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-	if(!Card)
-	{
-		COS_SCREEN(TEXT("MapEvent_Treasure : ACardBase 액터가 생성되지 않습니다."));
-		return;
-	}
+	
+	COS_IF_CHECK_VOID(!RewardCardData.IsNull(),TEXT("RewardCardData를 설정해주세요!!"));
+	
+	ACardBase* Card = GetWorld()->SpawnActorDeferred<ACardBase>(ACardBase::StaticClass(), FTransform::Identity, nullptr,
+	                                                            nullptr,
+	                                                            ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	
 	Card->CardDataDeck = UFunctionLibrary_Card::MakeCardStructFromCardData(RewardCardData);
 	Card->FinishSpawning(FTransform::Identity);
 
-	TArray<AActor*> Targets; 
-	Card->AttemptUseCard(Targets,false,false,false);
+	TArray<AActor*> Targets;
+	Card->AttemptUseCard(Targets, false, false, false);
 
-	
-	
-	
 	UGameInstance* gameInstance = UGameplayStatics::GetGameInstance(this);
-	if(!gameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
-	{
-		COS_SCREEN(TEXT("게임 인스턴스가 UInterface_CardGameInstance를 상속받지 않았습니다"));
-		return;
-	}
-	IInterface_CardGameInstance::Execute_AttemptSaveGame(gameInstance,"",true);
-
-	UFunctionLibrary_Event::BindEventToGlobalDispatcherHub(this,CosGameTags::Event_CloseRewardScreen);
+	IInterface_CardGameInstance::Execute_AttemptSaveGame(gameInstance, "", true);
+	UFunctionLibrary_Event::BindEventToGlobalDispatcherHub(this, CosGameTags::Event_CloseRewardScreen);
 }
 
 void UMapEvent_Treasure::RunEvent(FGameplayTag EventTag, UObject* CallingObject, bool bGlobal, UObject* Payload,
-	FGameplayTagContainer CallTags)
+                                  FGameplayTagContainer CallTags)
 {
-	if(EventTag != CosGameTags::Event_CloseRewardScreen)
+	if (EventTag != CosGameTags::Event_CloseRewardScreen)
 	{
 		return;
 	}
 
 	UGameInstance* gameInstance = UGameplayStatics::GetGameInstance(this);
-	if(!gameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
+	if (!gameInstance->GetClass()->ImplementsInterface(UInterface_CardGameInstance::StaticClass()))
 	{
 		COS_SCREEN(TEXT("게임 인스턴스가 UInterface_CardGameInstance를 상속받지 않았습니다"));
 		return;
 	}
-	IInterface_CardGameInstance::Execute_AttemptSaveGame(gameInstance,"",true);
+	IInterface_CardGameInstance::Execute_AttemptSaveGame(gameInstance, "", true);
 
 	// TODO:UnbindEventToGlobalDispatcherHub() 구현 필요
 
-	UFunctionLibrary_Event::UnBindEventFromGlobalDispatcherHub(this,CosGameTags::Event_CloseRewardScreen);
-
+	UFunctionLibrary_Event::UnBindEventFromGlobalDispatcherHub(this, CosGameTags::Event_CloseRewardScreen);
 }
-
-
-

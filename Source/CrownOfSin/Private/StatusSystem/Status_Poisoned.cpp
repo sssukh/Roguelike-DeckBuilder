@@ -125,8 +125,9 @@ void UStatus_Poisoned::RunEvent_Implementation(const FGameplayTag& EventTag, UOb
 						AActor* Puppet = IInterface_CardTarget::Execute_GetPuppet(CallingActor);
 
 						UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
-						ActionManagerSubsystem->CreateAndQueueAction<AAction_SimpleAnim>([](AAction_SimpleAnim* NewSimpleAnimAction)
+						ActionManagerSubsystem->CreateAndQueueAction<AAction_SimpleAnim>([&](AAction_SimpleAnim* NewSimpleAnimAction)
 						{
+							NewSimpleAnimAction->Puppet = Puppet;
 							NewSimpleAnimAction->Animation = CosGameTags::Anim_Flinch;
 							NewSimpleAnimAction->EndDelay = 1.5f;
 						});

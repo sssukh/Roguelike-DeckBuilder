@@ -21,9 +21,9 @@ public:
 
 	// Member Variables
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Action SimpleAnim")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Action SimpleAnim",meta=(ExposeOnSpawn="true"))
 	TObjectPtr<AActor> Puppet;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Action SimpleAnim")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Action SimpleAnim",meta=(ExposeOnSpawn="true"))
 	FGameplayTag Animation;
 };

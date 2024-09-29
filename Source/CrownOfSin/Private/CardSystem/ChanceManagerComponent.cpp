@@ -40,7 +40,7 @@ UChanceManagerComponent::UChanceManagerComponent()
 	{
 		COS_LOG_ERROR(TEXT("DT_Artifacts 를 로드하지 못했습니다."));
 	}
-	
+
 
 	DefaultArtifactRarityWeights.Add(CosGameTags::Rarity_Common, 1.0f);
 	DefaultArtifactRarityWeights.Add(CosGameTags::Rarity_Rare, 0.0f);
@@ -99,7 +99,8 @@ TArray<FStatusData> UChanceManagerComponent::GenerateAllArtifactsArray()
 	return AllArtifacts;
 }
 
-TArray<FGameplayTag> UChanceManagerComponent::GetRandomTagsByWeights(const TMap<FGameplayTag, float>& WeightedTags, int InAmount)
+TArray<FGameplayTag> UChanceManagerComponent::GetRandomTagsByWeights(const TMap<FGameplayTag, float>& WeightedTags,
+                                                                     int InAmount)
 {
 	// 가중치 값을 저장할 배열 생성
 	TArray<float> WeightValues;
@@ -129,7 +130,8 @@ TArray<FGameplayTag> UChanceManagerComponent::GetRandomTagsByWeights(const TMap<
 	return PickedTags;
 }
 
-bool UChanceManagerComponent::PickTagFromWeightAndWeightSum(TMap<FGameplayTag, float> WeightedTags, float TotalWeight, FGameplayTag& OutPickedTag)
+bool UChanceManagerComponent::PickTagFromWeightAndWeightSum(TMap<FGameplayTag, float> WeightedTags, float TotalWeight,
+                                                            FGameplayTag& OutPickedTag)
 {
 	// 기준값: 0과 가중치 총합 사이에서 랜덤 값 선택
 	float RandomWeight = FMath::FRandRange(0.0f, TotalWeight);
@@ -154,30 +156,39 @@ bool UChanceManagerComponent::PickTagFromWeightAndWeightSum(TMap<FGameplayTag, f
 	return false;
 }
 
-bool UChanceManagerComponent::FindPickedTagAmongFilteredCards(FGameplayTag PickedCardTag, TArray<FCard>& FilteredCards, bool bPreventDuplicates, FCard& OutPickedCard)
+bool UChanceManagerComponent::FindPickedTagAmongFilteredCards(FGameplayTag PickedCardTag, TArray<FCard>& FilteredCards,
+                                                              bool bPreventDuplicates, FCard& OutPickedCard)
 {
+	FCard LocalPickedCard;
+
 	// 필터링된 카드 목록을 뒤에서부터 순회
 	for (int i = FilteredCards.Num() - 1; i >= 0; --i)
 	{
 		// 현재 카드가 선택된 태그를 가지고 있는지 확인
 		if (FilteredCards[i].CardTags.HasTagExact(PickedCardTag))
 		{
+			LocalPickedCard =FilteredCards[i];
+
 			// 중복 방지를 활성화한 경우, 카드를 목록에서 제거
 			if (bPreventDuplicates)
 			{
 				FilteredCards.RemoveAt(i);
 			}
-
-			OutPickedCard = FilteredCards[i]; // 찾은 카드를 출력 변수에 할당
+			
+			OutPickedCard = LocalPickedCard;
 			return true; // 성공적으로 카드를 찾았음을 반환
 		}
 	}
 
 	// 해당 태그를 가진 카드를 찾지 못한 경우 false 반환
+	OutPickedCard = LocalPickedCard;
 	return false;
 }
 
-bool UChanceManagerComponent::FindPickedTagAmongFilteredArtifacts(FGameplayTag PickedTag, TArray<FStatusData>& FilteredArtifacts, bool bPreventDuplicates, FStatusData& OutPickedArtifact)
+bool UChanceManagerComponent::FindPickedTagAmongFilteredArtifacts(FGameplayTag PickedTag,
+                                                                  TArray<FStatusData>& FilteredArtifacts,
+                                                                  bool bPreventDuplicates,
+                                                                  FStatusData& OutPickedArtifact)
 {
 	// 인덱스를 초기화
 	int32 Index = 0;
@@ -208,7 +219,8 @@ bool UChanceManagerComponent::FindPickedTagAmongFilteredArtifacts(FGameplayTag P
 	return false;
 }
 
-TArray<FCard> UChanceManagerComponent::GetFilteredCardsWithAllTags(FGameplayTagContainer Filter, const TArray<FCard>& Cards, bool bExactMatch)
+TArray<FCard> UChanceManagerComponent::GetFilteredCardsWithAllTags(FGameplayTagContainer Filter,
+                                                                   const TArray<FCard>& Cards, bool bExactMatch)
 {
 	// 필터링된 카드를 저장할 배열
 	TArray<FCard> FilteredCards;
@@ -227,7 +239,8 @@ TArray<FCard> UChanceManagerComponent::GetFilteredCardsWithAllTags(FGameplayTagC
 	return FilteredCards;
 }
 
-TArray<FCard> UChanceManagerComponent::GetFilteredCardsWithAnyTag(FGameplayTagContainer Filter, const TArray<FCard>& Cards, bool bExactMatch)
+TArray<FCard> UChanceManagerComponent::GetFilteredCardsWithAnyTag(FGameplayTagContainer Filter,
+                                                                  const TArray<FCard>& Cards, bool bExactMatch)
 {
 	// 필터링된 카드를 저장할 배열
 	TArray<FCard> FilteredCards;
@@ -246,7 +259,9 @@ TArray<FCard> UChanceManagerComponent::GetFilteredCardsWithAnyTag(FGameplayTagCo
 	return FilteredCards;
 }
 
-TArray<FCard> UChanceManagerComponent::GetRandomCardsByTagWeights(TMap<FGameplayTag, float> TagWeights, FGameplayTagContainer PossibleTags, FGameplayTagContainer RequiredTags,
+TArray<FCard> UChanceManagerComponent::GetRandomCardsByTagWeights(TMap<FGameplayTag, float> TagWeights,
+                                                                  FGameplayTagContainer PossibleTags,
+                                                                  FGameplayTagContainer RequiredTags,
                                                                   bool bExactMatch, int32 InAmount)
 {
 	// 전체 카드 목록에서 필터링된 카드 목록 생성
@@ -275,7 +290,8 @@ TArray<FCard> UChanceManagerComponent::GetRandomCardsByTagWeights(TMap<FGameplay
 	return HandleNoFilteredCards(InAmount);
 }
 
-TArray<FCard> UChanceManagerComponent::GetRandomFilteredCards(int32 InAmount, FGameplayTagContainer PossibleTags, FGameplayTagContainer RequiredTags, bool bExactMatch)
+TArray<FCard> UChanceManagerComponent::GetRandomFilteredCards(int32 InAmount, FGameplayTagContainer PossibleTags,
+                                                              FGameplayTagContainer RequiredTags, bool bExactMatch)
 {
 	// 빈 가중치 맵을 정의하여 가중치 없이 무작위 선택을 처리
 	TMap<FGameplayTag, float> NoWeights;
@@ -293,7 +309,8 @@ TArray<FCard> UChanceManagerComponent::GetTrueRandomCardsOfAnyRarity(int32 InAmo
 	FGameplayTag RarityTag = CosGameTags::Rarity;
 
 	// 주어진 수량만큼 무작위로 필터링된 카드를 가져옴 (희귀도 태그로 필터링)
-	TArray<FCard> RandomCards = GetRandomFilteredCards(InAmount, FGameplayTagContainer(), FGameplayTagContainer(RarityTag), false);
+	TArray<FCard> RandomCards = GetRandomFilteredCards(InAmount, FGameplayTagContainer(),
+	                                                   FGameplayTagContainer(RarityTag), false);
 
 	// 선택할 카드 수가 0 이하인 경우 기본 카드 한 장을 반환
 	if (InAmount <= 0)
@@ -330,7 +347,8 @@ TArray<FStatusData> UChanceManagerComponent::GetRemainingArtifacts()
 	}
 
 	// 게임 인스턴스에서 이미 획득한 아티팩트 리스트를 가져옵니다.
-	const TArray<FStatusData>& AcquiredArtifacts = IInterface_CardGameInstance::Execute_GetArtifactsFromInstance(CardGameInstance);
+	const TArray<FStatusData>& AcquiredArtifacts = IInterface_CardGameInstance::Execute_GetArtifactsFromInstance(
+		CardGameInstance);
 
 	// 이미 획득한 아티팩트를 '모든 아티팩트' 리스트에서 제거합니다.
 	for (const FStatusData& AcquiredArtifact : AcquiredArtifacts)
@@ -349,7 +367,9 @@ TArray<FStatusData> UChanceManagerComponent::GetRemainingArtifacts()
 	return RemainingArtifacts;
 }
 
-bool UChanceManagerComponent::GetRandomArtifactsByCustomTagWeights(TMap<FGameplayTag, float> TagWeights, int32 InAmount, bool bExactMatch, TArray<FStatusData>& OutPickedArtifacts)
+bool UChanceManagerComponent::GetRandomArtifactsByCustomTagWeights(TMap<FGameplayTag, float> TagWeights, int32 InAmount,
+                                                                   bool bExactMatch,
+                                                                   TArray<FStatusData>& OutPickedArtifacts)
 {
 	// 남아있는 아티팩트를 가져옴
 	TArray<FStatusData> RemainingArtifacts = GetRemainingArtifacts();
@@ -392,12 +412,14 @@ bool UChanceManagerComponent::GetRandomArtifactsByCustomTagWeights(TMap<FGamepla
 	return true;
 }
 
-bool UChanceManagerComponent::GetRandomArtifactsByDefaultRarityWeights(int32 InAmount, TArray<FStatusData>& OutPickedArtifacts)
+bool UChanceManagerComponent::GetRandomArtifactsByDefaultRarityWeights(int32 InAmount,
+                                                                       TArray<FStatusData>& OutPickedArtifacts)
 {
 	return GetRandomArtifactsByCustomTagWeights(DefaultArtifactRarityWeights, InAmount, true, OutPickedArtifacts);
 }
 
-TArray<FGameplayTag> UChanceManagerComponent::GetRandomTagsWithoutWeight(const TMap<FGameplayTag, float>& WeightedTags, int32 InAmount)
+TArray<FGameplayTag> UChanceManagerComponent::GetRandomTagsWithoutWeight(
+	const TMap<FGameplayTag, float>& WeightedTags, int32 InAmount)
 {
 	TArray<FGameplayTag> RandomTags;
 	TArray<FGameplayTag> Keys;
@@ -424,7 +446,8 @@ float UChanceManagerComponent::GetTotalWeight(const TArray<float>& WeightValues)
 	return TotalWeight;
 }
 
-TArray<FGameplayTag> UChanceManagerComponent::GetRandomTagsWithWeight(const TMap<FGameplayTag, float>& WeightedTags, int32 InAmount, float TotalWeight)
+TArray<FGameplayTag> UChanceManagerComponent::GetRandomTagsWithWeight(const TMap<FGameplayTag, float>& WeightedTags,
+                                                                      int32 InAmount, float TotalWeight)
 {
 	// 선택된 태그를 저장할 배열
 	TArray<FGameplayTag> WeightedTagsResult;
@@ -446,7 +469,8 @@ TArray<FGameplayTag> UChanceManagerComponent::GetRandomTagsWithWeight(const TMap
 	return WeightedTagsResult;
 }
 
-void UChanceManagerComponent::FilterCardsByRequiredTags(const FGameplayTagContainer& RequiredTags, bool bExactMatch, TArray<FCard>& OutCards)
+void UChanceManagerComponent::FilterCardsByRequiredTags(const FGameplayTagContainer& RequiredTags, bool bExactMatch,
+                                                        TArray<FCard>& OutCards)
 {
 	// 필수 태그가 있는 경우 필터링을 수행
 	if (RequiredTags.Num() > 0)
@@ -456,7 +480,8 @@ void UChanceManagerComponent::FilterCardsByRequiredTags(const FGameplayTagContai
 	}
 }
 
-void UChanceManagerComponent::FilterCardsByPossibleTags(const FGameplayTagContainer& PossibleTags, bool bExactMatch, TArray<FCard>& OutCards)
+void UChanceManagerComponent::FilterCardsByPossibleTags(const FGameplayTagContainer& PossibleTags, bool bExactMatch,
+                                                        TArray<FCard>& OutCards)
 {
 	// 가능한 태그가 있는 경우 필터링을 수행
 	if (PossibleTags.Num() > 0)
@@ -466,7 +491,9 @@ void UChanceManagerComponent::FilterCardsByPossibleTags(const FGameplayTagContai
 	}
 }
 
-TArray<FCard> UChanceManagerComponent::ProcessCardsWithWeights(TArray<FCard>& FilteredCards, const TMap<FGameplayTag, float>& TagWeights, int32 InAmount)
+TArray<FCard> UChanceManagerComponent::ProcessCardsWithWeights(TArray<FCard>& FilteredCards,
+                                                               const TMap<FGameplayTag, float>& TagWeights,
+                                                               int32 InAmount)
 {
 	// 필터링된 카드에 태그 가중치 적용
 	ApplyTagWeightsToFilteredCards(FilteredCards, TagWeights);
@@ -487,7 +514,8 @@ TArray<FCard> UChanceManagerComponent::ProcessCardsWithWeights(TArray<FCard>& Fi
 	return HandleNoFilteredCards(InAmount);
 }
 
-void UChanceManagerComponent::ApplyTagWeightsToFilteredCards(TArray<FCard>& FilteredCards, const TMap<FGameplayTag, float>& TagWeights)
+void UChanceManagerComponent::ApplyTagWeightsToFilteredCards(TArray<FCard>& FilteredCards,
+                                                             const TMap<FGameplayTag, float>& TagWeights)
 {
 	// 가중치가 적용된 태그 목록을 가져옴
 	TArray<FGameplayTag> TagWeightKeys;
@@ -503,7 +531,8 @@ void UChanceManagerComponent::ApplyTagWeightsToFilteredCards(TArray<FCard>& Filt
 	UFunctionLibrary_ArrayUtils::ShuffleArray(FilteredCards);
 }
 
-TArray<FCard> UChanceManagerComponent::PickCardsByTags(TArray<FCard>& FilteredCards, const TArray<FGameplayTag>& SelectedTags)
+TArray<FCard> UChanceManagerComponent::PickCardsByTags(TArray<FCard>& FilteredCards,
+                                                       const TArray<FGameplayTag>& SelectedTags)
 {
 	TArray<FCard> PickedCards;
 
@@ -572,7 +601,8 @@ TArray<FCard> UChanceManagerComponent::HandleNoFilteredCards(int32 InAmount)
 	if (!CardRewardDataRowHandle.IsNull())
 	{
 		// 데이터 테이블에서 보상 카드 찾기
-		if (FCard* FoundRewardCard = CardRewardDataRowHandle.DataTable->FindRow<FCard>(CardRewardDataRowHandle.RowName, TEXT("")))
+		if (FCard* FoundRewardCard = CardRewardDataRowHandle.DataTable->FindRow<FCard>(
+			CardRewardDataRowHandle.RowName, TEXT("")))
 		{
 			// 보상 카드 정보 복사
 			FCard RewardsCard = *FoundRewardCard;
