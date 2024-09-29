@@ -99,5 +99,5 @@ void UUW_CardRewardScreen::ReturnReward(UUW_CardListCard* SelectedCard, ACardBas
 
 		// 첫 번째 타이머 클리어
 		GetWorld()->GetTimerManager().ClearTimer(RewardCompletionHandle);
-	}), 4.0f, false);
+	}), 0.4f, false);
 }

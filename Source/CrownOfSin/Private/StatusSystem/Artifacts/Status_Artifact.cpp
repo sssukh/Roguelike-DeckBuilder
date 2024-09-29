@@ -29,19 +29,19 @@ UStatus_Artifact::UStatus_Artifact()
 	{
 		COS_LOG_SCREEN_ERROR(TEXT("T_Chest를 로드하지 못했습니다."))
 	}
-	static ConstructorHelpers::FObjectFinder<UDataTable> DT_Tooltips_Statuses(*AssetPath::DataTable::DT_Tooltips_Statuses);
-	if (DT_Tooltips_Statuses.Succeeded())
-	{
-		FToolTipValue NewToolTipValue;
-		NewToolTipValue.ToolTipTable.DataTable = DT_Tooltips_Statuses.Object;
-		NewToolTipValue.ToolTipTable.RowName = FName(TEXT("Barrier"));
-		NewToolTipValue.bValued = true;
-		Tooltips.Add(NewToolTipValue);
-	}
-	else
-	{
-		COS_LOG_SCREEN_ERROR(TEXT("DT_Tooltips_Statuses를 로드하지 못했습니다"));
-	}
+	// static ConstructorHelpers::FObjectFinder<UDataTable> DT_Tooltips_Statuses(*AssetPath::DataTable::DT_Tooltips_Statuses);
+	// if (DT_Tooltips_Statuses.Succeeded())
+	// {
+	// 	FToolTipValue NewToolTipValue;
+	// 	NewToolTipValue.ToolTipTable.DataTable = DT_Tooltips_Statuses.Object;
+	// 	NewToolTipValue.ToolTipTable.RowName = FName(TEXT("Barrier"));
+	// 	NewToolTipValue.bValued = true;
+	// 	Tooltips.Add(NewToolTipValue);
+	// }
+	// else
+	// {
+	// 	COS_LOG_SCREEN_ERROR(TEXT("DT_Tooltips_Statuses를 로드하지 못했습니다"));
+	// }
 	SlotType = EStatusSlot::Artifact;
 	Tint = FLinearColor::White;
 	bCanBeZero = true;

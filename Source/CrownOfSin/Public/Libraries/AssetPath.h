@@ -64,7 +64,6 @@ namespace AssetPath
 		const FString T_BagOfHolding = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_BagOfHolding.T_BagOfHolding'");
 		const FString T_BootsOfSpeed = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_BootsOfSpeed.T_BootsOfSpeed'");
 		const FString T_BrokenShield = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_BrokenShield.T_BrokenShield'");
-		const FString T_CardReward = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_CardReward.T_CardReward'");
 		const FString T_JackOLantern = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_JackOLantern.T_JackOLantern'");
 		const FString T_RobesOfProtection = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_RobesOfProtection.T_RobesOfProtection'");
 		const FString T_WaterSkin = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_Waterskin.T_Waterskin'");

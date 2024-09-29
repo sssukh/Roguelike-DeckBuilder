@@ -70,9 +70,7 @@ bool UTargetingComponent_Discover::FindValidTargets(TArray<AActor*>& SpecifiedTa
 		CurrentCardOption.Add(NewCard);
 	}
 
-	// TODO : Action Card RewardScreen
-	// AAction_CardRewardScreen
-
+	
 	
 	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
 	ActionManagerSubsystem->CreateAndQueueAction<AAction_CardRewardScreen>([&](AAction_CardRewardScreen* Action_CardRewardScreen)
