@@ -1,7 +1,12 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "StatusSystem/CardStatuses/Status_Card_PlayCardOnCardPlayerEvent.h"
 
-
-#include "StatusSystem/CardStatuses/Status_Card_PlayCardOnCardPlayerEvent.h"
+#include "CardSystem/CardBase.h"
+#include "CardSystem/CardPlayer.h"
+#include "Core/DispatcherHubComponent.h"
+#include "Core/DispatcherHubLocalComponent.h"
+#include "Libraries/FunctionLibrary_Event.h"
+#include "Libraries/FunctionLibrary_Singletons.h"
+#include "Utilities/CosGameplayTags.h"
 
 
 // Sets default values for this component's properties
@@ -12,24 +17,50 @@ UStatus_Card_PlayCardOnCardPlayerEvent::UStatus_Card_PlayCardOnCardPlayerEvent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	Priority = 1.0f;
 }
 
 
-// Called when the game starts
 void UStatus_Card_PlayCardOnCardPlayerEvent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	UDispatcherHubComponent* DispatcherHub;
+	if (GetOwnersDispatcherHub(DispatcherHub))
+	{
+		FGameplayTagContainer EventTags;
+		EventTags.AddTag(CosGameTags::Event_Card_EnterHand);
+		EventTags.AddTag(CosGameTags::Event_Card_ExitHand);
+		DispatcherHub->BindMultipleEventsToHub(this, EventTags);
+	}
 }
 
-
-// Called every frame
-void UStatus_Card_PlayCardOnCardPlayerEvent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UStatus_Card_PlayCardOnCardPlayerEvent::RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (EventTag == CosGameTags::Event_Card_EnterHand)
+	{
+		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
+		CardPlayer->DispatcherHubLocalComponent->BindMultipleEventsToHub(this, GameplayTags);
 
-	// ...
+		RunEventGate.Open();
+	}
+	else if (EventTag == CosGameTags::Event_Card_ExitHand)
+	{
+		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
+		CardPlayer->DispatcherHubLocalComponent->UnbindMultipleEventsFromHub(this, GameplayTags);
+		RunEventGate.Close();
+	}
+	else
+	{
+		if (RunEventGate.IsOpen())
+		{
+			if (ACardBase* OwnerCard = Cast<ACardBase>(GetOwner()))
+			{
+				UFunctionLibrary_Singletons::QueueDelay(this, 0.4f);
+				UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(CosGameTags::Event_Action_AutoPlay, GetOwner(), nullptr, 1.0f);
+				OwnerCard->AttemptUseCardUnTargeted(true, true, true);
+				UFunctionLibrary_Singletons::QueueDelay(this, 1.0f);
+			}
+		}
+	}
 }
-

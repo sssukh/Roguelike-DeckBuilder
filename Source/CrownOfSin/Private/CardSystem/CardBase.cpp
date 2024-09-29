@@ -174,7 +174,7 @@ void ACardBase::SetupStatusComponents()
 	}
 }
 
-bool ACardBase::AttemptUseCard(TArray<AActor*> Targets, bool SkipPlayableCheck, bool SkipConsequences, bool AutoPlay)
+bool ACardBase::AttemptUseCard(const TArray<AActor*>& Targets, bool SkipPlayableCheck, bool SkipConsequences, bool AutoPlay)
 {
 	InputTargets = Targets;
 
@@ -381,7 +381,8 @@ void ACardBase::ContinueToNextTarget()
 	}
 
 	// 현재 처리 중인 카드 효과를 가져온다
-	FCardEffect TempCardEffect = GetCardEffects(ECardDataType::Hand)[EffectLoopIndex];
+	const TArray<FCardEffect>& HandCardEffects = GetCardEffects(ECardDataType::Hand);
+	const FCardEffect& TempCardEffect = HandCardEffects[EffectLoopIndex];
 
 	// 카드 효과 컴포넌트를 생성 및 초기화
 	InitializeCurrentCardEffect(TempCardEffect);
@@ -414,23 +415,22 @@ void ACardBase::InitializeCurrentCardEffect(const FCardEffect& CardEffect)
 {
 	// 카드 효과 컴포넌트를 생성하고 등록.
 	UCardEffectComponent* NewCardEffectComponent = NewObject<UCardEffectComponent>(this, CardEffect.EffectClass);
+	// 카드 효과 데이터를 컴포넌트에 설정.
+	NewCardEffectComponent->EffectValue = CardEffect.EffectValue;
+	NewCardEffectComponent->TargetComponent = CardEffect.TargetComponent;
+	NewCardEffectComponent->ParentCard = this;
+	NewCardEffectComponent->GameplayTags = CardEffect.GameplayTags;
+	NewCardEffectComponent->TargetingClass = CardEffect.Targeting;
+	NewCardEffectComponent->HeroAnim = CardEffect.HeroAnim;
+	NewCardEffectComponent->EffectActionClass = CardEffect.EffectAction;
+	NewCardEffectComponent->UsedData = CardEffect.UsedData;
+	NewCardEffectComponent->Identifier = CardEffect.Identifier;
+
 	NewCardEffectComponent->RegisterComponent();
+	AddInstanceComponent(NewCardEffectComponent);
 
 	// 현재 카드 효과를 새로 생성한 컴포넌트로 설정.
 	CurrentCardEffectComponent = NewCardEffectComponent;
-
-	// 카드 효과 데이터를 컴포넌트에 설정.
-	CurrentCardEffectComponent->EffectValue = CardEffect.EffectValue;
-	CurrentCardEffectComponent->TargetComponent = CardEffect.TargetComponent;
-	CurrentCardEffectComponent->ParentCard = this;
-	CurrentCardEffectComponent->GameplayTags = CardEffect.GameplayTags;
-	CurrentCardEffectComponent->TargetingClass = CardEffect.Targeting;
-	CurrentCardEffectComponent->HeroAnim = CardEffect.HeroAnim;
-	CurrentCardEffectComponent->EffectActionClass = CardEffect.EffectAction;
-	CurrentCardEffectComponent->UsedData = CardEffect.UsedData;
-	CurrentCardEffectComponent->Identifier = CardEffect.Identifier;
-
-	AddInstanceComponent(NewCardEffectComponent);
 }
 
 void ACardBase::HandleImmediateCardEffect()
@@ -948,6 +948,11 @@ bool ACardBase::SetUseRuleCost(TSubclassOf<UUseRule_StatCost> UseRule, TSubclass
 	}
 
 	return false;
+}
+
+void ACardBase::SetPostUseEvent(ECardDataType InCardType, FGameplayTag NewPostUseEvent)
+{
+	GetCardByCardDataTypeRef(InCardType).PostUseEvent = NewPostUseEvent;
 }
 
 void ACardBase::SetCardDataFromOtherData(ECardDataType From, ECardDataType To)

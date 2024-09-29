@@ -92,7 +92,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	void ChangeNodeMapInInstance(const FString& NewNodeMap);
-	
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	bool GetDeckFromInstance(TArray<FCard>& OutDeck);
 
@@ -104,12 +104,10 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	TArray<UDataTable*> GetRewardTables();
-	
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	FEncounterData GetCurrentEncounterFromInstance();
 
-
-	//ToDo:Cos
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Game Instance")
 	FString GetInstanceSaveId();
 };

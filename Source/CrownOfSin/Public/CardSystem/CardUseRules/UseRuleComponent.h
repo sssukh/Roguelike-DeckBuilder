@@ -4,29 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Core/CosEnumStruct.h"
 #include "UseRuleComponent.generated.h"
 
 
 class ACardBase;
-struct FUseRule;
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+
+UCLASS(ClassGroup=("COS|Rule"), meta=(BlueprintSpawnableComponent))
 class CROWNOFSIN_API UUseRuleComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UUseRuleComponent();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 	UFUNCTION(BlueprintCallable)
 	virtual bool CheckIfUseAllowed(FUseRule UseRuleData, FString& FailMessage);
 
@@ -40,6 +36,6 @@ public:
 	*	Field Members
 	=========================================================================================*/
 public:
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Variable | Use Rule")
-	ACardBase* ParentCard;
+	UPROPERTY(BlueprintReadWrite, Category = "Variable | Use Rule")
+	TObjectPtr<ACardBase> ParentCard;
 };

@@ -79,8 +79,10 @@ void ATurnManager::StartNextObjectTurn()
 	if (bCombatOver) return;
 
 	// 가장 높은 이니셔티브를 가진 액터를 찾아서 ActiveActor에 할당
-	if (GetRemainingActorWithHighestInitiative(ActiveActor))
+	AActor* FastestActor;
+	if (GetRemainingActorWithHighestInitiative(FastestActor))
 	{
+		ActiveActor = FastestActor;
 		if (UDispatcherHubLocalComponent* DispatcherHubLocal = ActiveActor->FindComponentByClass<UDispatcherHubLocalComponent>())
 		{
 			DispatcherHubLocal->CallEvent(CosGameTags::Event_TurnStart, ActiveActor); // 해당 액터의 턴을 시작하는 이벤트 호출
@@ -125,7 +127,6 @@ void ATurnManager::ExecuteCombatVictory()
 
 	// 게임 인스턴스 가져오기
 	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetCardGameInstance(this);
-	if (!CardGameInstance) return;
 
 	// 지속적인 영웅 상태 가져오기
 	const TArray<FMinion>& PersistentHeroes = IInterface_CardGameInstance::Execute_GetPersistentHeroesFromInstance(CardGameInstance);
@@ -301,6 +302,7 @@ bool ATurnManager::GetRemainingActorWithHighestInitiative(AActor*& FastestActor)
 {
 	float MaxInitiative = -FLT_MAX; // 가장 높은 이니셔티브 값을 추적
 
+	AActor* LocalFastestActor = nullptr;
 	// RoundOrderActors 배열을 순회하여 이니셔티브가 가장 높은 액터를 찾음
 	for (AActor* Actor : RoundOrderActors)
 	{
@@ -314,12 +316,13 @@ bool ATurnManager::GetRemainingActorWithHighestInitiative(AActor*& FastestActor)
 		if (CurrentInitiative > MaxInitiative)
 		{
 			MaxInitiative = CurrentInitiative; // 가장 높은 이니셔티브 값 저장
-			FastestActor = Actor; // 해당 액터를 FastestActor에 저장
+			LocalFastestActor = Actor; // 해당 액터를 FastestActor에 저장
 		}
 	}
 
 	// 가장 높은 이니셔티브를 가진 액터가 유효한지 여부를 반환
-	return IsValid(FastestActor);
+	FastestActor = LocalFastestActor;
+	return IsValid(LocalFastestActor);
 }
 
 void ATurnManager::CheckIfCombatShouldEndAfterDeath()

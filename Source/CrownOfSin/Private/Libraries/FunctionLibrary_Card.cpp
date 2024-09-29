@@ -20,10 +20,9 @@ FCard UFunctionLibrary_Card::MakeCardStructFromCardData(const FDataTableRowHandl
 	return *Card;
 }
 
-void UFunctionLibrary_Card::SpawnAndPlayHeroCard(const UObject* WorldContextObject, const FDataTableRowHandle& CardData, TArray<AActor*> Targets, AActor* OwnerOverride)
+void UFunctionLibrary_Card::SpawnAndPlayHeroCard(const UObject* WorldContextObject, const FDataTableRowHandle& CardData, const TArray<AActor*>& Targets, AActor* OwnerOverride)
 {
 	UGameInstance* CardGameInstance = UFunctionLibrary_Singletons::GetCardGameInstance(WorldContextObject);
-	if (!CardGameInstance) return;
 
 	AActor* MainHero;
 	IInterface_CardGameInstance::Execute_GetMainHero(CardGameInstance, MainHero);
@@ -44,7 +43,8 @@ void UFunctionLibrary_Card::SpawnAndPlayHeroCard(const UObject* WorldContextObje
 
 void UFunctionLibrary_Card::SpawnAndPlayHeroCardUnTargeted(const UObject* WorldContextObject, const FDataTableRowHandle& CardData, AActor* OwnerOverride)
 {
-	TArray<AActor*> Targets;
-	Targets.Add(nullptr);
-	SpawnAndPlayHeroCard(WorldContextObject, CardData, Targets, OwnerOverride);
+	// 명시적으로 타겟이 없는 상태를 처리
+	TArray<AActor*> EmptyTargets;
+	EmptyTargets.Add(nullptr);
+	SpawnAndPlayHeroCard(WorldContextObject, CardData, EmptyTargets, OwnerOverride);
 }

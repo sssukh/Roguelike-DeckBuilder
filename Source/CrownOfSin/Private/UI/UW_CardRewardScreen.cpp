@@ -24,57 +24,80 @@ UUW_CardRewardScreen::UUW_CardRewardScreen(const FObjectInitializer& ObjectIniti
 	}
 }
 
-void UUW_CardRewardScreen::UpdateRewardScreen(const TArray<ACardBase*>& Cards, const FText& InTitle, bool bAllowSkip)
+void UUW_CardRewardScreen::UpdateRewardScreen(const TArray<ACardBase*>& AvailableCards, const FText& TitleText, bool bIsSkipAllowed)
 {
-	SkipOverlay->SetVisibility(bAllowSkip ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+	COS_IF_CHECK_VOID(WBP_CardListCardClass, TEXT("WBP_CardListCardClass를 설정해주세요"));
 
+	// 스킵 버튼 오버레이의 가시성 설정
+	SkipOverlay->SetVisibility(bIsSkipAllowed ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+
+	// 보상 상자 초기화
 	RewardBox->ClearChildren();
 
-	Title->SetText(InTitle);
+	// 타이틀 텍스트 설정
+	Title->SetText(TitleText);
 
+	// UI를 표시
 	SetVisibility(ESlateVisibility::Visible);
 
-	for (int i = 0; i < Cards.Num(); i++)
+	// 카드 목록 위젯을 보상 상자에 추가
+	for (int32 i = 0; i < AvailableCards.Num(); i++)
 	{
-		if (i < RewardOptionCount)
+		if (i >= RewardOptionCount)
 		{
-			UUW_CardListCard* NewCardListCardWidget = Cast<UUW_CardListCard>(CreateWidget(GetWorld(), WBP_CardListCardClass));
-			NewCardListCardWidget->CardActor = Cards[i];
-			RewardBox->AddChild(NewCardListCardWidget);
-			NewCardListCardWidget->OnCardClicked.AddDynamic(this, &UUW_CardRewardScreen::ReturnReward);
+			break; // 보상 카드 수를 초과하지 않도록 제한
 		}
+
+		// 카드 위젯 생성
+		UUW_CardListCard* CardWidget = Cast<UUW_CardListCard>(CreateWidget(GetWorld(), WBP_CardListCardClass));
+
+		// 위젯에 카드 액터 설정
+		CardWidget->CardActor = AvailableCards[i];
+
+		// 보상 상자에 위젯 추가
+		RewardBox->AddChild(CardWidget);
+
+		// 카드 클릭 이벤트 바인딩
+		CardWidget->OnCardClicked.AddDynamic(this, &UUW_CardRewardScreen::ReturnReward);
 	}
 
+	// 카드 옵션을 보여주는 블루프린트 함수 호출
 	ShowCardOptions();
 }
 
-void UUW_CardRewardScreen::ReturnReward(UUW_CardListCard* CardListCard, ACardBase* CardActor)
+void UUW_CardRewardScreen::ReturnReward(UUW_CardListCard* SelectedCard, ACardBase* SelectedCardActor)
 {
+	// 보상 카드 목록에서 모든 위젯을 순회하면서 상태 변경
 	for (UWidget* Widget : RewardBox->GetAllChildren())
 	{
 		UUW_CardListCard* CastCardListCard = Cast<UUW_CardListCard>(Widget);
 		if (!CastCardListCard) continue;
 
+		// 카드를 히트 테스트 비활성화 및 애니메이션 재생
 		CastCardListCard->SetVisibility(ESlateVisibility::HitTestInvisible);
 		CastCardListCard->bBlockHoverAnim = true;
-		CastCardListCard->PlayAnimation(CardListCard != CastCardListCard ? CardListCard->FadeOut : CardListCard->Select);
+		CastCardListCard->PlayAnimation(SelectedCard != CastCardListCard ? SelectedCard->FadeOut : SelectedCard->Select);
 	}
 
-	FTimerHandle DelayHandle;
-	GetWorld()->GetTimerManager().SetTimer(DelayHandle, FTimerDelegate::CreateLambda([&]()
+	GetWorld()->GetTimerManager().SetTimer(RewardCompletionHandle, FTimerDelegate::CreateLambda([this, SelectedCardActor]()
 	{
+		// 첫 번째 단계: 애니메이션 재생
 		PlayAnimationReverse(FadeIn);
 
-		FTimerHandle DelayHandle2;
-		GetWorld()->GetTimerManager().SetTimer(DelayHandle2, FTimerDelegate::CreateLambda([&]()
+		// 두 번째 단계: 0.1초 뒤에 호출할 작업 예약
+		GetWorld()->GetTimerManager().SetTimer(ReturnCompletionHandle, FTimerDelegate::CreateLambda([this, SelectedCardActor]()
 		{
 			SetVisibility(ESlateVisibility::Collapsed);
 			if (OnReturnSelectedCardInRewardScreen.IsBound())
-				OnReturnSelectedCardInRewardScreen.Broadcast(false, CardActor);
+			{
+				OnReturnSelectedCardInRewardScreen.Broadcast(false, SelectedCardActor);
+			}
 
-			GetWorld()->GetTimerManager().ClearTimer(DelayHandle2);
+			// 두 번째 타이머 클리어
+			GetWorld()->GetTimerManager().ClearTimer(ReturnCompletionHandle);
 		}), 0.1f, false);
 
-		GetWorld()->GetTimerManager().ClearTimer(DelayHandle);
+		// 첫 번째 타이머 클리어
+		GetWorld()->GetTimerManager().ClearTimer(RewardCompletionHandle);
 	}), 4.0f, false);
 }

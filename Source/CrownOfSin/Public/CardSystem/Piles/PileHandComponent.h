@@ -45,7 +45,7 @@ public:
  	 * @return 카드를 성공적으로 뽑으면 true, 실패하면 false를 반환합니다.
  	 */
 	UFUNCTION(BlueprintCallable, Category="Pile Hand Component Event")
-	bool DrawCard(ACardBase* SpecifiedCard, TSubclassOf<UPileHandComponent> SourcePile, ACardBase*& OutDrawnCard);
+	bool DrawCard(ACardBase* SpecifiedCard, TSubclassOf<UPileComponent> SourcePile, ACardBase*& OutDrawnCard);
 
 	/**
  	 * DiscardHand 함수는 현재 손에 들고 있는 모든 카드를 처리하여 버리는 기능을 수행합니다.

@@ -83,7 +83,7 @@ public:
 	 * 타겟 목록과 여러 옵션을 통해 카드를 사용하려고 시도합니다.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Card|Usage")
-	bool AttemptUseCard(TArray<AActor*> Targets, bool SkipPlayableCheck, bool SkipConsequences, bool AutoPlay);
+	bool AttemptUseCard(const TArray<AActor*>& Targets, bool SkipPlayableCheck, bool SkipConsequences, bool AutoPlay);
 
 	/**
 	 * 타겟이 없는(UnTargeted) 카드를 시도하는 함수.
@@ -307,6 +307,9 @@ public:
 	/*카드 더미에 대해 사용 규칙의 비용을 설정하는 함수.*/
 	UFUNCTION(BlueprintCallable, Category = "Card|Attributes")
 	bool SetUseRuleCost(TSubclassOf<UUseRule_StatCost> UseRule, TSubclassOf<UStatusComponent> Status, int32 NewValue, ECardDataType Pile, bool bAddIfNotFound);
+	
+	UFUNCTION(BlueprintCallable, Category = "Card|Attributes")
+	void SetPostUseEvent(ECardDataType InCardType, FGameplayTag NewPostUseEvent);
 
 	/*카드 데이터를 복사하는 함수.*/
 	UFUNCTION(BlueprintCallable, Category = "Card|Attributes")

@@ -83,13 +83,9 @@ void UCardTransferComponent::RunCardTransferEvent(FGameplayTag EventTag, ACardBa
 			{
 				UFunctionLibrary_Event::QueueEventInGlobalDispatcherHub(CosGameTags::Event_Action_FlickCard, Card, nullptr, 0.2f);
 			}
-
-			if (CallTag == CosGameTags::Flag_Active || CallTag == CosGameTags::Flag_Passive)
-			{
-				ResolveTransfer(Card, Card->CurrentPile, CurrentTargetPile);
-				return;
-			}
 		}
+
+		ResolveTransfer(Card, Card->CurrentPile, CurrentTargetPile);
 	}
 	else if (EventTag == CosGameTags::Event_Card_Destroy)
 	{

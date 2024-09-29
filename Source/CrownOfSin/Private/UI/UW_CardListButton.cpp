@@ -90,12 +90,20 @@ void UUW_CardListButton::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	COS_IF_CHECK_VOID(WBP_ToolTipClass, TEXT("WBP_ToolTipClass를 설정해주세요"));
+	COS_IF_CHECK_VOID(WBP_CardListClass, TEXT("WBP_CardListClass를 설정해주세요"));
+
 	ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
 	COS_IF_CHECK_VOID(CardPlayer, TEXT("CardPlayer를 찾지 못했습니다."));
 
 	PileReference = Cast<UPileComponent>(CardPlayer->GetComponentByClass(PileClass));
 
+
 	UUW_ToolTip* NewToolTip = CreateWidget<UUW_ToolTip>(GetWorld(), WBP_ToolTipClass);
+	UPileComponent* PileComponentCDO = PileClass->GetDefaultObject<UPileComponent>();
+	NewToolTip->ToolTipData = PileComponentCDO->Tooltip;
+	NewToolTip->Value = 0;
+	NewToolTip->TextOverride;
 	CardListButton->SetToolTip(NewToolTip);
 
 	CardList = CreateWidget<UUW_CardList>(GetWorld(), WBP_CardListClass);

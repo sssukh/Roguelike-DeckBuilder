@@ -68,7 +68,7 @@ void UPileHandComponent::AttemptDraw()
 	// }
 }
 
-bool UPileHandComponent::DrawCard(ACardBase* SpecifiedCard, TSubclassOf<UPileHandComponent> SourcePile, ACardBase*& OutDrawnCard)
+bool UPileHandComponent::DrawCard(ACardBase* SpecifiedCard, TSubclassOf<UPileComponent> SourcePile, ACardBase*& OutDrawnCard)
 {
 	// SourcePile로부터 컴포넌트를 가져와서 캐스팅합니다. 성공하지 못하면 더미가 유효하지 않으므로 false를 반환합니다.
 	UPileComponent* SourcePileComponent = Cast<UPileComponent>(GetOwner()->GetComponentByClass(SourcePile));

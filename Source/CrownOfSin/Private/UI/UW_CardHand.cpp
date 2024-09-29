@@ -190,8 +190,9 @@ void UUW_CardHand::TransferCardAction(ACardBase* InCard, FGameplayTag SourcePile
 		if (CardWidgets.Contains(CurrentEventCard))
 		{
 			CardWidgetsInHand.Remove(CardWidgets[CurrentEventCard]); // 손에서 제거
-			CardWidgets[CurrentEventCard]->AnimateCardEvent(TargetPile); // 이동 애니메이션 실행
+			CardWidgets[CurrentEventCard]->AnimateCardTransfer(TargetPile); // 이동 애니메이션 실행
 		}
+		
 		return;
 	}
 
@@ -208,7 +209,7 @@ void UUW_CardHand::TransferCardAction(ACardBase* InCard, FGameplayTag SourcePile
 		}
 		else
 		{
-			CardWidgets[CurrentEventCard]->AnimateCardEvent(TargetPile); // 목표 더미로 이동 애니메이션 실행
+			CardWidgets[CurrentEventCard]->AnimateCardTransfer(TargetPile); // 목표 더미로 이동 애니메이션 실행
 		}
 	}
 	else

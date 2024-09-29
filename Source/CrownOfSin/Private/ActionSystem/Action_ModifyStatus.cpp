@@ -1,5 +1,6 @@
 ﻿#include "ActionSystem/Action_ModifyStatus.h"
 
+#include "Interfaces/Interface_CardPuppet.h"
 #include "Interfaces/Interface_CardTarget.h"
 #include "Interfaces/Widget/Interface_StatusIcon.h"
 #include "Kismet/GameplayStatics.h"
@@ -64,15 +65,15 @@ void AAction_ModifyStatus::PlayAction_Implementation()
 	}
 
 	// 스플래시 아이콘을 화면에 표시해야 하는지 확인
-	if (bShowSplashIcon && Puppet && Puppet->Implements<UInterface_CardTarget>())
+	if (bShowSplashIcon && Puppet && Puppet->Implements<UInterface_CardPuppet>())
 	{
 		// 대상 위치와 카메라 위치 계산
-		FVector PuppetCenter = IInterface_CardTarget::Execute_GetPuppetRelativeCenter(Puppet);
+		FVector PuppetCenter = IInterface_CardPuppet::Execute_GetPuppetRelativeCenter(Puppet);
 		FVector TargetLocation = PuppetCenter + Puppet->GetActorLocation();
 		FVector CameraLocation = UGameplayStatics::GetPlayerCameraManager(this, 0)->GetCameraLocation();
 
 		// 카메라에서 대상 위치로의 보간 위치 계산
-		FVector SplashLocation = UKismetMathLibrary::VLerp(CameraLocation, TargetLocation, 0.2f);
+		FVector SplashLocation = UKismetMathLibrary::VLerp(TargetLocation, CameraLocation, 0.2f);
 
 		// 스플래시 아이콘 스폰 위치 설정
 		FTransform SplashTransform = FTransform::Identity;
@@ -80,7 +81,9 @@ void AAction_ModifyStatus::PlayAction_Implementation()
 
 		// 스플래시 아이콘을 스폰
 		if (AIconSplash* IconSplash = GetWorld()->SpawnActorDeferred<AIconSplash>(
-			BP_AIconSplashClass, SplashTransform, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
+			BP_AIconSplashClass, SplashTransform, nullptr, nullptr,
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn,
+			ESpawnActorScaleMethod::OverrideRootScale))
 		{
 			IconSplash->Icon = StatusAppearance.Icon;
 			IconSplash->Color = StatusAppearance.Tint;
@@ -89,13 +92,13 @@ void AAction_ModifyStatus::PlayAction_Implementation()
 	}
 
 	// 스플래시 텍스트를 표시해야 하는지 확인
-	if (!SplashText.IsEmpty() && bShowSplashNumber && Puppet && Puppet->Implements<UInterface_CardTarget>())
+	if (!SplashText.IsEmpty() && bShowSplashNumber && Puppet && Puppet->Implements<UInterface_CardPuppet>())
 	{
 		// 텍스트 스플래시를 위한 위치 계산
-		FVector PuppetCenter = IInterface_CardTarget::Execute_GetPuppetRelativeCenter(Puppet);
+		FVector PuppetCenter = IInterface_CardPuppet::Execute_GetPuppetRelativeCenter(Puppet);
 		FVector TargetLocation = PuppetCenter + Puppet->GetActorLocation();
 		FVector CameraLocation = UGameplayStatics::GetPlayerCameraManager(this, 0)->GetCameraLocation();
-		FVector TextSplashLocation = UKismetMathLibrary::VLerp(CameraLocation, TargetLocation, 0.2f) + FVector(0, 0, 70.0f);
+		FVector TextSplashLocation = UKismetMathLibrary::VLerp(TargetLocation, CameraLocation, 0.2f) + FVector(0, 0, 70.0f);
 
 		// 스플래시 텍스트 스폰 위치 설정
 		FTransform TextSplashTransform = FTransform::Identity;

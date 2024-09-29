@@ -57,7 +57,5 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Target")
 	bool GetStatusValue(TSubclassOf<UStatusComponent> InStatus, int32& OutStatusValue);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="COS|Interface|Card Target")
-	FVector GetPuppetRelativeCenter();
+	
 };

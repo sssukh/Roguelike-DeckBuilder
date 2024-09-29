@@ -1,10 +1,9 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "StatusSystem/CardStatuses/Status_Card_InterruptOnPlayerUse.h"
+
+#include "Core/DispatcherHubComponent.h"
+#include "Utilities/CosGameplayTags.h"
 
 
-#include "StatusSystem/CardStatuses/Status_Card_InterruptOnPlayerUse.h"
-
-
-// Sets default values for this component's properties
 UStatus_Card_InterruptOnPlayerUse::UStatus_Card_InterruptOnPlayerUse()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -12,24 +11,26 @@ UStatus_Card_InterruptOnPlayerUse::UStatus_Card_InterruptOnPlayerUse()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	Priority = 1.0f;
 }
 
 
-// Called when the game starts
 void UStatus_Card_InterruptOnPlayerUse::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	UDispatcherHubComponent* DispatcherHub;
+	if (GetOwnersDispatcherHub(DispatcherHub))
+	{
+		DispatcherHub->BindEventToHub(this, CosGameTags::Event_Card_PrePlay);
+	}
 }
 
-
-// Called every frame
-void UStatus_Card_InterruptOnPlayerUse::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UStatus_Card_InterruptOnPlayerUse::RunEvent_Implementation(const FGameplayTag& EventTag, UObject* CallingObject, bool bIsGlobal, UObject* PayLoad, const FGameplayTagContainer& CallTags)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	if (!CallTags.HasTagExact(CosGameTags::Flag_AutoPlayed))
+	{
+		if (GetOwner()->Implements<UInterface_Interrupt>())
+			IInterface_Interrupt::Execute_Interrupt(GetOwner());
+	}
 }
-

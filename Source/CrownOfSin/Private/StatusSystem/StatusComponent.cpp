@@ -54,10 +54,12 @@ int32 UStatusComponent::AddStatusValue(int32 InAmount, bool bShowSplashNumber, b
 {
 	// 상태를 소유한 액터의 DispatcherHubComponent를 가져옴. 없으면 종료
 	UDispatcherHubComponent* DispatcherHub;
-	if (!GetOwnersDispatcherHub(DispatcherHub)) return 0;
+	if (GetOwnersDispatcherHub(DispatcherHub))
+	{
+		// 상태 변경 전 이벤트 호출
+		DispatcherHub->CallEvent(CosGameTags::Event_PreModifyStatus, this);
+	}
 
-	// 상태 변경 전 이벤트 호출
-	DispatcherHub->CallEvent(CosGameTags::Event_PreModifyStatus, this);
 
 	// 상태가 인터럽트된 경우 인터럽트를 해제
 	if (bInterrupt)
@@ -182,7 +184,7 @@ void UStatusComponent::ApplyStatusChange(int32 InAmount, bool bShowSplashNumber,
 {
 	// 상태 변경값을 저장하고, 상태 값이 음수로 내려가는 것을 방지
 	IncomingStatusChange = InAmount;
-	StatusValue = FMath::Max(StatusValue + InAmount, 0);
+	StatusValue = FMath::Max(InAmount + StatusValue, 0);
 
 	// 시각적 효과를 처리
 	SpawnModifyStatusAction(InAmount, bShowSplashNumber, bShowSplashIcon, bRefreshAppearance);

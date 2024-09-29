@@ -49,29 +49,24 @@ void ARewardHolder::RunEvent_Implementation(const FGameplayTag& EventTag, UObjec
 	}
 }
 
-int32 ARewardHolder::AddToStatus_Implementation(TSubclassOf<UStatusComponent> InStatusClass, int32 InAmount,
-	bool bIsShowSplash, UObject* InPayLoad)
+int32 ARewardHolder::AddToStatus_Implementation(TSubclassOf<UStatusComponent> InStatusClass, int32 InAmount, bool bIsShowSplash, UObject* InPayLoad)
 {
 	UActorComponent* StatusComponentFound = GetComponentByClass(InStatusClass);
 
-	if(IsValid(StatusComponentFound))
+	if (IsValid(StatusComponentFound))
 	{
 		UStatusComponent* StatusComponent = Cast<UStatusComponent>(StatusComponentFound);
-
-		return StatusComponent->AddStatusValue(InAmount,false,false,false,InPayLoad);
+		return StatusComponent->AddStatusValue(InAmount, false, false, false, InPayLoad);
 	}
-	
+
 	// InAmount가 0 이상이거나 그렇지 않은경우 bCanBeZero의 여부를 확인하기위해 CDO를 가져와서 확인
-	if(InAmount>0||Cast<UStatusComponent>(InStatusClass->GetDefaultObject())->bCanBeZero)
+	if (InAmount > 0 || Cast<UStatusComponent>(InStatusClass->GetDefaultObject())->bCanBeZero)
 	{
 		ACardPlayer* CardPlayer = UFunctionLibrary_Singletons::GetCardPlayer(this);
-
-		UStatusComponent* NewStatus = NewObject<UStatusComponent>(this,InStatusClass);
+		UStatusComponent* NewStatus = NewObject<UStatusComponent>(this, InStatusClass);
 		NewStatus->OwnerUiRef = CardPlayer->PlayerUI->WBP_RewardScreen;
-
 		NewStatus->RegisterComponent();
-
-		NewStatus->AddStatusValue(InAmount,false,false,true,InPayLoad);
+		NewStatus->AddStatusValue(InAmount, false, false, true, InPayLoad);
 
 		return InAmount;
 	}

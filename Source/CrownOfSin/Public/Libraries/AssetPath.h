@@ -9,6 +9,7 @@ namespace AssetPath
 		const FString BP_GlobalDispatcherHub_C = TEXT("Blueprint'/Game/CrownOfSin/BluePrints/Core/BP_GlobalDispatcherHub.BP_GlobalDispatcherHub_C'");
 		const FString BP_CardPlayer_C = TEXT("Blueprint'/Game/CrownOfSin/BluePrints/Core/BP_CardPlayer.BP_CardPlayer_C'");
 		const FString BP_RewardHolder_C = TEXT("Blueprint'/Game/CrownOfSin/BluePrints/Core/BP_RewardHolder.BP_RewardHolder_C'");
+		
 		const FString BP_TurnManager_C = TEXT("Blueprint'/Game/CrownOfSin/BluePrints/Core/BP_TurnManager.BP_TurnManager_C'");
 
 		const FString BP_ScreenShake_C = TEXT("Blueprint'/Game/CrownOfSin/BluePrints/UI/BP_ScreenShake.BP_ScreenShake_C'");
@@ -50,15 +51,15 @@ namespace AssetPath
 		const FString T_Owl = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Owl.T_Owl'");
 		const FString T_Fear = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Fear.T_Fear'");
 		const FString T_King = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_King.T_King'");
-
-		
 		const FString T_DiceShield = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_DiceShield.T_DiceShield'");
 		const FString T_Poison = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Poison.T_Poison'");		
 		const FString T_Skittish = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Skittish.T_Skittish'");
 		const FString T_Strength = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Strength.T_Strength'");
-		
 		const FString T_Venomous = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Venomous.T_Venomous'");
-	
+		const FString T_CardReward = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_CardReward.T_CardReward'");
+		const FString T_Chest = TEXT("Texture2D'/Game/RLDB/Demo/Textures/NodeMap/T_Chest.T_Chest'");
+
+		
 		
 		
 	}

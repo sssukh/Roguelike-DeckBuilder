@@ -1,5 +1,4 @@
-﻿
-#include "UI/Actors/TextSplash.h"
+﻿#include "UI/Actors/TextSplash.h"
 
 
 // Sets default values
@@ -9,7 +8,7 @@ ATextSplash::ATextSplash()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
-	DefaultSceneRoot =CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
+	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 	SetRootComponent(DefaultSceneRoot);
 }
 
@@ -17,7 +16,4 @@ ATextSplash::ATextSplash()
 void ATextSplash::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
-
-

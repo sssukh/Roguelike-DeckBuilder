@@ -138,45 +138,41 @@ bool UDispatcherHubComponent::ResolveCallEvent(FGameplayTag EventTag, UObject* C
 	// 3. EventTag에 바인딩된 모든 이벤트 홀더를 가져옴.
 	const TArray<UObject*>& EventHolderList = EventLists[EventTag].Objects;
 
-	// 유효하지 않은 이벤트 홀더를 저장할 배열.
+	// 4. 유효하지 않은 이벤트 홀더를 저장할 배열.
 	TArray<UObject*> InvalidEventHolders;
 
-	// 4. 바인딩된 모든 이벤트 홀더에 대해 반복 처리.
-	for (UObject* CurrentEventHolder : EventHolderList)
+	// ** 배열을 복사한 후 순회하여, 원본 배열의 변경을 피함 **
+	TArray<UObject*> EventHolderListCopy = EventHolderList;
+
+	// 5. 복사한 배열을 순회하여 유효성 검사 및 이벤트 실행.
+	for (UObject* CurrentEventHolder : EventHolderListCopy)
 	{
-		// 이벤트 홀더가 유효하지 않은 경우, 추적 리스트에 추가.
 		if (!IsValid(CurrentEventHolder))
 		{
 			InvalidEventHolders.Add(CurrentEventHolder);
 			continue;
 		}
 
-		// 이벤트 홀더가 UInterface_EventHolder 인터페이스를 구현하지 않으면 건너뜀.
 		if (!CurrentEventHolder->Implements<UInterface_EventHolder>()) continue;
 
-		// 5. 이벤트를 실행.
 		IInterface_EventHolder::Execute_RunEvent(CurrentEventHolder, EventTag, CallingObject, bGlobal, PayLoad, CallTags);
 
-		// 6. 인터럽트가 발생한 경우, 처리 후 종료.
 		if (bInterrupt)
 		{
-			bInterrupt = false; // 인터럽트 상태 초기화.
+			bInterrupt = false;
 			return true; // 인터럽트 발생 시 종료.
 		}
 	}
 
-	// 7. 유효하지 않은 이벤트 홀더가 없으면 바로 종료.
+	// 6. 유효하지 않은 이벤트 홀더가 없으면 바로 종료.
 	if (InvalidEventHolders.Num() <= 0) return true;
 
-	// 8. 유효하지 않은 객체들을 제거하여 이벤트 홀더 리스트를 정리.
+	// 7. 유효하지 않은 객체들을 제거하여 이벤트 홀더 리스트를 정리.
 	TArray<UObject*>& ValidEventHolderList = EventLists[EventTag].Objects;
 	for (UObject* InvalidEventHolder : InvalidEventHolders)
 	{
 		ValidEventHolderList.Remove(InvalidEventHolder); // 유효하지 않은 객체 제거.
 	}
-
-	// 9. 정리된 리스트를 EventLists에 다시 추가.
-	EventLists[EventTag] = ValidEventHolderList;
 
 	return true; // 모든 작업 완료 후 true 반환.
 }
