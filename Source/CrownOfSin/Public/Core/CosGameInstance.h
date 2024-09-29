@@ -160,7 +160,7 @@ public:
 
 	virtual FEncounterData GetCurrentEncounterFromInstance_Implementation() override;
 
-
+	virtual FString GetInstanceSaveId_Implementation() override;
 	
 	/*========================================================================================
 	*	Field Members

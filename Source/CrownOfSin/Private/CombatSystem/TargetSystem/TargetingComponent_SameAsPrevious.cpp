@@ -19,17 +19,19 @@ UTargetingComponent_SameAsPrevious::UTargetingComponent_SameAsPrevious()
 bool UTargetingComponent_SameAsPrevious::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
                                                           const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
-	OutValidTargets.Reset();
+	TArray<AActor*> FoundTargets;
 	
 	for (AActor* Target : Card->CurrentValidTargets)
 	{
 		if(IsValid(Target))
 		{
-			OutValidTargets.Add(Target);
+			FoundTargets.Add(Target);
 		}
 	}
-
-	return OutValidTargets.Num() > 0;
+	
+	OutValidTargets = FoundTargets;
+	
+	return FoundTargets.Num() > 0;
 }
 
 

@@ -350,7 +350,9 @@ void ACardBase::ContinueToNextEffect()
 		else
 		{
 			// 8. 타겟 입력이 필요하지 않으면 바로 유효한 타겟을 찾습니다.
-			CurrentTargetingComponent->FindValidTargets(InputTargets, HandCurrentCardEffect, this, false, CurrentValidTargets);
+			TArray<AActor*> ValidTargets;
+			CurrentTargetingComponent->FindValidTargets(InputTargets, HandCurrentCardEffect, this, false, ValidTargets);
+			CurrentValidTargets = ValidTargets;
 			ContinueToNextTarget();
 		}
 	}
@@ -454,21 +456,28 @@ void ACardBase::HandleImmediateCardEffect()
 void ACardBase::ExecuteEffectAction()
 {
 	// 소스 퍼펫을 가져오고, 타겟 액터에 카드 효과 적용
-	if (!GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+	// if (!GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+	// {
+	// 	COS_SCREEN(TEXT("소유자는 UInterface_CardTarget을 구현하지 않습니다."));
+	// 	return;
+	// }
+
+	AActor* SourcePuppet = nullptr;
+	if (IsValid(GetOwner())&&GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
 	{
-		COS_SCREEN(TEXT("소유자는 UInterface_CardTarget을 구현하지 않습니다."));
-		return;
+		// 소스 퍼펫과 타겟을 가져온다.
+		SourcePuppet = IInterface_CardTarget::Execute_GetPuppet(GetOwner());
 	}
 
 	// 소스 퍼펫과 타겟을 가져온다.
-	AActor* SourcePuppet = IInterface_CardTarget::Execute_GetPuppet(GetOwner());
+	// AActor* SourcePuppet = IInterface_CardTarget::Execute_GetPuppet(GetOwner());
 	AActor* TargetActor = GetValidTargetPuppet(CurrentValidTargets[TargetLoopIndex]);
 
 	// 유효한 타겟이 없으면 로그를 출력하고 함수 종료.
 	if (!TargetActor)
 	{
 		COS_SCREEN(TEXT("대상이 UInterface_CardTarget을 구현하지 않습니다."));
-		return;
+		// return;
 	}
 
 	// 카드 효과 액션을 큐에 추가

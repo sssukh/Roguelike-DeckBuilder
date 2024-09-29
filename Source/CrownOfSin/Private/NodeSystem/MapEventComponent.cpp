@@ -142,10 +142,11 @@ bool UMapEventComponent::TryFindValidEncounter(UDataTable* EncounterTable, const
 		FGameplayTagContainer EncounterTagContainer = GetEncounterTags(EncounterRowHandle);
 
 		// 선택된 태그가 포함되어 있거나, 태그 가중치가 없는 경우 true로 설정
-		bool bHasPickedTag = UBlueprintGameplayTagLibrary::HasTag(EncounterTagContainer, PickedTag, true) || bNoTagWeights;
+		bool bHasPickedTag = EncounterTagContainer.HasTagExact(PickedTag) || bNoTagWeights;
+		
 
 		// 필수 태그들이 모두 포함되어 있거나, 필수 태그가 없는 경우 true로 설정
-		bool bHasRequiredTags = UBlueprintGameplayTagLibrary::HasAllTags(EncounterTagContainer, RequiredTags, true) || bNoRequiredTags;
+		bool bHasRequiredTags = EncounterTagContainer.HasAllExact(RequiredTags) || bNoRequiredTags;
 
 		// Encounter가 선택된 태그와 필수 태그를 모두 만족하는 경우
 		if (bHasPickedTag && bHasRequiredTags)

@@ -14,7 +14,7 @@ UTargetingComponent_OpposingFront::UTargetingComponent_OpposingFront()
 bool UTargetingComponent_OpposingFront::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
                                                          const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
-	OutValidTargets.Reset();
+	TArray<AActor*> ValidTargets;
 	
 	AMinionTrack* OwnerTrack = nullptr;
 	AMinionTrack* OpposingTrack = nullptr;
@@ -23,7 +23,8 @@ bool UTargetingComponent_OpposingFront::FindValidTargets(TArray<AActor*>& Specif
 
 	if(OpposingTrack && OpposingTrack->Minions.Num()>0)
 	{
-		OutValidTargets.Add(OpposingTrack->Minions[0]);
+		ValidTargets.Add(OpposingTrack->Minions[0]);
+		OutValidTargets = ValidTargets;
 		return true;
 	}
 

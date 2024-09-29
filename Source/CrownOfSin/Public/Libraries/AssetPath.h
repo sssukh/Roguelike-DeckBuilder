@@ -44,6 +44,7 @@ namespace AssetPath
 		const FString T_Coins = TEXT("Texture2D'/Game/RLDB/Demo/Textures/UI/T_Coins.T_Coins'");
 		const FString T_LuchadorMask = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_LuchadorMask.T_LuchadorMask'");
 		const FString T_Dagger = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Dagger.T_Dagger'");
+		
 		const FString T_Heart = TEXT("Texture2D'/Game/RLDB/Demo/Textures/UI/T_Heart.T_Heart'");
 		const FString T_Shield_Metal = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Shield_Metal.T_Shield_Metal'");
 		const FString T_Barrier = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Barrier.T_Barrier'");
@@ -58,10 +59,16 @@ namespace AssetPath
 		const FString T_Venomous = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Statuses/T_Venomous.T_Venomous'");
 		const FString T_CardReward = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_CardReward.T_CardReward'");
 		const FString T_Chest = TEXT("Texture2D'/Game/RLDB/Demo/Textures/NodeMap/T_Chest.T_Chest'");
+		const FString T_Lollipop = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_Lollipop.T_Lollipop'");
+		const FString T_HeavyTome = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_HeavyTome.T_HeavyTome'");
+		const FString T_BagOfHolding = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_BagOfHolding.T_BagOfHolding'");
+		const FString T_BootsOfSpeed = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_BootsOfSpeed.T_BootsOfSpeed'");
+		const FString T_BrokenShield = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_BrokenShield.T_BrokenShield'");
+		const FString T_CardReward = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_CardReward.T_CardReward'");
+		const FString T_JackOLantern = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_JackOLantern.T_JackOLantern'");
+		const FString T_RobesOfProtection = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_RobesOfProtection.T_RobesOfProtection'");
+		const FString T_WaterSkin = TEXT("Texture2D'/Game/RLDB/Demo/Textures/Artifacts/T_Waterskin.T_Waterskin'");
 
-		
-		
-		
 	}
 
 	namespace DataTable

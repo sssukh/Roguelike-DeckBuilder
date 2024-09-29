@@ -3,6 +3,8 @@
 
 #include "CombatSystem/TargetSystem/TargetingComponent_DiscoverArtifact.h"
 
+#include "ActionSystem/ActionManagerSubsystem.h"
+#include "ActionSystem/Action_ArtifactRewardScreen.h"
 #include "CardSystem/CardPlayer.h"
 #include "CardSystem/ChanceManagerComponent.h"
 #include "Interfaces/Interface_CardGameInstance.h"
@@ -69,21 +71,23 @@ bool UTargetingComponent_DiscoverArtifact::FindValidTargets(TArray<AActor*>& Spe
 
 	TempArtifactHolder = GetWorld()->SpawnActor(AActor::StaticClass());
 
-	UStatusComponent* StatusComponent = NewObject<UStatusComponent>(this);
+	UStatusComponent* NewStatusComponent = NewObject<UStatusComponent>(this);
 
-	if (StatusComponent)
+	if (NewStatusComponent)
 	{
-		StatusComponent->StatusValue = PickedArtifact.Value;
-		StatusComponent->GameplayTags = PickedArtifact.GameplayTags;
-		StatusComponent->bShowImmediately = true;
+		NewStatusComponent->StatusValue = PickedArtifact.Value;
+		NewStatusComponent->GameplayTags = PickedArtifact.GameplayTags;
+		NewStatusComponent->bShowImmediately = true;
 
-		StatusComponent->RegisterComponent();
+		NewStatusComponent->RegisterComponent();
 	}
-
-	// TODO : ActionArtifactRewardScreen 을 생성해서 Artifact에 값 넣어주기
-	// GetWorld()->SpawnActorDeferred<ActionArti>()
-
-
+	
+	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
+	ActionManagerSubsystem->CreateAndQueueAction<AAction_ArtifactRewardScreen>([&](AAction_ArtifactRewardScreen* Action_ArtifactRewardScreen)
+	{
+		Action_ArtifactRewardScreen->Artifact = NewStatusComponent;
+	});
+	
 	BindToArtifactConfirm(CardPlayer->PlayerUI->WBP_ArtifactReward);
 
 	return true;

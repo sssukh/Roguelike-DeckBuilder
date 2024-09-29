@@ -520,6 +520,11 @@ FEncounterData UCosGameInstance::GetCurrentEncounterFromInstance_Implementation(
 	return CurrentEncounter;
 }
 
+FString UCosGameInstance::GetInstanceSaveId_Implementation()
+{
+	return SaveId;
+}
+
 TArray<FStatusData> UCosGameInstance::GetArtifactsFromInstance_Implementation()
 {
 	return Artifacts;

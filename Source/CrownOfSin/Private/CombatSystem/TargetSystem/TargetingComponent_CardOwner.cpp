@@ -15,12 +15,14 @@ UTargetingComponent_CardOwner::UTargetingComponent_CardOwner()
 bool UTargetingComponent_CardOwner::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
                                                      ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
-	OutValidTargets.Reset();
+	TArray<AActor*> ValidTargets;
 	
 	if(!Card->GetOwner())
 		return false;
 
-	OutValidTargets.Add(Card->GetOwner());
+	ValidTargets.Add(Card->GetOwner());
+
+	OutValidTargets = ValidTargets;
 	return true;
 }
 

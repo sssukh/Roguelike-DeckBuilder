@@ -18,12 +18,13 @@ UTargetingComponent_CardPlayer::UTargetingComponent_CardPlayer()
 bool UTargetingComponent_CardPlayer::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
                                                       ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
-	OutValidTargets.Reset();
+	TArray<AActor*> ValidTargets;
 
 	ACardPlayer* CardPlayer =UFunctionLibrary_Singletons::GetCardPlayer(this);
 	
-	OutValidTargets.Add(CardPlayer);
+	ValidTargets.Add(CardPlayer);
 
+	OutValidTargets = ValidTargets;
 	return true;
 }
 
