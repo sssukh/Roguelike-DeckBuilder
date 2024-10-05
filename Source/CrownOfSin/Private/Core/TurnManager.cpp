@@ -422,7 +422,7 @@ void ATurnManager::RunEvent_Implementation(const FGameplayTag& EventTag, UObject
 	else if (EventTag == CosGameTags::Event_Death)
 	{
 		// 전투가 끝났는지 확인
-		CheckIfCombatShouldEndAfterDeath();
+ 		CheckIfCombatShouldEndAfterDeath();
 		if (bCombatOver) return;
 
 		// 사망한 액터가 현재 액티브 액터일 경우, 턴 종료 처리
