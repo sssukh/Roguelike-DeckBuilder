@@ -737,3 +737,74 @@ struct FTransferAnim
 		Offset = FVector2D::Zero();
 	}
 };
+
+USTRUCT(BlueprintType)
+struct FStoryOption : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	// 카드 효과 클래스를 나타내는 서브클래스 타입
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
+	TSubclassOf<UCardEffectComponent> EffectClass;
+
+	// 효과의 값
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
+	int32 EffectValue;
+	
+	// 히어로 애니메이션을 나타내는 태그
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
+	FGameplayTag HeroAnim;
+
+	// 관련된 게임플레이 태그
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
+	FGameplayTagContainer GameplayTags;
+	
+	// 타겟 컴포넌트를 나타내는 클래스 타입
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
+	TSubclassOf<UActorComponent> TargetComponent;
+
+	// 타겟팅 컴포넌트를 나타내는 클래스 타입
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
+	TSubclassOf<UTargetingComponent> Targeting;
+
+	// 사용된 데이터 테이블 행 핸들
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
+	FDataTableRowHandle UsedData;
+
+	// 고유 식별자
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effect")
+	FString Identifier;
+
+	// 기본 생성자
+	FStoryOption()
+		: EffectClass(nullptr)
+		, EffectValue(0)
+		, TargetComponent(nullptr)
+		, Targeting(nullptr)
+	{
+	}
+	
+	// 매개변수 생성자
+
+	FStoryOption(TSubclassOf<UCardEffectComponent> InEffectClass
+		, int32 InEffectValue
+		, FGameplayTag InHeroAnim
+		, FGameplayTagContainer InGameplayTags
+		, TSubclassOf<UActorComponent> InTargetComponent
+		,TSubclassOf<UTargetingComponent> InTargeting
+		, FDataTableRowHandle InUsedData
+		, FString InIdentifier)
+	{
+		EffectValue = InEffectValue;
+		HeroAnim = InHeroAnim;
+		GameplayTags = InGameplayTags;
+		TargetComponent = InTargetComponent;
+		Targeting = InTargeting;
+		UsedData = InUsedData;
+		Identifier = InIdentifier;
+	}
+	// 복사 생성자
+
+	
+	// 대입 연산자
+};
