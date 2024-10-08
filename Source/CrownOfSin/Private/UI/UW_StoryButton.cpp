@@ -12,8 +12,10 @@ void UUW_StoryButton::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	// 버튼 클릭시 호출할 함수인 OnClicked_StoryButton OnClick 델리게이트에 등록
 	StoryButton->OnClicked.AddDynamic(this, &UUW_StoryButton::OnClicked_StoryButton);
 
+	// ToolTipClass가 미리 설정되어있는지 체크
 	if (!WBPToolTipClass)
 	{
 		COS_SCREEN(TEXT("WBPToolTipClass 클래스를 설정해주세요!!"));
@@ -21,7 +23,8 @@ void UUW_StoryButton::NativeConstruct()
 	}
 
 	if (EncounterCard.CardEffects.IsEmpty()) return;
-	
+
+	// 등록된 EncounterCard 정보로 ACardBase 생성
 	FTransform SpawnTransform = FTransform::Identity;
 	if (ACardBase* NewCard = GetWorld()->SpawnActorDeferred<ACardBase>(ACardBase::StaticClass(), SpawnTransform,
 	                                                                   nullptr, nullptr,

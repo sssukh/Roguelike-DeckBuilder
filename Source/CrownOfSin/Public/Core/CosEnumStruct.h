@@ -804,7 +804,30 @@ struct FStoryOption : public FTableRowBase
 		Identifier = InIdentifier;
 	}
 	// 복사 생성자
-
+	FStoryOption(const FStoryOption& Other)
+	{
+		EffectValue = Other.EffectValue;
+		HeroAnim = Other.HeroAnim;
+		GameplayTags = Other.GameplayTags;
+		TargetComponent = Other.TargetComponent;
+		Targeting = Other.Targeting;
+		UsedData = Other.UsedData;
+		Identifier = Other.Identifier;
+	}
 	
 	// 대입 연산자
+	FStoryOption& operator=(const FStoryOption& Other)
+	{
+		if(this != &Other)
+		{
+			EffectValue = Other.EffectValue;
+			HeroAnim = Other.HeroAnim;
+			GameplayTags = Other.GameplayTags;
+			TargetComponent = Other.TargetComponent;
+			Targeting = Other.Targeting;
+			UsedData = Other.UsedData;
+			Identifier = Other.Identifier;
+		}
+		return *this;
+	}
 };
