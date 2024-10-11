@@ -20,6 +20,11 @@ void UEffectState::ResetState()
 	bInterrupt = false;
 }
 
+void UEffectState::ResetRepetition()
+{
+	Repetition = -1;
+}
+
 
 
 

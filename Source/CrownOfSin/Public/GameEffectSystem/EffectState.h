@@ -18,7 +18,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "EffectState")
 	void ResetState();
-	
+
+	UFUNCTION(BlueprintCallable, Category = "EffectState")
+	void ResetRepetition();
 	// Member Variables
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EffectState")

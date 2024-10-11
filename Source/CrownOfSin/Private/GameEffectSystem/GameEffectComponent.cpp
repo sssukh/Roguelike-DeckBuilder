@@ -38,3 +38,8 @@ void UGameEffectComponent::ApplyEffect()
 {
 }
 
+bool UGameEffectComponent::TakeEffect(AActor* TargetActor)
+{
+	return true;
+}
+
