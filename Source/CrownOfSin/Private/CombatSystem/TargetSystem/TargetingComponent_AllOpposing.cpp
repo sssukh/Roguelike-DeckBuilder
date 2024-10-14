@@ -17,7 +17,7 @@ UTargetingComponent_AllOpposing::UTargetingComponent_AllOpposing()
 
 
 bool UTargetingComponent_AllOpposing::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
-                                                       ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
+                                                       AEffectActor* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
 	TArray<AActor*> ValidTargets;
 	

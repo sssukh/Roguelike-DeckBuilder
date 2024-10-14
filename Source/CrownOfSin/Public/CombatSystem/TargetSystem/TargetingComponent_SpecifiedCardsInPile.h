@@ -19,7 +19,7 @@ class CROWNOFSIN_API UTargetingComponent_SpecifiedCardsInPile : public UTargetin
 public:
 	UTargetingComponent_SpecifiedCardsInPile();
 
-	virtual bool FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets) override;
+	virtual bool FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, AEffectActor* Card, bool bPreview, TArray<AActor*>& OutValidTargets) override;
 
 	UFUNCTION(BlueprintCallable, Category="TargetingSystem SpecifiedCardsInPile")
 	void BindToCardConfirm(UUW_CardSelectorList* CardList);

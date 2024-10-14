@@ -12,7 +12,7 @@ UTargetingComponent_OpposingFront::UTargetingComponent_OpposingFront()
 }
 
 bool UTargetingComponent_OpposingFront::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
-                                                         const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
+                                                         const FCardEffect& CardEffect, AEffectActor* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
 	TArray<AActor*> ValidTargets;
 	

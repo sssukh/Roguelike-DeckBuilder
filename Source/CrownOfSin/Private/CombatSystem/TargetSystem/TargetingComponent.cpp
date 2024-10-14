@@ -21,7 +21,8 @@ UTargetingComponent::UTargetingComponent()
 }
 
 
-bool UTargetingComponent::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card,
+
+bool UTargetingComponent::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, AEffectActor* Card,
                                            bool bPreview, TArray<AActor*>& OutValidTargets)
 {
 	TArray<AActor*> NewTargets;
@@ -51,7 +52,7 @@ TArray<AActor*> UTargetingComponent::FindAllMinionsWithMatchingTags(FGameplayTag
 	return MatchingTargets;
 }
 
-void UTargetingComponent::FindMinionTracks(ACardBase* Card, AMinionTrack*& OwnerTrack, AMinionTrack*& OpposingTrack)
+void UTargetingComponent::FindMinionTracks(AEffectActor* Card, AMinionTrack*& OwnerTrack, AMinionTrack*& OpposingTrack)
 {
 	AMinionBase* Minion = Cast<AMinionBase>(Card->GetOwner());
 
@@ -65,7 +66,7 @@ void UTargetingComponent::FindMinionTracks(ACardBase* Card, AMinionTrack*& Owner
 	}
 }
 
-bool UTargetingComponent::GetAllMinionsOnOpposingTrack(ACardBase* Card, TArray<AMinionBase*>& Minions)
+bool UTargetingComponent::GetAllMinionsOnOpposingTrack(AEffectActor* Card, TArray<AMinionBase*>& Minions)
 {
 	Minions.Reset();
 

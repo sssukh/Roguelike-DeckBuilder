@@ -13,7 +13,7 @@ UTargetingComponent_CardOwner::UTargetingComponent_CardOwner()
 }
 
 bool UTargetingComponent_CardOwner::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
-                                                     ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
+                                                     AEffectActor* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
 	TArray<AActor*> ValidTargets;
 	

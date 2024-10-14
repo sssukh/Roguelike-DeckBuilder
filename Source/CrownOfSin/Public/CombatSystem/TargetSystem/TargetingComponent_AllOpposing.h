@@ -17,5 +17,5 @@ public:
 	UTargetingComponent_AllOpposing();
 
 	// 카드를 소유한 미니언이 있는 트랙의 반대편에 있는 모든 미니언을 대상으로 삼는다.
-	virtual bool FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets) override;
+	virtual bool FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, AEffectActor* Card, bool bPreview, TArray<AActor*>& OutValidTargets) override;
 };

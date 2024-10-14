@@ -16,7 +16,7 @@ UTargetingComponent_PayloadWithIdentifier::UTargetingComponent_PayloadWithIdenti
 }
 
 bool UTargetingComponent_PayloadWithIdentifier::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
-                                                                 const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
+                                                                 const FCardEffect& CardEffect, AEffectActor* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
 	TArray<AActor*> ValidTargets;
 	

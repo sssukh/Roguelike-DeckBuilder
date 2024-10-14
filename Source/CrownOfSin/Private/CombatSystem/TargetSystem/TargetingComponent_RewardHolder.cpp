@@ -12,7 +12,7 @@ UTargetingComponent_RewardHolder::UTargetingComponent_RewardHolder()
 {
 }
 
-bool UTargetingComponent_RewardHolder::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
+bool UTargetingComponent_RewardHolder::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect, AEffectActor* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
 	OutValidTargets.Empty();
 	

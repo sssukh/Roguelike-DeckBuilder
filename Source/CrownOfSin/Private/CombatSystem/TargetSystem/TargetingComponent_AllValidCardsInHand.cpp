@@ -17,7 +17,7 @@ UTargetingComponent_AllValidCardsInHand::UTargetingComponent_AllValidCardsInHand
 }
 
 bool UTargetingComponent_AllValidCardsInHand::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
-                                                               ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
+                                                               AEffectActor* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
 	TArray<AActor*> ValidTargets;
 	

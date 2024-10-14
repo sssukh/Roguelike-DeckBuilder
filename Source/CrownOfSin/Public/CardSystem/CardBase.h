@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/CosEnumStruct.h"
+#include "GameEffectSystem/EffectActor.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/Interface_Interrupt.h"
 #include "CardBase.generated.h"
@@ -29,7 +30,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnThisCardModified);
  * 5. 카드 관련 유틸리티 함수: 카드의 이름, 설명, 태그 등의 정보를 가져오는 다양한 유틸리티 함수가 포함되어 있습니다.
  */
 UCLASS()
-class CROWNOFSIN_API ACardBase : public AActor, public IInterface_Interrupt
+class CROWNOFSIN_API ACardBase : public AEffectActor, public IInterface_Interrupt
 {
 	GENERATED_BODY()
 

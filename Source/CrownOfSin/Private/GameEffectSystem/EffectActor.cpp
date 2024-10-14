@@ -3,20 +3,25 @@
 
 #include "GameEffectSystem/EffectActor.h"
 
+#include "ActionSystem/ActionManagerSubsystem.h"
 #include "ActionSystem/Action_Effect.h"
 #include "CardSystem/CardEffects/CardEffectComponent.h"
+#include "CardSystem/CardUseRules/UseRuleComponent.h"
 #include "CombatSystem/TargetSystem/TargetingComponent.h"
 #include "CombatSystem/TargetSystem/TargetingComponent_Untargeted.h"
 #include "Core/CosEnumStruct.h"
 #include "Core/DispatcherHubLocalComponent.h"
+#include "Core/GameplayTagComponent.h"
 #include "GameEffectSystem/EffectState.h"
 #include "GameEffectSystem/GameEffectComponent.h"
 #include "Interfaces/Interface_CardTarget.h"
 #include "Libraries/FunctionLibrary_Event.h"
+#include "StatusSystem/StatusComponent.h"
 #include "Utilities/CosGameplayTags.h"
 #include "Utilities/CosLog.h"
 
 
+class UActionManagerSubsystem;
 // Sets default values
 AEffectActor::AEffectActor()
 {
@@ -25,20 +30,118 @@ AEffectActor::AEffectActor()
 
 	EffectState = CreateDefaultSubobject<UEffectState>("EffectState");
 
-	
+	DispatcherHubLocal = CreateDefaultSubobject<UDispatcherHubLocalComponent>("DispatcherHubLocal");
+
+	GameplayTagComponent = CreateDefaultSubobject<UGameplayTagComponent>("GameplayTagComponent");
 }
 
 // Called when the game starts or when spawned
 void AEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	InitializeFromData();
 }
 
 // Called every frame
 void AEffectActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AEffectActor::InitializeFromData()
+{
+	// 1. Deck 카드 데이터를 가져옵니다.
+	const FDataTableRowHandle CardDataRowHandle = EffectData.DataRow;
+
+	// 2. 유효한 데이터가 아니면 초기화를 중단합니다.
+	if (!InitializeEffectDataFromRow(CardDataRowHandle))
+	{
+		return;
+	}
+
+	// 3. 카드의 소유자가 유효하고 IInterface_CardTarget 인터페이스를 구현하는지 확인합니다.
+	if (IsValid(GetOwner()) && GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+	{
+		// 4. 소유자의 고유 ID를 가져와 Deck 카드 데이터에 설정합니다.
+		FString OwnerUniqueID = IInterface_CardTarget::Execute_GetMinionUniqueID(GetOwner());
+		EffectData.OwnerID = OwnerUniqueID;
+	}
+	
+	// 5. 데이터를 초기화하고 사용 규칙과 상태 컴포넌트를 설정합니다.
+	// InitializeCardData();
+	SetupUseRuleComponents();
+	SetupStatusComponents();
+}
+
+bool AEffectActor::InitializeEffectDataFromRow(const FDataTableRowHandle& EffectDataRowHandle)
+{
+	if(EffectDataRowHandle.IsNull())
+	{
+		return HandleInvalidData(EffectDataRowHandle);
+	}
+
+	if(const FCard* FoundData = EffectDataRowHandle.DataTable->FindRow<FCard>(EffectDataRowHandle.RowName,TEXT("FCard in AEffectActor")))
+	{
+		EffectData = *FoundData;
+	}
+	else
+	{
+		return HandleInvalidData(EffectDataRowHandle);
+	}
+
+	return true;
+}
+
+bool AEffectActor::HandleInvalidData(const FDataTableRowHandle& CardDataRowHandle)
+{
+	COS_LOG_SCREEN(TEXT("오류 : EffectData의 DataRowHandle의 값이 올바르지 않습니다. "));
+	return false;
+}
+
+void AEffectActor::SetupUseRuleComponents()
+{
+	// 1. EffectData에서 사용 규칙을 가져옵니다.
+	const TArray<FUseRule>& UseRulesArray = EffectData.UseRules;
+
+	// 2. 각 사용 규칙에 대해 컴포넌트를 생성하고 초기화합니다.
+	for (const FUseRule& UseRule : UseRulesArray)
+	{
+		// 3. 고유한 컴포넌트 이름을 생성합니다.
+		FName UniqueComponentName = MakeUniqueObjectName(this, UUseRuleComponent::StaticClass());
+
+		// 4. 새로운 UUseRuleComponent를 생성하고, 해당 규칙에 맞게 설정합니다.
+		UUseRuleComponent* NewUseRuleComponent = NewObject<UUseRuleComponent>(this, UseRule.Rule, UniqueComponentName);
+
+		// 5. 컴포넌트를 등록하고 초기화합니다.
+		NewUseRuleComponent->RegisterComponent();
+		NewUseRuleComponent->InitializeUseRule();
+		AddInstanceComponent(NewUseRuleComponent);
+
+		// 6. 생성된 컴포넌트를 사용 규칙 인스턴스에 추가합니다.
+		UseRuleInstances.Add(UseRule.Rule, NewUseRuleComponent);
+	}
+}
+
+void AEffectActor::SetupStatusComponents()
+{
+	// 1. EffectData에서 초기 상태 정보를 가져옵니다.
+	TArray<FStatusData> StartingStatusArray = EffectData.StartingStatuses;
+
+	// 2. 각 상태에 대해 컴포넌트를 생성하고 초기화합니다.
+	for (const FStatusData& StatusData : StartingStatusArray)
+	{
+		// 3. 고유한 상태 컴포넌트 이름을 생성합니다.
+		FName UniqueStatusComponentName = MakeUniqueObjectName(this, UStatusComponent::StaticClass());
+
+		// 4. 새로운 UStatusComponent를 생성하고, 상태 값과 태그를 설정합니다.
+		UStatusComponent* NewStatusComponent = NewObject<UStatusComponent>(this, StatusData.StatusClass, UniqueStatusComponentName);
+
+		NewStatusComponent->RegisterComponent();
+		NewStatusComponent->StatusValue = StatusData.Value;
+		NewStatusComponent->GameplayTags = StatusData.GameplayTags;
+		AddInstanceComponent(NewStatusComponent);
+	}
 }
 
 void AEffectActor::ApplyEffect(bool bSkipConsequences, bool bAutoPlay)
@@ -151,6 +254,23 @@ void AEffectActor::HandleInterruption()
 {
 }
 
+void AEffectActor::ResolveUseRuleConsequences()
+{
+	// 1. Hand 데이터 타입의 카드에 대한 사용 규칙을 가져옵니다.
+	TArray<FUseRule> CardUseRules = EffectData.UseRules;
+
+	// 2. 각 사용 규칙을 순회하며 규칙에 따른 결과를 적용합니다.
+	for (const FUseRule& UseRule : CardUseRules)
+	{
+		// 3. 해당 규칙에 대한 컴포넌트가 있는지 확인합니다.
+		if (UseRuleInstances.Contains(UseRule.Rule))
+		{
+			// 4. 규칙에 정의된 결과를 처리합니다.
+			UseRuleInstances[UseRule.Rule]->ResolveUseConsequence(UseRule);
+		}
+	}
+}
+
 void AEffectActor::ProcessCurrentEffect(const FCardEffect& Effect)
 {
 	CurrentTargetingComponent = AccessTargetingClassLazy(GetOwner(), Effect.Targeting);
@@ -230,7 +350,7 @@ void AEffectActor::HandleImmediateEffect()
 void AEffectActor::EndEffect()
 {
 	DispatcherHubLocal->CallEvent(CosGameTags::Event_Card_PostPlay, this);
-	DispatcherHubLocal->CallEvent(GetPostUseEvent(ECardDataType::Hand), this);
+	DispatcherHubLocal->CallEvent(EffectData.PostUseEvent, this);
 }
 
 UTargetingComponent* AEffectActor::AccessTargetingClassLazy(AActor* TargetingHolderActor,
@@ -314,6 +434,33 @@ AActor* AEffectActor::GetValidTargetPuppet(AActor* TargetActor) const
 
 	// 유효하지 않은 경우 nullptr 반환.
 	return nullptr;
+}
+
+
+void AEffectActor::QueueGameEffectAction(AActor* TargetActor, AActor* SourcePuppet, UGameEffectComponent* CardEffect,
+                                         bool bAnimateSourcePuppet)
+{
+	// 1. 카드 효과에 대한 액션이 유효한지 확인합니다.
+	if (!IsValid(CardEffect->EffectActionClass)) return;
+
+	// 2. 카드 효과가 유효한지 다시 확인 (생성 실패시 로그 출력).
+	if (!CardEffect) return;
+
+	// 3. AAction_Effect 액터를 생성합니다.
+	UActionManagerSubsystem* ActionManagerSubsystem = GetWorld()->GetSubsystem<UActionManagerSubsystem>();
+	ActionManagerSubsystem->CreateAndQueueActionWithClass<AAction_Effect>(CardEffect->EffectActionClass, [this,TargetActor,SourcePuppet,CardEffect,bAnimateSourcePuppet](AAction_Effect* Action_Effect)
+	{
+		Action_Effect->Target = TargetActor;
+		Action_Effect->SourcePuppet = SourcePuppet;
+
+		if (bAnimateSourcePuppet)
+			Action_Effect->HeroAnim = CardEffect->HeroAnim;
+
+		const TArray<FCardEffect>& HandCardEffect = EffectData.CardEffects;
+
+		if (HandCardEffect.IsValidIndex(EffectState->EffectLoopIndex))
+			Action_Effect->Effect = HandCardEffect[EffectState->EffectLoopIndex];
+	}, ESpawnActorCollisionHandlingMethod::Undefined, ESpawnActorScaleMethod::SelectDefaultAtRuntime);
 }
 
 

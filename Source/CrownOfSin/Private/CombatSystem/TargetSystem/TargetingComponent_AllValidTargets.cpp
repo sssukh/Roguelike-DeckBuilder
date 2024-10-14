@@ -11,7 +11,7 @@ UTargetingComponent_AllValidTargets::UTargetingComponent_AllValidTargets()
 }
 
 bool UTargetingComponent_AllValidTargets::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
-                                                           const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
+                                                           const FCardEffect& CardEffect, AEffectActor* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
 	OutValidTargets = FindAllMinionsWithMatchingTags(CardEffect.GameplayTags);
 	

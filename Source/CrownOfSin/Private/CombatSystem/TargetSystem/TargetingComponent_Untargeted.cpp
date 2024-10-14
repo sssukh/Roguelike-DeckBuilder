@@ -15,7 +15,7 @@ UTargetingComponent_Untargeted::UTargetingComponent_Untargeted()
 }
 
 bool UTargetingComponent_Untargeted::FindValidTargets(TArray<AActor*>& SpecifiedTargets, const FCardEffect& CardEffect,
-                                                      ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
+                                                      AEffectActor* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
 	TArray<AActor*> NewTargets;
 	NewTargets.Add(nullptr);

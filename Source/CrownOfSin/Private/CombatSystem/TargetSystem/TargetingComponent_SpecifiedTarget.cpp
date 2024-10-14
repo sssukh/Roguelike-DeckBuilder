@@ -15,7 +15,7 @@ UTargetingComponent_SpecifiedTarget::UTargetingComponent_SpecifiedTarget()
 }
 
 bool UTargetingComponent_SpecifiedTarget::FindValidTargets(TArray<AActor*>& SpecifiedTargets,
-                                                           const FCardEffect& CardEffect, ACardBase* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
+                                                           const FCardEffect& CardEffect, AEffectActor* Card, bool bPreview, TArray<AActor*>& OutValidTargets)
 {
 	OutValidTargets.Reset();
 	
