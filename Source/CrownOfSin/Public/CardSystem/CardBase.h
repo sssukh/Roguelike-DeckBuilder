@@ -44,13 +44,13 @@ protected:
  	 * 카드 데이터 테이블에서 Deck 데이터를 가져와 카드를 초기화합니다.
  	 * 카드 데이터를 설정한 후, 카드 사용 규칙과 상태 컴포넌트를 설정하고 카드의 희귀도 및 타입을 결정합니다.
  	 */
-	void InitializeFromData();
+	virtual void InitializeFromData() override;
 
 	/* 
  	 * 주어진 데이터 테이블 핸들을 통해 카드 데이터를 찾아 초기화합니다.
  	 * 데이터가 유효하지 않거나 존재하지 않을 경우, 에러 처리를 수행하고 초기화를 중단합니다.
  	 */
-	bool InitializeCardDataFromRow(const FDataTableRowHandle& CardDataRowHandle);
+	virtual bool InitializeCardDataFromRow(const FDataTableRowHandle& CardDataRowHandle);
 
 	/* 
  	 * 유효하지 않은 카드 데이터를 처리하고, 필요한 경우 에러 메시지를 출력하며 기본 데이터를 설정합니다.
@@ -60,19 +60,19 @@ protected:
 	/* 
  	 * 카드의 Pile, Hand 데이터를 초기화하며, 해당 카드에 대한 GameplayTags를 설정합니다.
  	 */
-	void InitializeCardData();
+	virtual void InitializeCardData() override;
 
 	/*
  	 * 카드 사용 규칙에 해당하는 컴포넌트들을 설정합니다.
  	 * 각 카드의 사용 규칙에 맞는 UUseRuleComponent를 생성하고 등록한 후, 카드의 사용 규칙 인스턴스에 추가합니다.
  	 */
-	void SetupUseRuleComponents();
+	virtual void SetupUseRuleComponents() override;
 
 	/*
  	 * 카드의 초기 상태를 설정합니다.
  	 * 카드가 게임에서 시작될 때 필요한 상태 컴포넌트를 생성하고 등록합니다.
  	 */
-	void SetupStatusComponents();
+	virtual void SetupStatusComponents();
 
 
 	/*========================================================================================
@@ -122,8 +122,8 @@ public:
 	void ContinueToNextTarget();
 
 	/*카드 사용 시, 타겟 입력이 필요한 경우 유효한 타겟들을 받아 저장하고, 이후 카드의 다음 타겟을 처리하는 함수.*/
-	UFUNCTION(BlueprintCallable, Category = "Card|Usage")
-	void ProceedOnInputTargetsReceived(TArray<AActor*> Targets);
+	// UFUNCTION(BlueprintCallable, Category = "Card|Usage")
+	// void ProceedOnInputTargetsReceived(TArray<AActor*> Targets);
 
 
 	/*========================================================================================
@@ -137,19 +137,19 @@ protected:
 	void HandleImmediateCardEffect();
 
 	/*카드 효과 액션을 실행하는 함수.*/
-	void ExecuteEffectAction();
+	// void ExecuteEffectAction();
 
 public:
 	/*주어진 타겟 액터가 UInterface_CardTarget 인터페이스를 구현하는지 확인하고, 해당 퍼펫을 반환하는 함수.*/
-	AActor* GetValidTargetPuppet(AActor* TargetActor) const;
+	// AActor* GetValidTargetPuppet(AActor* TargetActor) const;
 
 	/*잠재적인 타겟들을 찾아 반환합니다.*/
 	UFUNCTION(BlueprintCallable, Category = "Card|Targeting")
 	TArray<AActor*> FindAllPotentialTargets();
 
 	/*타겟팅 클래스에 액세스하거나 새로운 타겟팅 컴포넌트를 생성합니다.*/
-	UFUNCTION(BlueprintCallable, Category = "Card|Targeting")
-	UTargetingComponent* AccessTargetingClassLazy(AActor* TargetingHolderActor, TSubclassOf<UTargetingComponent> TargetingClass);
+	// UFUNCTION(BlueprintCallable, Category = "Card|Targeting")
+	// UTargetingComponent* AccessTargetingClassLazy(AActor* TargetingHolderActor, TSubclassOf<UTargetingComponent> TargetingClass);
 
 
 	/*========================================================================================
@@ -158,7 +158,7 @@ public:
 public:
 	/*주어진 카드 데이터 타입에 해당하는 카드 데이터를 반환합니다.*/
 	UFUNCTION(BlueprintCallable, Category = "Card|Data")
-	FCard GetCardByCardDataType(ECardDataType InCardType);
+	FCard GetCardByCardDataType(ECardDataType InCardType = ECardDataType::None);
 
 	/*주어진 카드 데이터 타입에 해당하는 카드 데이터를 참조로 반환합니다.*/
 	FCard& GetCardByCardDataTypeRef(ECardDataType InCardType);
@@ -330,27 +330,27 @@ public:
 	=========================================================================================*/
 public:
 	// 카드 이벤트 호출을 위한 로컬 디스패처 허브
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Components")
-	TObjectPtr<UDispatcherHubLocalComponent> DispatcherHubLocal;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Components")
+	// TObjectPtr<UDispatcherHubLocalComponent> DispatcherHubLocal;
 
 	// 카드의 게임플레이 태그를 관리하는 컴포넌트
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Components")
-	TObjectPtr<UGameplayTagComponent> GameplayTagComponent;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Components")
+	// TObjectPtr<UGameplayTagComponent> GameplayTagComponent;
 
 protected:
 	// 현재 카드 효과를 처리하는 컴포넌트
-	UPROPERTY(BlueprintReadWrite, Category = "Card|Components")
-	TObjectPtr<UCardEffectComponent> CurrentCardEffectComponent;
+	// UPROPERTY(BlueprintReadWrite, Category = "Card|Components")
+	// TObjectPtr<UCardEffectComponent> CurrentCardEffectComponent;
 
 	// 현재 카드의 타겟팅을 관리하는 컴포넌트
-	UPROPERTY(BlueprintReadWrite, Category = "Card|Components")
-	TObjectPtr<UTargetingComponent> CurrentTargetingComponent;
+	// UPROPERTY(BlueprintReadWrite, Category = "Card|Components")
+	// TObjectPtr<UTargetingComponent> CurrentTargetingComponent;
 
 	// 카드 데이터 관련 멤버 변수
 public:
 	// 입력된 타겟 리스트
-	UPROPERTY(BlueprintReadWrite, Category = "Card|Data")
-	TArray<AActor*> InputTargets;
+	// UPROPERTY(BlueprintReadWrite, Category = "Card|Data")
+	// TArray<AActor*> InputTargets;
 
 	// 손에 있는 카드 데이터
 	UPROPERTY(BlueprintReadWrite, Category = "Card|Data")
@@ -371,24 +371,24 @@ public:
 	// 카드 상태 및 진행 관련 멤버 변수
 public:
 	// 카드 효과의 반복 횟수
-	UPROPERTY(BlueprintReadWrite, Category = "Card|State")
-	int32 CurrentRepetitions;
+	// UPROPERTY(BlueprintReadWrite, Category = "Card|State")
+	// int32 CurrentRepetitions;
 
 	// 카드 효과 루프의 현재 인덱스
-	UPROPERTY(BlueprintReadWrite, Category = "Card|State")
-	int32 EffectLoopIndex;
+	// UPROPERTY(BlueprintReadWrite, Category = "Card|State")
+	// int32 EffectLoopIndex;
 
 	// 타겟 루프의 현재 인덱스
-	UPROPERTY(BlueprintReadWrite, Category = "Card|State")
-	int32 TargetLoopIndex;
+	// UPROPERTY(BlueprintReadWrite, Category = "Card|State")
+	// int32 TargetLoopIndex;
 
 	// 현재 유효한 타겟 리스트
-	UPROPERTY(BlueprintReadWrite, Category = "Card|State")
-	TArray<AActor*> CurrentValidTargets;
+	// UPROPERTY(BlueprintReadWrite, Category = "Card|State")
+	// TArray<AActor*> CurrentValidTargets;
 
 	// 카드 사용 중단 플래그
-	UPROPERTY(BlueprintReadWrite, Category = "Card|State")
-	bool bInterrupt;
+	// UPROPERTY(BlueprintReadWrite, Category = "Card|State")
+	// bool bInterrupt;
 
 
 	// 카드 특성 관련 멤버 변수
@@ -408,8 +408,8 @@ public:
 	// 사용 규칙 관련 멤버 변수
 public:
 	// 카드 사용 규칙을 관리하는 컴포넌트 맵
-	UPROPERTY(BlueprintReadWrite, Category = "Card|UseRules")
-	TMap<TSubclassOf<UUseRuleComponent>, UUseRuleComponent*> UseRuleInstances;
+	// UPROPERTY(BlueprintReadWrite, Category = "Card|UseRules")
+	// TMap<TSubclassOf<UUseRuleComponent>, UUseRuleComponent*> UseRuleInstances;
 
 
 	// 이벤트 및 델리게이트

@@ -25,6 +25,7 @@ UENUM(BlueprintType)
 
 enum class ECardDataType : uint8
 {
+	None,
 	Hand UMETA(Description = "Modify until it leaves the hand. 손에서 떠날 때 까지 변형된다."),
 	Deck UMETA(Description = "Modifies between level loads. 레벨 사이에서 변형된다."),
 	Base UMETA(Description = "Used to get the non-modified version. 변형되지 않은 원본을 받을 때 사용"),

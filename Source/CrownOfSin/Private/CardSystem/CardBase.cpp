@@ -31,8 +31,8 @@ ACardBase::ACardBase()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
-	GameplayTagComponent = CreateDefaultSubobject<UGameplayTagComponent>(TEXT("GameplayTagComponent"));
-	DispatcherHubLocal = CreateDefaultSubobject<UDispatcherHubLocalComponent>(TEXT("DispatcherHubLocal"));
+	// GameplayTagComponent = CreateDefaultSubobject<UGameplayTagComponent>(TEXT("GameplayTagComponent"));
+	// DispatcherHubLocal = CreateDefaultSubobject<UDispatcherHubLocalComponent>(TEXT("DispatcherHubLocal"));
 
 	CardType = CosGameTags::Effect_Invalid;
 }
@@ -401,17 +401,17 @@ void ACardBase::ContinueToNextTarget()
 	}
 }
 
-void ACardBase::ProceedOnInputTargetsReceived(TArray<AActor*> Targets)
-{
-	// 입력된 유효한 타겟들을 저장.
-	CurrentValidTargets = Targets;
-
-	// 델리게이트에서 타겟 입력 수신자를 제거하여 중복 호출 방지.
-	CurrentTargetingComponent->OnInputTargetsReceived.RemoveDynamic(this, &ACardBase::ProceedOnInputTargetsReceived);
-
-	// 다음 타겟을 처리.
-	ContinueToNextTarget();
-}
+// void ACardBase::ProceedOnInputTargetsReceived(TArray<AActor*> Targets)
+// {
+// 	// 입력된 유효한 타겟들을 저장.
+// 	CurrentValidTargets = Targets;
+//
+// 	// 델리게이트에서 타겟 입력 수신자를 제거하여 중복 호출 방지.
+// 	CurrentTargetingComponent->OnInputTargetsReceived.RemoveDynamic(this, &ACardBase::ProceedOnInputTargetsReceived);
+//
+// 	// 다음 타겟을 처리.
+// 	ContinueToNextTarget();
+// }
 
 void ACardBase::InitializeCurrentCardEffect(const FCardEffect& CardEffect)
 {
@@ -453,49 +453,49 @@ void ACardBase::HandleImmediateCardEffect()
 	}
 }
 
-void ACardBase::ExecuteEffectAction()
-{
-	// 소스 퍼펫을 가져오고, 타겟 액터에 카드 효과 적용
-	// if (!GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
-	// {
-	// 	COS_SCREEN(TEXT("소유자는 UInterface_CardTarget을 구현하지 않습니다."));
-	// 	return;
-	// }
+// void ACardBase::ExecuteEffectAction()
+// {
+// 	// 소스 퍼펫을 가져오고, 타겟 액터에 카드 효과 적용
+// 	// if (!GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+// 	// {
+// 	// 	COS_SCREEN(TEXT("소유자는 UInterface_CardTarget을 구현하지 않습니다."));
+// 	// 	return;
+// 	// }
+//
+// 	AActor* SourcePuppet = nullptr;
+// 	if (IsValid(GetOwner())&&GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+// 	{
+// 		// 소스 퍼펫과 타겟을 가져온다.
+// 		SourcePuppet = IInterface_CardTarget::Execute_GetPuppet(GetOwner());
+// 	}
+//
+// 	// 소스 퍼펫과 타겟을 가져온다.
+// 	// AActor* SourcePuppet = IInterface_CardTarget::Execute_GetPuppet(GetOwner());
+// 	AActor* TargetActor = GetValidTargetPuppet(CurrentValidTargets[TargetLoopIndex]);
+//
+// 	// 유효한 타겟이 없으면 로그를 출력하고 함수 종료.
+// 	if (!TargetActor)
+// 	{
+// 		COS_SCREEN(TEXT("대상이 UInterface_CardTarget을 구현하지 않습니다."));
+// 		// return;
+// 	}
+//
+// 	// 카드 효과 액션을 큐에 추가
+// 	QueueCardEffectAction(TargetActor, SourcePuppet, CurrentCardEffectComponent, TargetLoopIndex == 0);
+// }
 
-	AActor* SourcePuppet = nullptr;
-	if (IsValid(GetOwner())&&GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
-	{
-		// 소스 퍼펫과 타겟을 가져온다.
-		SourcePuppet = IInterface_CardTarget::Execute_GetPuppet(GetOwner());
-	}
-
-	// 소스 퍼펫과 타겟을 가져온다.
-	// AActor* SourcePuppet = IInterface_CardTarget::Execute_GetPuppet(GetOwner());
-	AActor* TargetActor = GetValidTargetPuppet(CurrentValidTargets[TargetLoopIndex]);
-
-	// 유효한 타겟이 없으면 로그를 출력하고 함수 종료.
-	if (!TargetActor)
-	{
-		COS_SCREEN(TEXT("대상이 UInterface_CardTarget을 구현하지 않습니다."));
-		// return;
-	}
-
-	// 카드 효과 액션을 큐에 추가
-	QueueCardEffectAction(TargetActor, SourcePuppet, CurrentCardEffectComponent, TargetLoopIndex == 0);
-}
-
-AActor* ACardBase::GetValidTargetPuppet(AActor* TargetActor) const
-{
-	// 타겟 액터가 UInterface_CardTarget을 구현하는지 확인.
-	if (TargetActor->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
-	{
-		// 퍼펫을 반환.
-		return IInterface_CardTarget::Execute_GetPuppet(TargetActor);
-	}
-
-	// 유효하지 않은 경우 nullptr 반환.
-	return nullptr;
-}
+// AActor* ACardBase::GetValidTargetPuppet(AActor* TargetActor) const
+// {
+// 	// 타겟 액터가 UInterface_CardTarget을 구현하는지 확인.
+// 	if (TargetActor->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
+// 	{
+// 		// 퍼펫을 반환.
+// 		return IInterface_CardTarget::Execute_GetPuppet(TargetActor);
+// 	}
+//
+// 	// 유효하지 않은 경우 nullptr 반환.
+// 	return nullptr;
+// }
 
 TArray<AActor*> ACardBase::FindAllPotentialTargets()
 {
@@ -523,38 +523,38 @@ TArray<AActor*> ACardBase::FindAllPotentialTargets()
 	return AllValidTargets;
 }
 
-UTargetingComponent* ACardBase::AccessTargetingClassLazy(AActor* TargetingHolderActor, TSubclassOf<UTargetingComponent> TargetingClass)
-{
-	// 1. TargetingHolderActor가 유효하지 않으면, 자기 자신(this)을 TargetingHolderActor로 설정하여 재귀 호출합니다.
-	if (!IsValid(TargetingHolderActor))
-	{
-		return AccessTargetingClassLazy(this, TargetingClass);
-	}
-
-	// 2. TargetingHolderActor에 해당 클래스의 타겟팅 컴포넌트가 있는지 확인하고, 있으면 반환합니다.
-	if (UActorComponent* FoundTargetingComponent = TargetingHolderActor->GetComponentByClass(TargetingClass))
-	{
-		if (UTargetingComponent* TargetingComponent = Cast<UTargetingComponent>(FoundTargetingComponent))
-		{
-			return TargetingComponent;
-		}
-	}
-
-
-	// 3. 타겟팅 컴포넌트가 없고, 주어진 TargetingClass가 유효하면 새로운 타겟팅 컴포넌트를 생성하여 추가합니다.
-	if (IsValid(TargetingClass))
-	{
-		// 새로운 타겟팅 컴포넌트를 생성하고 등록합니다.
-		UTargetingComponent* NewTargetingComponent = NewObject<UTargetingComponent>(TargetingHolderActor, TargetingClass);
-		NewTargetingComponent->RegisterComponent();
-		TargetingHolderActor->AddInstanceComponent(NewTargetingComponent);
-
-		return NewTargetingComponent;
-	}
-
-	// 4. TargetingClass가 유효하지 않으면, 기본 타겟팅 클래스(UTargetingComponent_Untargeted)를 사용하여 다시 접근합니다.
-	return AccessTargetingClassLazy(TargetingHolderActor, UTargetingComponent_Untargeted::StaticClass());
-}
+// UTargetingComponent* ACardBase::AccessTargetingClassLazy(AActor* TargetingHolderActor, TSubclassOf<UTargetingComponent> TargetingClass)
+// {
+// 	// 1. TargetingHolderActor가 유효하지 않으면, 자기 자신(this)을 TargetingHolderActor로 설정하여 재귀 호출합니다.
+// 	if (!IsValid(TargetingHolderActor))
+// 	{
+// 		return AccessTargetingClassLazy(this, TargetingClass);
+// 	}
+//
+// 	// 2. TargetingHolderActor에 해당 클래스의 타겟팅 컴포넌트가 있는지 확인하고, 있으면 반환합니다.
+// 	if (UActorComponent* FoundTargetingComponent = TargetingHolderActor->GetComponentByClass(TargetingClass))
+// 	{
+// 		if (UTargetingComponent* TargetingComponent = Cast<UTargetingComponent>(FoundTargetingComponent))
+// 		{
+// 			return TargetingComponent;
+// 		}
+// 	}
+//
+//
+// 	// 3. 타겟팅 컴포넌트가 없고, 주어진 TargetingClass가 유효하면 새로운 타겟팅 컴포넌트를 생성하여 추가합니다.
+// 	if (IsValid(TargetingClass))
+// 	{
+// 		// 새로운 타겟팅 컴포넌트를 생성하고 등록합니다.
+// 		UTargetingComponent* NewTargetingComponent = NewObject<UTargetingComponent>(TargetingHolderActor, TargetingClass);
+// 		NewTargetingComponent->RegisterComponent();
+// 		TargetingHolderActor->AddInstanceComponent(NewTargetingComponent);
+//
+// 		return NewTargetingComponent;
+// 	}
+//
+// 	// 4. TargetingClass가 유효하지 않으면, 기본 타겟팅 클래스(UTargetingComponent_Untargeted)를 사용하여 다시 접근합니다.
+// 	return AccessTargetingClassLazy(TargetingHolderActor, UTargetingComponent_Untargeted::StaticClass());
+// }
 
 FCard ACardBase::GetCardByCardDataType(ECardDataType InCardType)
 {
@@ -563,7 +563,7 @@ FCard ACardBase::GetCardByCardDataType(ECardDataType InCardType)
 	if (InCardType == ECardDataType::Hand) return CardDataHand;
 	if (InCardType == ECardDataType::Pile) return CardDataPile;
 
-	return FCard(); // 기본 FCard 객체를 반환 (에러 처리가 필요한 경우 추가 가능)
+	return EffectData; // 기본 FCard 객체를 반환 (에러 처리가 필요한 경우 추가 가능)
 }
 
 FCard& ACardBase::GetCardByCardDataTypeRef(ECardDataType InCardType)

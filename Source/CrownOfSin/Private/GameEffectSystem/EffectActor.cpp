@@ -16,6 +16,7 @@
 #include "GameEffectSystem/GameEffectComponent.h"
 #include "Interfaces/Interface_CardTarget.h"
 #include "Libraries/FunctionLibrary_Event.h"
+#include "Libraries/FunctionLibrary_Utility.h"
 #include "StatusSystem/StatusComponent.h"
 #include "Utilities/CosGameplayTags.h"
 #include "Utilities/CosLog.h"
@@ -60,16 +61,18 @@ void AEffectActor::InitializeFromData()
 		return;
 	}
 
-	// 3. 카드의 소유자가 유효하고 IInterface_CardTarget 인터페이스를 구현하는지 확인합니다.
+	// 3. 소유자가 유효하고 IInterface_CardTarget 인터페이스를 구현하는지 확인합니다.
 	if (IsValid(GetOwner()) && GetOwner()->GetClass()->ImplementsInterface(UInterface_CardTarget::StaticClass()))
 	{
 		// 4. 소유자의 고유 ID를 가져와 Deck 카드 데이터에 설정합니다.
 		FString OwnerUniqueID = IInterface_CardTarget::Execute_GetMinionUniqueID(GetOwner());
 		EffectData.OwnerID = OwnerUniqueID;
 	}
+
+	
 	
 	// 5. 데이터를 초기화하고 사용 규칙과 상태 컴포넌트를 설정합니다.
-	// InitializeCardData();
+	
 	SetupUseRuleComponents();
 	SetupStatusComponents();
 }
@@ -97,6 +100,10 @@ bool AEffectActor::HandleInvalidData(const FDataTableRowHandle& CardDataRowHandl
 {
 	COS_LOG_SCREEN(TEXT("오류 : EffectData의 DataRowHandle의 값이 올바르지 않습니다. "));
 	return false;
+}
+
+void AEffectActor::InitializeCardData()
+{
 }
 
 void AEffectActor::SetupUseRuleComponents()
@@ -142,6 +149,31 @@ void AEffectActor::SetupStatusComponents()
 		NewStatusComponent->GameplayTags = StatusData.GameplayTags;
 		AddInstanceComponent(NewStatusComponent);
 	}
+}
+
+bool AEffectActor::AttemptApplyEffect(const TArray<AActor*>& Targets, bool SkipPlayableCheck, bool SkipConsequences,
+	bool AutoPlay)
+{
+	InputTargets = Targets;
+
+	// CheckIfPlayable을 뛰어넘고 바로 UseCard
+	if (SkipPlayableCheck)
+	{
+		ApplyEffect(SkipConsequences, AutoPlay);
+		return true;
+	}
+
+	// CheckIfPlayable로 가능 여부 확인 후 UseCard
+	FString FailMessage;
+	if (CheckIfPlayable(FailMessage))
+	{
+		ApplyEffect(SkipConsequences, AutoPlay);
+		return true;
+	}
+
+	// 사용불가능한 상태이므로 에러메시지 출력
+	UFunctionLibrary_Utility::SendScreenLogMessage(this, FText::FromString(FailMessage), FColor::Red);
+	return false;
 }
 
 void AEffectActor::ApplyEffect(bool bSkipConsequences, bool bAutoPlay)
@@ -343,7 +375,7 @@ void AEffectActor::HandleImmediateEffect()
 	// 카드 효과가 즉시 실행되었다면, 후속 처리를 바로 진행.
 	if (CurrentEffectComponent->bImmediate)
 	{
-		ContinueAfterCardResolved();
+		ContinueAfterTakingEffect();
 	}
 }
 
@@ -353,8 +385,32 @@ void AEffectActor::EndEffect()
 	DispatcherHubLocal->CallEvent(EffectData.PostUseEvent, this);
 }
 
+bool AEffectActor::CheckIfPlayable(FString& OutFailMessage)
+{
+	// 1. 카드의 Hand 데이터에 해당하는 사용 규칙을 가져옵니다.
+	TArray<FUseRule> UseRules = GetCardUseRules(ECardDataType::Hand);
+
+	// 2. 각 사용 규칙을 순회하며, 해당 규칙을 충족하는지 확인합니다.
+	for (const FUseRule& CurrentRule : UseRules)
+	{
+		// 3. 해당 규칙에 대한 컴포넌트가 존재하는지 확인합니다.
+		if (!UseRuleInstances.Contains(CurrentRule.Rule))
+			continue;
+
+		// 4. 규칙을 충족하지 못하면 실패 메시지를 반환하고 false를 반환합니다.
+		if (!UseRuleInstances[CurrentRule.Rule]->CheckIfUseAllowed(CurrentRule, OutFailMessage))
+		{
+			return false;
+		}
+	}
+
+	// 5. 모든 규칙을 통과하면 빈 메시지와 함께 true를 반환합니다.
+	OutFailMessage = TEXT("");
+	return true;
+}
+
 UTargetingComponent* AEffectActor::AccessTargetingClassLazy(AActor* TargetingHolderActor,
-	TSubclassOf<UTargetingComponent> TargetingClass)
+                                                            TSubclassOf<UTargetingComponent> TargetingClass)
 {
 	// 1. TargetingHolderActor가 유효하지 않으면, 자기 자신(this)을 TargetingHolderActor로 설정하여 재귀 호출합니다.
 	if (!IsValid(TargetingHolderActor))

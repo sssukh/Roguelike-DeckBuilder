@@ -36,13 +36,13 @@ public:
 	  * 카드 데이터 테이블에서 Deck 데이터를 가져와 카드를 초기화합니다.
 	  * 카드 데이터를 설정한 후, 카드 사용 규칙과 상태 컴포넌트를 설정하고 카드의 희귀도 및 타입을 결정합니다.
 	  */
-	void InitializeFromData();
+	virtual void InitializeFromData();
 
 	/* 
 	  * 주어진 데이터 테이블 핸들을 통해 카드 데이터를 찾아 초기화합니다.
 	  * 데이터가 유효하지 않거나 존재하지 않을 경우, 에러 처리를 수행하고 초기화를 중단합니다.
 	  */
-	bool InitializeEffectDataFromRow(const FDataTableRowHandle& EffectDataRowHandle);
+	virtual bool InitializeEffectDataFromRow(const FDataTableRowHandle& EffectDataRowHandle);
 
 	/* 
 	  * 유효하지 않은 카드 데이터를 처리하고, 필요한 경우 에러 메시지를 출력하며 기본 데이터를 설정합니다.
@@ -50,23 +50,30 @@ public:
 	bool HandleInvalidData(const FDataTableRowHandle& CardDataRowHandle);
 
 	/* 
-	  * 카드의 Pile, Hand 데이터를 초기화하며, 해당 카드에 대한 GameplayTags를 설정합니다.
-	  */
-	// void InitializeCardData();
+	* 카드의 Pile, Hand 데이터를 초기화하며, 해당 카드에 대한 GameplayTags를 설정합니다.
+	*/
+	virtual void InitializeCardData();
 
 	/*
 	  * 카드 사용 규칙에 해당하는 컴포넌트들을 설정합니다.
 	  * 각 카드의 사용 규칙에 맞는 UUseRuleComponent를 생성하고 등록한 후, 카드의 사용 규칙 인스턴스에 추가합니다.
 	  */
-	void SetupUseRuleComponents();
+	virtual void SetupUseRuleComponents();
 
 	/*
 	  * 카드의 초기 상태를 설정합니다.
 	  * 카드가 게임에서 시작될 때 필요한 상태 컴포넌트를 생성하고 등록합니다.
 	  */
-	void SetupStatusComponents();
+	virtual void SetupStatusComponents();
 	
 public:
+	/*
+	 * 카드가 재생 가능한지 확인합니다. 그렇다면 UseCard가 호출됩니다. 그렇지 않으면 실패 메시지를 기록합니다.
+	 * 타겟 목록과 여러 옵션을 통해 카드를 사용하려고 시도합니다.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Card|Usage")
+	bool AttemptApplyEffect(const TArray<AActor*>& Targets, bool SkipPlayableCheck, bool SkipConsequences, bool AutoPlay);
+	
 	UFUNCTION(BlueprintCallable, Category = "Effect Actor")
 	virtual void ApplyEffect(bool bSkipConsequences, bool bAutoPlay);
 
@@ -101,6 +108,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Effect Actor")
 	void EndEffect();
 
+	/*카드가 사용 가능한지 여부를 확인합니다. 사용 가능할 경우 true, 그렇지 않으면 false를 반환합니다.*/
+	UFUNCTION(BlueprintCallable, Category = "Card|Usage")
+	bool CheckIfPlayable(FString& OutFailMessage);
+	
 	/*타겟팅 클래스에 액세스하거나 새로운 타겟팅 컴포넌트를 생성합니다.*/
 	UFUNCTION(BlueprintCallable, Category = "Card|Targeting")
 	UTargetingComponent* AccessTargetingClassLazy(AActor* TargetingHolderActor, TSubclassOf<UTargetingComponent> TargetingClass);
@@ -120,9 +131,6 @@ public:
 
 	// Effect Event
 public:
-	UFUNCTION(BlueprintCallable, Category = "Card|Event")
-	void ContinueAfterCardResolved();
-
 	/*카드 효과에 따른 액션을 큐에 추가하여 실행합니다.*/
 	UFUNCTION(BlueprintCallable, Category = "Card|Event")
 	void QueueGameEffectAction(AActor* TargetActor, AActor* SourcePuppet, UGameEffectComponent* CardEffect, bool bAnimateSourcePuppet);
